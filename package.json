@@ -14,7 +14,7 @@
   "devDependencies": {
     "@types/node": "18.16.7",
     "dotenv": "16.0.3",
-    "rimraf": "^5.0.0",
+    "rimraf": "5.0.0",
     "typescript": "5.0.4"
   }
 }
