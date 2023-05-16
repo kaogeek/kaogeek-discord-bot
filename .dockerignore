@@ -1,0 +1,23 @@
+# build output
+dist/
+
+# dependencies
+node_modules/
+**/node_modules
+
+# logs
+pnpm-debug.log*
+
+# environment variables
+.env
+
+# macOS-specific files
+.DS_Store
+
+Dockerfile
+**/Dockerfile
+
+# misc
+.git
+.github
+.vscode
