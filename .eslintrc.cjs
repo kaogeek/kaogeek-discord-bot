@@ -18,10 +18,7 @@ const config = {
   overrides: [
     {
       files: ['.eslintrc.*', '.prettierrc.*', '*.config.js'],
-      rules: {
-        '@typescript-eslint/no-var-requires': 'off',
-        'no-undef': 'off',
-      },
+      rules: {},
     },
   ],
   ignorePatterns: ['dist'],
