@@ -1,9 +1,9 @@
-import Bot from "../client" 
+import { EventHandlerConfig } from '../types/event-handler-config.types.js'
 
 export default {
-    name: `ready`,
-    once: true,
-    async execute(client: Bot){
-        console.log(`Helloworld, Online as ${client.user?.tag}.`);
-    }
-}
+  eventName: 'ready',
+  once: true,
+  execute: async (client) => {
+    console.log(`Helloworld, Online as ${client.user?.tag}.`)
+  },
+} satisfies EventHandlerConfig<'ready'>
