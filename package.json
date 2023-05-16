@@ -27,5 +27,9 @@
     "prettier": "2.8.8",
     "rimraf": "5.0.0",
     "typescript": "5.0.4"
+  },
+  "engines": {
+    "node": "^16.13 || ^18.12",
+    "pnpm": ">=8"
   }
 }
