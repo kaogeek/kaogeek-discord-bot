@@ -1,9 +1,6 @@
+import 'dotenv/config'
 import { Client, Collection, IntentsBitField } from 'discord.js';
 import { readdirSync } from 'fs';
-import dotenv from 'dotenv';
-
-// Load .env file
-dotenv.config();
 
 export default class Bot extends Client {
     public commands: Collection<string, Dictionary>;
