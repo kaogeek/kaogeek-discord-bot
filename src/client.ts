@@ -1,73 +1,82 @@
 import { Client, Collection, IntentsBitField } from 'discord.js';
-import { readdirSync } from 'fs';
+import { readdir } from 'fs/promises';
 
-export default class Bot extends Client {
-    public commands: Collection<string, Dictionary>;
-    public commandArray: Dictionary[];
-    constructor() {
-        super({
-            intents: [
-                IntentsBitField.Flags.Guilds,
-                IntentsBitField.Flags.GuildMembers,
-                IntentsBitField.Flags.GuildMessages,
-                IntentsBitField.Flags.MessageContent
-            ]
-        });
-        this.commands = new Collection()
-        this.commandArray = [];
-    }
-
-    async init() {
-        return new Promise(async (resolve, reject) => {
-            await this.handler();
-            this.login(process.env.BOT_TOKEN)
-        })
-    }
-
-    async handler() {
-        const eventFiles = readdirSync(`/${__dirname}/events`).filter(file => file.endsWith(".js"));
-        const commandFolders = readdirSync(`/${__dirname}/commands`).filter(file => file.endsWith(".js"));
-        this.handleEvents(eventFiles, "./events");
-        this.handleCommands(commandFolders, "./commands");
-    };
-
-    async handleEvents(eventFiles: string[], path: string) {
-        for (const file of eventFiles) {
-            if (file[0] === "-") {
-            } else {
-                try {
-                    const event = require(`${path}/${file}`).default;
-                    if (event.once) {
-                        this.once(event.name, (...args) => event.execute(...args, this));
-                    } else {
-                        this.on(event.name, (...args) => event.execute(...args, this));
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            };
-        };
-    };
-
-    async handleCommands(commandFolders: string[] = [], path: string) {
-
-        for (const folder of commandFolders) {
-            const commandFiles = readdirSync(`${path}/${folder}`).filter(file => file.endsWith('.js'));
-            for (const file of commandFiles) {
-                if (file[0] != "-") {
-                    const command = require(`${path}/${folder}/${file}`);
-                    this.commands.set(command.data.name, command);
-                    this.commandArray.push(command.data);
-                } else {
-                    const command = require(`./commands/${folder}/${file}`);
-                };
-            };
-        };
-    };
+interface Command {
+  name: string;
+  execute: (...args: any[]) => void;
 }
 
-declare global {
-    type Dictionary<V = any, K extends string | symbol = string> = Record<K, V>;
+export default class Bot extends Client {
+  public commands: Collection<string, Command>;
+  public commandArray: Command[];
+
+  constructor() {
+    super({
+      intents: [
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMembers,
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.MessageContent
+      ],
+    });
+    this.commands = new Collection();
+    this.commandArray = [];
+  }
+
+  async init(): Promise<void> {
+    try {
+      await this.handler();
+      await this.login(process.env.BOT_TOKEN);
+    } catch (error) {
+      console.error('Error initializing bot:', error);
+    }
+  }
+
+  async handler(): Promise<void> {
+    try {
+      const eventFiles = await readdir(`${__dirname}/events`);
+      const commandFolders = await readdir(`${__dirname}/commands`);
+      await this.handleEvents(eventFiles, './events');
+      await this.handleCommands(commandFolders, './commands');
+    } catch (error) {
+      console.error('Error handling events and commands:', error);
+    }
+  }
+
+  async handleEvents(eventFiles: string[], path: string): Promise<void> {
+    for (const file of eventFiles) {
+      if (file[0] === '-') {
+        continue;
+      }
+      try {
+        const { default: event } = await import(`${path}/${file}`);
+        if (event.once) {
+          this.once(event.name, (...args) => event.execute(...args, this));
+        } else {
+          this.on(event.name, (...args) => event.execute(...args, this));
+        }
+      } catch (error) {
+        console.error('Error loading event:', error);
+      }
+    }
+  }
+
+  async handleCommands(commandFolders: string[], path: string): Promise<void> {
+    for (const folder of commandFolders) {
+      const commandFiles = await readdir(`${path}/${folder}`);
+      for (const file of commandFiles) {
+        if (file[0] !== '-') {
+          try {
+            const { default: command } = await import(`${path}/${folder}/${file}`);
+            this.commands.set(command.name, command);
+            this.commandArray.push(command);
+          } catch (error) {
+            console.error('Error loading command:', error);
+          }
+        }
+      }
+    }
+  }
 }
 
 new Bot().init();
