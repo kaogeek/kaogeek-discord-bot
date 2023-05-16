@@ -1,21 +1,20 @@
 {
   "name": "kaogeek-discord-bot",
   "version": "1.0.0",
+  "private": true,
   "description": "Discord bot for KaoGeek, built with TypeScript",
-  "main": "dist/Index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node dist/client.js",
-    "dev": "tsc -d && NODE_ENV=development node dist/client.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^20.1.5",
-    "typescript": "^5.0.4"
+    "dev": "ts-node src/client.ts",
+    "build": "rimraf dist && tsc --build",
+    "start": "node dist/client.js"
   },
   "dependencies": {
-    "discord.js": "^14.11.0",
-    "dotenv": "^16.0.3"
+    "discord.js": "14.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.7",
+    "dotenv": "16.0.3",
+    "rimraf": "5.0.0",
+    "typescript": "5.0.4"
   }
 }
