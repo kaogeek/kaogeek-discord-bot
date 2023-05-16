@@ -19,3 +19,5 @@ You need to set the `BOT_TOKEN` environment variable in `.env` file first before
 # Run the bot in development mode
 pnpm dev
 ```
+
+Before pushing your code please run `pnpm format` to fix any issues
