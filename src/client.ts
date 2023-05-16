@@ -50,11 +50,11 @@ export default class Bot extends Client {
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
               this.once(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(...args, this)
+                eventHandlerConfig.execute(this, ...args)
               )
             } else {
               this.on(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(...args, this)
+                eventHandlerConfig.execute(this, ...args)
               )
             }
           }
