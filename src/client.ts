@@ -45,7 +45,9 @@ export default class Bot extends Client {
     for (const file of eventFiles) {
       if (!file[0].startsWith('-')) {
         try {
-          const eventHandlerConfig = await import(`${path}/${file}`)
+          const eventHandlerConfig = await import(`${path}/${file}`).then(
+            ({ default: defaultExport }) => defaultExport
+          )
 
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
@@ -73,7 +75,9 @@ export default class Bot extends Client {
 
       for (const file of commandFiles) {
         if (!file[0].startsWith('-')) {
-          const commandHandlerConfig = await import(`${path}/${folder}/${file}`)
+          const commandHandlerConfig = await import(
+            `${path}/${folder}/${file}`
+          ).then(({ default: defaultExport }) => defaultExport)
 
           if (validateCommandHandlerConfig(commandHandlerConfig)) {
             this.commands.set(
