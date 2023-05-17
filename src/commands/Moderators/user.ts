@@ -4,7 +4,7 @@ export default {
   data: {
     name: 'user',
     // https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types
-    type: 2
+    type: 2,
   },
   ephemeral: true,
   execute: async (client, interaction) => {
@@ -14,7 +14,7 @@ export default {
     await interaction.editReply(
       `**${
         member.user.tag
-      }**\nJoined: ${member.joinedAt?.toLocaleString()}\nCreated: ${member.user.createdAt.toLocaleString()}`
+      }**\nJoined: ${member.joinedAt?.toLocaleString()}\nCreated: ${member.user.createdAt.toLocaleString()}`,
     )
   },
 } satisfies CommandHandlerConfig
