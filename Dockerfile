@@ -1,22 +1,37 @@
-FROM node:18-alpine
+FROM node:18-alpine as builder
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml* ./
+RUN npx pnpm -r i --frozen-lockfile
+
+COPY src ./src
+COPY tsconfig.json ./
+
+RUN npx pnpm build
+
+COPY package.json pnpm-lock.yaml ./
+
+# ? -------------------------
+
+FROM node:18-alpine as deps-prod
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml* ./
+RUN npx pnpm -r i --frozen-lockfile --prod
+
+# ? -------------------------
+
+FROM gcr.io/distroless/nodejs18-debian11:nonroot as runner
+
 LABEL name "kaogeek-discord-bot"
 
-# PNPM installation
-RUN npm install -g pnpm
+USER nonroot
+ENV NODE_ENV production
 
-# Create app directory
-WORKDIR /usr/src/app
-
-# Install app dependencies
 COPY package.json ./
-COPY pnpm-lock.yaml ./
-RUN pnpm install
+COPY --chown=nonroot:nonroot --from=deps-prod /app/node_modules ./node_modules
+COPY --chown=nonroot:nonroot --from=builder /app/dist ./dist
 
-# Bundle app source
-COPY . .
-
-# Build app
-RUN pnpm run build
-
-# Run app
-CMD [ "pnpm", "start" ]
+CMD ["dist/client.js"]
