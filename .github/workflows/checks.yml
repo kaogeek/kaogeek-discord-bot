@@ -1,0 +1,19 @@
+name: Checks
+on:
+  pull_request:
+  merge_group:
+jobs:
+  checks:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build and lint
+        run: pnpm lint
