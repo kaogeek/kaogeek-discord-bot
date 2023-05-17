@@ -29,7 +29,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.8",
     "rimraf": "5.0.0",
-    "tsx": "^3.12.7",
+    "tsx": "3.12.7",
     "typescript": "5.0.4"
   },
   "engines": {
