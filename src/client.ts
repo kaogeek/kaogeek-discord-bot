@@ -15,8 +15,8 @@ export default class Bot extends Client {
   public isProduction = process.env.NODE_ENV === 'production'
   public __dirname =
     process.env.NODE_ENV === 'production'
-      ? path.resolve('./dist/')
-      : path.resolve('./')
+      ? path.resolve('./dist')
+      : path.resolve('./src')
   constructor() {
     super({
       intents: [
@@ -30,19 +30,23 @@ export default class Bot extends Client {
   }
 
   async init() {
+    console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     await this.handler()
+
     void this.login(Environment.BOT_TOKEN)
   }
 
   async handler() {
+    console.info('[HANDLER] Loading...')
     const eventFiles = globSync(
-      path.resolve(this.__dirname, './src/events/*.{js,ts}'),
+      path.resolve(this.__dirname, 'events/*.{js,ts}'),
     )
     const commandFolders = globSync(
-      path.resolve(this.__dirname, './src/commands/**/*.{js,ts}'),
+      path.resolve(this.__dirname, 'commands/**/*.{js,ts}'),
     )
     void this.handleEvents(eventFiles)
     void this.handleCommands(commandFolders)
+    return Promise.resolve(true)
   }
 
   async handleEvents(eventFiles: string[]) {

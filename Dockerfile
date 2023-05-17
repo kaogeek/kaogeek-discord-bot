@@ -1,15 +1,22 @@
 FROM node:18-alpine
 LABEL name "kaogeek-discord-bot"
 
-WORKDIR /usr/src/bot
+# PNPM installation
+RUN npm install -g pnpm
 
-COPY package.json pnpm-lock.yaml ./
+# Create app directory
+WORKDIR /usr/src/app
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+# Install app dependencies
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+RUN pnpm install
 
+# Bundle app source
 COPY . .
 
+# Build app
 RUN pnpm run build
-ENV NODE_ENV=production
-ENV BOT_TOKEN=
-CMD ["node", "dist/src/client.js"]
+
+# Run app
+CMD [ "pnpm", "start" ]
