@@ -9,5 +9,6 @@ export type CommandHandlerExecutor = (
 
 export interface CommandHandlerConfig {
   data: ApplicationCommandData
+  ephemeral?: boolean
   execute: CommandHandlerExecutor
 }
