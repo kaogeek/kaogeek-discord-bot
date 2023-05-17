@@ -13,7 +13,7 @@ devDependencies:
     specifier: 4.1.1
     version: 4.1.1(prettier@2.8.8)
   '@tsconfig/node18':
-    specifier: ^2.0.1
+    specifier: 2.0.1
     version: 2.0.1
   '@types/eslint':
     specifier: ^8.37.0
@@ -49,7 +49,7 @@ devDependencies:
     specifier: 5.0.0
     version: 5.0.0
   tsx:
-    specifier: ^3.12.7
+    specifier: 3.12.7
     version: 3.12.7
   typescript:
     specifier: 5.0.4
