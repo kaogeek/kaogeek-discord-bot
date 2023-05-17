@@ -18,6 +18,7 @@ const config = {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
+  trailingComma: 'all',
 }
 
 module.exports = config
