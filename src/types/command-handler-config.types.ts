@@ -1,4 +1,4 @@
-import type Bot from '../client.js'
+import type Bot from '../client'
 
 export type CommandHandlerExecutor = (client: Bot) => void
 

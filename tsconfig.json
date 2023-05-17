@@ -1,18 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext"],
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext"],
     "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "strict": true,
+    "rootDir": "src",
+    "outDir": "dist",
     "moduleResolution": "nodenext",
+    "baseUrl": ".",
+    "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": ["src/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }

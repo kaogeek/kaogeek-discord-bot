@@ -1,4 +1,4 @@
-import { EventHandlerConfig } from '../types/event-handler-config.types.js'
+import { EventHandlerConfig } from '../types/event-handler-config.types'
 
 export default {
   eventName: 'ready',

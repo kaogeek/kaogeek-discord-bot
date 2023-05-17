@@ -1,6 +1,6 @@
 import { ClientEvents } from 'discord.js'
 
-import type Bot from '../client.js'
+import type Bot from '../client'
 
 export type EventHandlerExecutor<K extends keyof ClientEvents> = (
   ...args: [Bot, ...ClientEvents[K]]

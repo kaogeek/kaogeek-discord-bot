@@ -1,11 +1,12 @@
 import { Client, Collection, IntentsBitField } from 'discord.js'
 
+import { Environment } from '@/config'
 import { readdirSync } from 'fs'
 
 import {
   validateCommandHandlerConfig,
   validateEventHandlerConfig,
-} from './utils/validate-handler-config.js'
+} from './utils/validate-handler-config'
 
 export default class Bot extends Client {
   public commands: Collection<string, Dictionary>
@@ -26,7 +27,7 @@ export default class Bot extends Client {
 
   async init() {
     await this.handler()
-    void this.login(process.env.BOT_TOKEN)
+    void this.login(Environment.BOT_TOKEN)
   }
 
   async handler() {

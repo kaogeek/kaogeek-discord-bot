@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "description": "Discord bot for KaoGeek, built with TypeScript",
-  "type": "module",
   "scripts": {
-    "dev": "ts-node src/client.ts",
-    "build": "rimraf dist && tsc --build",
+    "dev": "nodemon src/client.ts",
+    "build": "rimraf dist && tsc && tsc-alias",
     "start": "node dist/client.js",
     "lint": "eslint .",
     "format": "eslint . --fix"
   },
   "dependencies": {
-    "discord.js": "14.11.0"
+    "discord.js": "14.11.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
@@ -24,8 +24,11 @@
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
+    "nodemon": "^2.0.22",
     "prettier": "2.8.8",
     "rimraf": "5.0.0",
+    "tsc-alias": "^1.8.6",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.4"
   },
   "engines": {
