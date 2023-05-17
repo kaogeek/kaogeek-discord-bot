@@ -4,10 +4,11 @@
   "private": true,
   "description": "Discord bot for KaoGeek, built with TypeScript",
   "type": "module",
+  "main": "dist/client.js",
   "scripts": {
     "dev": "tsx src/client.ts",
     "build": "rimraf dist && tsc --build",
-    "start": "NODE_ENV=production node dist/src/client.js",
+    "start": "NODE_ENV=production node dist/client.js",
     "lint": "eslint .",
     "format": "eslint . --fix"
   },
