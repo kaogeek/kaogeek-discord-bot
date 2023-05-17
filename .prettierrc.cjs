@@ -8,6 +8,7 @@ const config = {
   singleQuote: true,
   semi: false,
   printWidth: 80,
+  trailingComma: 'all',
   plugins: ['@trivago/prettier-plugin-sort-imports'],
   importOrder: [
     '^discord.js',
@@ -18,7 +19,6 @@ const config = {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
-  trailingComma: 'all',
 }
 
 module.exports = config
