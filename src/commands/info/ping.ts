@@ -1,4 +1,4 @@
-import { CommandHandlerConfig } from '../../types/command-handler-config.types.js'
+import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
   data: {
