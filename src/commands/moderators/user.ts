@@ -1,10 +1,11 @@
-import { CommandHandlerConfig } from '../../types/command-handler-config.types.js'
+import { ApplicationCommandType } from 'discord.js'
+
+import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
   data: {
     name: 'user',
-    // https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types
-    type: 2,
+    type: ApplicationCommandType.User,
   },
   ephemeral: true,
   execute: async (client, interaction) => {

@@ -12,8 +12,10 @@
     "format": "eslint . --fix"
   },
   "dependencies": {
+    "@(-.-)/env": "0.3.2",
     "discord.js": "14.11.0",
-    "glob": "^10.2.4"
+    "glob": "^10.2.4",
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
