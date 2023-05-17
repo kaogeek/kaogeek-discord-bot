@@ -1,6 +1,7 @@
 import { Client, Collection, IntentsBitField } from 'discord.js'
 
-import { readdirSync } from 'fs'
+import { globSync } from 'glob'
+import path from 'path'
 
 import {
   validateCommandHandlerConfig,
@@ -9,8 +10,11 @@ import {
 
 export default class Bot extends Client {
   public commands: Collection<string, Dictionary>
-  public commandArray: Dictionary[]
-
+  public isProduction = process.env.NODE_ENV === 'production'
+  public __dirname =
+    process.env.NODE_ENV === 'production'
+      ? path.resolve('./dist/')
+      : path.resolve('./')
   constructor() {
     super({
       intents: [
@@ -21,7 +25,6 @@ export default class Bot extends Client {
       ],
     })
     this.commands = new Collection()
-    this.commandArray = []
   }
 
   async init() {
@@ -30,33 +33,32 @@ export default class Bot extends Client {
   }
 
   async handler() {
-    const eventFiles = readdirSync(`/${__dirname}/events`).filter((file) =>
-      file.endsWith('.js')
+    const eventFiles = globSync(
+      path.resolve(this.__dirname, './src/events/*.{js,ts}'),
     )
-    const commandFolders = readdirSync(`/${__dirname}/commands`).filter(
-      (file) => file.endsWith('.js')
+    const commandFolders = globSync(
+      path.resolve(this.__dirname, './src/commands/**/*.{js,ts}'),
     )
-
-    void this.handleEvents(eventFiles, './events')
-    void this.handleCommands(commandFolders, './commands')
+    void this.handleEvents(eventFiles)
+    void this.handleCommands(commandFolders)
   }
 
-  async handleEvents(eventFiles: string[], path: string) {
+  async handleEvents(eventFiles: string[]) {
     for (const file of eventFiles) {
       if (!file[0].startsWith('-')) {
         try {
-          const eventHandlerConfig = await import(`${path}/${file}`).then(
-            ({ default: defaultExport }) => defaultExport
+          const eventHandlerConfig = await import(`${file}`).then(
+            ({ default: defaultExport }) => defaultExport,
           )
 
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
               this.once(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(this, ...args)
+                eventHandlerConfig.execute(this, ...args),
               )
             } else {
               this.on(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(this, ...args)
+                eventHandlerConfig.execute(this, ...args),
               )
             }
           }
@@ -67,25 +69,22 @@ export default class Bot extends Client {
     }
   }
 
-  async handleCommands(commandFolders: string[] = [], path: string) {
-    for (const folder of commandFolders) {
-      const commandFiles = readdirSync(`${path}/${folder}`).filter((file) =>
-        file.endsWith('.js')
-      )
-
-      for (const file of commandFiles) {
-        if (!file[0].startsWith('-')) {
-          const commandHandlerConfig = await import(
-            `${path}/${folder}/${file}`
-          ).then(({ default: defaultExport }) => defaultExport)
+  async handleCommands(commandFiles: string[] = []) {
+    for (const cmdfile of commandFiles) {
+      if (!cmdfile[0].startsWith('-')) {
+        try {
+          const commandHandlerConfig = await import(`${cmdfile}`).then(
+            ({ default: defaultExport }) => defaultExport,
+          )
 
           if (validateCommandHandlerConfig(commandHandlerConfig)) {
             this.commands.set(
-              commandHandlerConfig.command,
-              commandHandlerConfig
+              commandHandlerConfig.data.name,
+              commandHandlerConfig,
             )
-            this.commandArray.push(commandHandlerConfig)
           }
+        } catch (error) {
+          console.log(error)
         }
       }
     }

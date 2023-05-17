@@ -1,18 +1,9 @@
 {
+  "extends": "@tsconfig/node18",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext"],
     "sourceMap": true,
     "rootDir": "./src",
-    "outDir": "./dist",
-    "strict": true,
-    "moduleResolution": "nodenext",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "outDir": "./dist"
   },
-  "exclude": ["dist", "node_modules"]
+  "include": ["src"]
 }

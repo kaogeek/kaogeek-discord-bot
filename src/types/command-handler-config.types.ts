@@ -1,8 +1,13 @@
+import { ApplicationCommandData, CommandInteraction } from 'discord.js'
+
 import type Bot from '../client.js'
 
-export type CommandHandlerExecutor = (client: Bot) => void
+export type CommandHandlerExecutor = (
+  client: Bot,
+  interaction: CommandInteraction,
+) => void
 
 export interface CommandHandlerConfig {
-  command: string
+  data: ApplicationCommandData
   execute: CommandHandlerExecutor
 }

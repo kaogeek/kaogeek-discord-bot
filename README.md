@@ -21,3 +21,16 @@ pnpm dev
 ```
 
 Before pushing your code please run `pnpm format` to fix any issues
+
+## Deploy
+- Run with Docker
+    ```bash
+    docker build -t kaogeek-discord-bot .
+    dockrt run -d -e BOT_TOKEN=<TOKEN> -name kaogeek-discord-bot kaogeek-discord-bot
+    ```
+- Run with Node
+    ```
+    pnpm install
+    pnpm build
+    pnpm start
+    ```
