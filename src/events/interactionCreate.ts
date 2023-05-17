@@ -8,7 +8,9 @@ export default {
       const command = client.commands.get(interaction.commandName)
       if (!command) return
       let bypass = true
-      await interaction.deferReply().catch(() => (bypass = false))
+      await interaction
+        .deferReply({ ephemeral: command.ephemeral })
+        .catch(() => (bypass = false))
       if (!bypass) return
       try {
         console.log(
