@@ -12,7 +12,7 @@ export default {
       if (!bypass) return
       try {
         console.log(
-          `[Command] ${interaction.user.tag} (${interaction.user.id}) > ${interaction.commandName}`
+          `[Command] ${interaction.user.tag} (${interaction.user.id}) > ${interaction.commandName}`,
         )
         await command.execute(client, interaction)
       } catch (error) {
