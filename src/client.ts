@@ -3,13 +3,14 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import { globSync } from 'glob'
 import path from 'path'
 
+import { CommandHandlerConfig } from './types/command-handler-config.types.js'
 import {
   validateCommandHandlerConfig,
   validateEventHandlerConfig,
 } from './utils/validate-handler-config.js'
 
 export default class Bot extends Client {
-  public commands: Collection<string, Dictionary>
+  public commands: Collection<string, CommandHandlerConfig>
   public isProduction = process.env.NODE_ENV === 'production'
   public __dirname =
     process.env.NODE_ENV === 'production'
