@@ -34,10 +34,10 @@ export default class Bot extends Client {
 
   async handler() {
     const eventFiles = globSync(
-      path.resolve(this.__dirname, './src/events/*.{js,ts}')
+      path.resolve(this.__dirname, './src/events/*.{js,ts}'),
     )
     const commandFolders = globSync(
-      path.resolve(this.__dirname, './src/commands/**/*.{js,ts}')
+      path.resolve(this.__dirname, './src/commands/**/*.{js,ts}'),
     )
     void this.handleEvents(eventFiles)
     void this.handleCommands(commandFolders)
@@ -48,17 +48,17 @@ export default class Bot extends Client {
       if (!file[0].startsWith('-')) {
         try {
           const eventHandlerConfig = await import(`${file}`).then(
-            ({ default: defaultExport }) => defaultExport
+            ({ default: defaultExport }) => defaultExport,
           )
 
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
               this.once(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(this, ...args)
+                eventHandlerConfig.execute(this, ...args),
               )
             } else {
               this.on(eventHandlerConfig.eventName, (...args) =>
-                eventHandlerConfig.execute(this, ...args)
+                eventHandlerConfig.execute(this, ...args),
               )
             }
           }
@@ -74,13 +74,13 @@ export default class Bot extends Client {
       if (!cmdfile[0].startsWith('-')) {
         try {
           const commandHandlerConfig = await import(`${cmdfile}`).then(
-            ({ default: defaultExport }) => defaultExport
+            ({ default: defaultExport }) => defaultExport,
           )
 
           if (validateCommandHandlerConfig(commandHandlerConfig)) {
             this.commands.set(
               commandHandlerConfig.data.name,
-              commandHandlerConfig
+              commandHandlerConfig,
             )
           }
         } catch (error) {

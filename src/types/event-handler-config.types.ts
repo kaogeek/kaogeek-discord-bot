@@ -7,7 +7,7 @@ export type EventHandlerExecutor<K extends keyof ClientEvents> = (
 ) => void
 
 export interface EventHandlerConfig<
-  K extends keyof ClientEvents = keyof ClientEvents
+  K extends keyof ClientEvents = keyof ClientEvents,
 > {
   eventName: K
   execute: EventHandlerExecutor<K>
