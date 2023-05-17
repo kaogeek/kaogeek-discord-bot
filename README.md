@@ -26,7 +26,7 @@ Before pushing your code please run `pnpm format` to fix any issues
 - Run with Docker
     ```bash
     docker build -t kaogeek-discord-bot .
-    dockrt run -d -e BOT_TOKEN=<TOKEN> -name kaogeek-discord-bot kaogeek-discord-bot
+    docker run -d --env-file=.env -name kaogeek-discord-bot kaogeek-discord-bot
     ```
 - Run with Node
     ```
