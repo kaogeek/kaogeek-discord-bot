@@ -3,7 +3,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import { globSync } from 'glob'
 import path from 'path'
 
-import { CommandHandlerConfig } from './types/command-handler-config.types.js'
+import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import {
   validateCommandHandlerConfig,
   validateEventHandlerConfig,
@@ -52,6 +52,7 @@ export default class Bot extends Client {
             ({ default: defaultExport }) => defaultExport,
           )
 
+          console.info(`[EVENT] "${eventHandlerConfig.eventName}" => "${file}"`)
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
               this.once(eventHandlerConfig.eventName, (...args) =>
@@ -79,6 +80,9 @@ export default class Bot extends Client {
           )
 
           if (validateCommandHandlerConfig(commandHandlerConfig)) {
+            console.info(
+              `[COMMAND] "${commandHandlerConfig.data.name}" => "${cmdfile}"`,
+            )
             this.commands.set(
               commandHandlerConfig.data.name,
               commandHandlerConfig,
