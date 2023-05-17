@@ -3,6 +3,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import { globSync } from 'glob'
 import path from 'path'
 
+import { Environment } from './config.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import {
   validateCommandHandlerConfig,
@@ -30,7 +31,7 @@ export default class Bot extends Client {
 
   async init() {
     await this.handler()
-    void this.login(process.env.BOT_TOKEN)
+    void this.login(Environment.BOT_TOKEN)
   }
 
   async handler() {
