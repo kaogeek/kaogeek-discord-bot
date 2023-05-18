@@ -35,5 +35,7 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
+      - name: Generate prisma types
+        run: pnpm generate:prisma
       - name: Run Type Checks
         run: pnpm typecheck
