@@ -14,7 +14,7 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
@@ -30,7 +30,7 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
@@ -53,13 +53,13 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: 'Test'
+      - name: "Test"
         run: pnpm test:coverage
-      - name: 'Report Coverage'
+      - name: "Report Coverage"
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v1
         with:
@@ -85,3 +85,7 @@ jobs:
           cache-to: type=gha,mode=max
       - name: Show Docker image history
         run: docker history bot
+      - name: Create .data directory
+        run: cd smoke && mkdir -p .data && chmod a+rw .data
+      - name: Perform database migrations
+        run: cd smoke && docker compose run --rm bot npx prisma db push && test -f .data/bot.db
