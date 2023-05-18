@@ -1,0 +1,10 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# To prevent the pre-commit hook from running during a merge
+if ! git rev-parse -q --verify MERGE_HEAD
+then
+  # Normally, changes from lint-staged will be reverted to the state before commit if there is any error.
+  # Using `--no-stash` to preserve all changes from lint-staged, such as auto eslint fixes.
+  pnpm lint-staged --no-stash
+fi
