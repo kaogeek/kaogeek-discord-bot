@@ -17,6 +17,7 @@ export default class Bot extends Client {
     process.env.NODE_ENV === 'production'
       ? path.resolve('./dist')
       : path.resolve('./src')
+
   constructor() {
     super({
       intents: [
