@@ -9,7 +9,7 @@
     "dev": "tsx src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "generate:prisma": "prisma generate"

@@ -1,8 +1,7 @@
-import { Env } from '@(-.-)/env'
-import { config } from 'dotenv'
-import { z } from 'zod'
+import 'dotenv/config'
 
-config()
+import { Env } from '@(-.-)/env'
+import { z } from 'zod'
 
 export const EnvironmentSchema = z.object({
   BOT_TOKEN: z.string(),
