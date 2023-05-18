@@ -113,6 +113,10 @@ if (process.argv.includes('--smoke')) {
   const result = await prisma.messageReportCount.count()
   console.info(`[SMOKE] Number of message reports: ${result}`)
   console.info(`[SMOKE] OK, database connection is working!`)
+
+  // Attempt to load handlers
+  await new Bot().loadHandlers()
+  console.info(`[SMOKE] OK, loading handlers is working!`)
 } else {
   // Run the bot
   new Bot().initAndStart()
