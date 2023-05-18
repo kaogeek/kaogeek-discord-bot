@@ -133,3 +133,6 @@ dist
 
 .idea
 .envrc.data
+
+# Datastore files
+.data

@@ -49,6 +49,14 @@ export default {
     )
 
     // Tell the user that the report was sent
-    await interaction.editReply('Report sent to moderators')
+    await interaction.editReply({
+      embeds: [
+        {
+          title: 'Thanks!',
+          description: 'Report sent to moderators',
+          color: 0x00ff00,
+        },
+      ],
+    })
   },
 } satisfies CommandHandlerConfig
