@@ -28,6 +28,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npx pnpm -r i --frozen-lockfile --prod
 
+COPY ./prisma ./prisma
+RUN npx prisma generate
+
 # ? -------------------------
 # ? Runner: Production to run
 # ? -------------------------
@@ -43,8 +46,5 @@ ENV NODE_ENV production
 COPY package.json ./
 COPY --chown=nonroot:nonroot --from=deps-prod /app/node_modules ./node_modules
 COPY --chown=nonroot:nonroot --from=builder /app/dist ./dist
-
-# generate prisma client
-RUN npx prisma generate
 
 CMD ["dist/client.js"]
