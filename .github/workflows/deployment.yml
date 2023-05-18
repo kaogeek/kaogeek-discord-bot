@@ -19,7 +19,7 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Run depoly script
+    - name: Run deploy script
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: public.yue.sh
