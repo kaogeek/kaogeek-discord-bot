@@ -40,15 +40,38 @@ export default {
     // Send the link to the message into the mod channel
     const channel = client.channels.cache.get(Environment.MOD_CHANNEL_ID)
     if (!(channel instanceof TextChannel)) return
-    await channel.send(
-      [
-        `Reported message: https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount} times)`,
-        `Message author: ${member.user} (reported ${reporteeCount} times)`,
-        `Reported by: ${interaction.user} (sent ${reporterCount} reports)`,
-      ].join('\n'),
-    )
+    await channel.send({
+      embeds: [
+        {
+          title: 'Report',
+          fields: [
+            {
+              name: 'Reported message',
+              value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount} times)`,
+            },
+            {
+              name: 'Message author',
+              value: `${member.user} (reported ${reporteeCount} times)`,
+            },
+            {
+              name: 'Reported by',
+              value: `${interaction.user} (sent ${reporterCount} reports)`,
+            },
+          ],
+          color: 0xff0000,
+        },
+      ],
+    })
 
     // Tell the user that the report was sent
-    await interaction.editReply('Report sent to moderators')
+    await interaction.editReply({
+      embeds: [
+        {
+          title: 'Thanks!',
+          description: 'Report sent to moderators',
+          color: 0x00ff00,
+        },
+      ],
+    })
   },
 } satisfies CommandHandlerConfig
