@@ -73,6 +73,7 @@ export default {
     }
 
     // Delete message in all channel
+    let numDeleted = 0
     for (const [channelId, channel] of client.channels.cache) {
       if (channel.type === ChannelType.GuildText) {
         const messages = await channel.messages.fetch()
@@ -86,11 +87,7 @@ export default {
             console.info(
               `Deleted ${userMessages.size} messages from ${interaction.targetId} in channel ${channel.name} (${channelId}).`,
             )
-            // Tell the user that the messages were successfully pruned
-            await interaction.editReply({
-              content: 'Successfully prune messages',
-              components: [],
-            })
+            numDeleted += userMessages.size
           } catch (error) {
             // Reply about the error
             await interaction.editReply({
@@ -107,5 +104,10 @@ export default {
         }
       }
     }
+    // Tell the user that the messages were successfully pruned
+    await interaction.editReply({
+      content: `Successfully prune messages. Number of messages deleted: ${numDeleted}`,
+      components: [],
+    })
   },
 } satisfies CommandHandlerConfig
