@@ -10,6 +10,8 @@
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
     "lint": "eslint . --max-warnings=0",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "format": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "generate:prisma": "prisma generate"
@@ -30,6 +32,7 @@
     "@types/node": "18.16.7",
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
+    "@vitest/coverage-c8": "0.31.1",
     "eslint": "8.40.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
@@ -38,7 +41,8 @@
     "prisma": "4.14.1",
     "rimraf": "5.0.0",
     "tsx": "3.12.7",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "vitest": "0.31.1"
   },
   "engines": {
     "node": "^16.13 || ^18.12",
