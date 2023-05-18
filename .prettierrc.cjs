@@ -11,6 +11,7 @@ const config = {
   trailingComma: 'all',
   plugins: ['@trivago/prettier-plugin-sort-imports'],
   importOrder: [
+    'dotenv/config',
     '^discord.js',
     '^@discordjs',
     '<THIRD_PARTY_MODULES>',
