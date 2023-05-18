@@ -36,7 +36,7 @@ export default {
       create: { userId: reporteeMemberId, count: 1 },
     })
 
-    const reporterMemberId = BigInt(member.id)
+    const reporterMemberId = BigInt(interaction.user.id)
 
     // Count the number of times a user has reported
     const reporterReportCount = await prisma.reporterReportCount.upsert({
