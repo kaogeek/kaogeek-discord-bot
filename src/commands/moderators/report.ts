@@ -29,7 +29,7 @@ export default {
 
     const reporteeMemberId = BigInt(member.id)
 
-    // TODO: Count the number of times a user has been reported
+    // Count the number of times a user has been reported
     const reporteeReportCount = await prisma.reporteeReportCount.upsert({
       where: { userId: reporteeMemberId },
       update: { count: { increment: 1 } },
@@ -38,7 +38,7 @@ export default {
 
     const reporterMemberId = BigInt(member.id)
 
-    // TODO: Count the number of times a user has reported
+    // Count the number of times a user has reported
     const reporterReportCount = await prisma.reporterReportCount.upsert({
       where: { userId: reporterMemberId },
       update: { count: { increment: 1 } },
