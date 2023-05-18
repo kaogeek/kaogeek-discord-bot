@@ -1,6 +1,6 @@
-import { Events, Message } from 'discord.js'
+import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig'
+import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 const emojiRegex =
   /<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}/gu
