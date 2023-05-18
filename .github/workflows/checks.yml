@@ -65,8 +65,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  docker-image-check:
-    name: Build Docker Image
+  docker-smoke:
+    name: Run Docker Smoke Test
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
