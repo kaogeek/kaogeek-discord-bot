@@ -28,20 +28,24 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npx pnpm -r i --frozen-lockfile --prod
 
+COPY ./prisma ./prisma
+RUN npx prisma generate
+
 # ? -------------------------
 # ? Runner: Production to run
 # ? -------------------------
 
-FROM gcr.io/distroless/nodejs18-debian11:nonroot as runner
+FROM node:18-alpine as runner
 
 LABEL name "kaogeek-discord-bot"
 
-USER nonroot
+USER node
 ENV NODE_ENV production
 
 # copy all files from layers above
 COPY package.json ./
-COPY --chown=nonroot:nonroot --from=deps-prod /app/node_modules ./node_modules
-COPY --chown=nonroot:nonroot --from=builder /app/dist ./dist
+COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
+COPY --chown=node:node --from=deps-prod /app/prisma ./prisma
+COPY --chown=node:node --from=builder /app/dist ./dist
 
 CMD ["dist/client.js"]

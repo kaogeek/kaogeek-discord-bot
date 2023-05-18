@@ -1,18 +1,14 @@
 import { Events } from 'discord.js'
 
 import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
-
-const emojiRegex =
-  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component})\s*/gu
+import isOnlyEmoji from '../utils/isOnlyEmoji.js'
 
 export default {
   eventName: Events.MessageCreate,
   once: false,
   execute: async (client, message) => {
-    const emoji = message.content.match(emojiRegex)
-
     // if has only emoji -> delete message
-    if (emoji && emoji.join('').trim() === message.content.trim()) {
+    if (isOnlyEmoji(message.content)) {
       try {
         await message.delete()
       } catch (err) {
