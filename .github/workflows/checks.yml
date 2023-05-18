@@ -57,6 +57,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
+      - name: Generate Prisma client
+        run: pnpm prisma generate
       - name: 'Test'
         run: pnpm test:coverage
       - name: 'Report Coverage'
