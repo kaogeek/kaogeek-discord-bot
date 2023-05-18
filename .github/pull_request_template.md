@@ -14,6 +14,9 @@ Please delete options that are not relevant.
 
 # Checklist:
 
+- [ ] I have run `pnpm format` and my code don't have any linting issues
+  <!-- Please run `pnpm lint` to fix any bad practices / issues -->
+  <!-- Code with formatting or ESLint error will not be accepted -->
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
