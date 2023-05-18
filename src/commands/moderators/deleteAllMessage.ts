@@ -10,7 +10,7 @@ import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
   data: {
-    name: 'Delete All',
+    name: 'Prune messages',
     type: ApplicationCommandType.Message,
   },
   ephemeral: true,
@@ -47,10 +47,10 @@ export default {
             console.info(
               `Deleted ${userMessages.size} messages from ${interaction.targetId} in channel ${channel.name}.`,
             )
-            // Tell the user that the successfully delete all message
-            await interaction.editReply('Successfully delete all message')
+            // Tell the user that the successfully prune message
+            await interaction.editReply('Successfully prune message')
           } catch (error) {
-            // Tell the user that the successfully delete all message
+            // Reply about the error
             await interaction.editReply(
               `Error deleting messages: ${(error as DiscordAPIError).message}`,
             )
