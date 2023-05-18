@@ -9,17 +9,18 @@
     "dev": "tsx src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:prisma": "prisma generate"
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
     "@keyv/sqlite": "3.6.5",
+    "@prisma/client": "4.14.1",
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
     "glob": "^10.2.4",
-    "keyv": "4.5.2",
     "zod": "3.21.4"
   },
   "devDependencies": {
@@ -34,6 +35,7 @@
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.8",
+    "prisma": "4.14.1",
     "rimraf": "5.0.0",
     "tsx": "3.12.7",
     "typescript": "5.0.4"

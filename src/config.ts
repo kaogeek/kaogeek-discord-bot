@@ -1,13 +1,13 @@
-import { Env } from '@(-.-)/env'
-import { config } from 'dotenv'
-import { z } from 'zod'
+import 'dotenv/config'
 
-config()
+import { Env } from '@(-.-)/env'
+import { z } from 'zod'
 
 export const EnvironmentSchema = z.object({
   BOT_TOKEN: z.string(),
   GUILD_ID: z.string(),
   MOD_CHANNEL_ID: z.string(),
+  DATABASE_URL: z.string(),
 })
 
 export const Environment = Env(EnvironmentSchema)
