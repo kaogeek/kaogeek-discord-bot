@@ -1,5 +1,5 @@
-import { CommandHandlerConfig } from '../types/command-handler-config.types.js'
-import { EventHandlerConfig } from '../types/event-handler-config.types.js'
+import { CommandHandlerConfig } from '../types/CommandHandlerConfig.js'
+import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 export const validateEventHandlerConfig = (
   config: unknown,

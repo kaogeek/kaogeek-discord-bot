@@ -1,14 +1,27 @@
-import { EventHandlerConfig } from '../types/event-handler-config.types.js'
+import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 export default {
   eventName: 'interactionCreate',
   once: false,
   execute: async (client, interaction) => {
     if (interaction.isCommand()) {
-      const command = client.commands.get(interaction.commandName)
+      const commandName = interaction.commandName
+
+      // Warning: Shit code
+      if (commandName === 'Report to mod') {
+        await interaction.reply({
+          ephemeral: true,
+          content: 'Ok, reported, kthx',
+        })
+        return
+      }
+
+      const command = client.commands.get(commandName)
       if (!command) return
       let bypass = true
-      await interaction.deferReply().catch(() => (bypass = false))
+      await interaction
+        .deferReply({ ephemeral: command.ephemeral })
+        .catch(() => (bypass = false))
       if (!bypass) return
       try {
         console.log(

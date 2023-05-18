@@ -3,18 +3,20 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import { globSync } from 'glob'
 import path from 'path'
 
+import { Environment } from './config.js'
+import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import {
   validateCommandHandlerConfig,
   validateEventHandlerConfig,
 } from './utils/validate-handler-config.js'
 
 export default class Bot extends Client {
-  public commands: Collection<string, Dictionary>
+  public commands: Collection<string, CommandHandlerConfig>
   public isProduction = process.env.NODE_ENV === 'production'
   public __dirname =
     process.env.NODE_ENV === 'production'
-      ? path.resolve('./dist/')
-      : path.resolve('./')
+      ? path.resolve('./dist')
+      : path.resolve('./src')
   constructor() {
     super({
       intents: [
@@ -28,29 +30,38 @@ export default class Bot extends Client {
   }
 
   async init() {
+    console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     await this.handler()
-    void this.login(process.env.BOT_TOKEN)
+
+    void this.login(Environment.BOT_TOKEN)
   }
 
   async handler() {
-    const eventFiles = globSync(
-      path.resolve(this.__dirname, './src/events/*.{js,ts}'),
-    )
-    const commandFolders = globSync(
-      path.resolve(this.__dirname, './src/commands/**/*.{js,ts}'),
-    )
+    console.info('[HANDLER] Loading...')
+    const eventFiles = globSync('events/*.{js,ts}', {
+      cwd: this.__dirname,
+      root: this.__dirname,
+      absolute: true,
+    })
+    const commandFolders = globSync('commands/**/*.{js,ts}', {
+      cwd: this.__dirname,
+      root: this.__dirname,
+      absolute: true,
+    })
     void this.handleEvents(eventFiles)
     void this.handleCommands(commandFolders)
+    return Promise.resolve(true)
   }
 
   async handleEvents(eventFiles: string[]) {
     for (const file of eventFiles) {
       if (!file[0].startsWith('-')) {
         try {
-          const eventHandlerConfig = await import(`${file}`).then(
+          const eventHandlerConfig = await import(`file:///${file}`).then(
             ({ default: defaultExport }) => defaultExport,
           )
 
+          console.info(`[EVENT] "${eventHandlerConfig.eventName}" => "${file}"`)
           if (validateEventHandlerConfig(eventHandlerConfig)) {
             if (eventHandlerConfig.once) {
               this.once(eventHandlerConfig.eventName, (...args) =>
@@ -73,11 +84,14 @@ export default class Bot extends Client {
     for (const cmdfile of commandFiles) {
       if (!cmdfile[0].startsWith('-')) {
         try {
-          const commandHandlerConfig = await import(`${cmdfile}`).then(
+          const commandHandlerConfig = await import(`file:///${cmdfile}`).then(
             ({ default: defaultExport }) => defaultExport,
           )
 
           if (validateCommandHandlerConfig(commandHandlerConfig)) {
+            console.info(
+              `[COMMAND] "${commandHandlerConfig.data.name}" => "${cmdfile}"`,
+            )
             this.commands.set(
               commandHandlerConfig.data.name,
               commandHandlerConfig,
