@@ -10,7 +10,8 @@
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
     "lint": "eslint .",
-    "format": "eslint . --fix"
+    "format": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
