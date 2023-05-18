@@ -37,7 +37,7 @@ export default {
 
         const messages = await channel.messages.fetch()
         const userMessages = messages.filter(
-          (msg) => msg.author.id === message.author.id,
+          (msg) => msg.author.id === message?.author.id,
         )
 
         if (userMessages.size > 0) {
