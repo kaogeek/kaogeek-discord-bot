@@ -12,7 +12,7 @@ export default {
     const emoji = message.content.match(emojiRegex)
 
     // if has only emoji -> delete message
-    if (emoji && emoji.join('').trim() === message.content.trim()) {
+    if (emoji && emoji.join(' ').trim() === message.content.trim()) {
       try {
         message.delete()
       } catch (err) {
