@@ -39,12 +39,12 @@ FROM node:18-alpine as runner
 
 LABEL name "kaogeek-discord-bot"
 
-USER nonroot
+USER node
 ENV NODE_ENV production
 
 # copy all files from layers above
 COPY package.json ./
-COPY --chown=nonroot:nonroot --from=deps-prod /app/node_modules ./node_modules
-COPY --chown=nonroot:nonroot --from=builder /app/dist ./dist
+COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/dist ./dist
 
 CMD ["dist/client.js"]
