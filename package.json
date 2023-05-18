@@ -12,6 +12,7 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:ci": "vitest run --coverage --reporter=json --outputFile=\"report.json\"",
     "format": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "generate:prisma": "prisma generate"
