@@ -19,6 +19,9 @@ dependencies:
   glob:
     specifier: ^10.2.4
     version: 10.2.4
+  prisma:
+    specifier: 4.14.1
+    version: 4.14.1
   zod:
     specifier: 3.21.4
     version: 3.21.4
@@ -60,9 +63,6 @@ devDependencies:
   prettier:
     specifier: 2.8.8
     version: 2.8.8
-  prisma:
-    specifier: 4.14.1
-    version: 4.14.1
   rimraf:
     specifier: 5.0.0
     version: 5.0.0
@@ -701,6 +701,7 @@ packages:
   /@prisma/engines@4.14.1:
     resolution: {integrity: sha512-APqFddPVHYmWNKqc+5J5SqrLFfOghKOLZxobmguDUacxOwdEutLsbXPVhNnpFDmuQWQFbXmrTTPoRrrF6B1MWA==}
     requiresBuild: true
+    dev: false
 
   /@sapphire/async-queue@1.5.0:
     resolution: {integrity: sha512-JkLdIsP8fPAdh9ZZjrbHWR/+mZj0wvKS5ICibcLrRI1j84UmLMshx5n9QmL8b95d4onJ2xxiyugTgSAX7AalmA==}
@@ -2942,6 +2943,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.14.1
+    dev: false
 
   /promise-inflight@1.0.1:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
