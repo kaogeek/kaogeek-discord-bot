@@ -1,7 +1,7 @@
 import { ApplicationCommandType, TextChannel } from 'discord.js'
 
 import { Environment } from '../../config.js'
-import { prisma } from '../../prisma'
+import { prisma } from '../../prisma.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
