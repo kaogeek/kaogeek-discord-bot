@@ -14,7 +14,7 @@ export default {
     // if has only emoji -> delete message
     if (emoji && emoji.join('').trim() === message.content.trim()) {
       try {
-        message.delete()
+        await message.delete()
       } catch (err) {
         console.error(err)
       }
