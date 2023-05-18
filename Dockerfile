@@ -35,7 +35,7 @@ RUN npx prisma generate
 # ? Runner: Production to run
 # ? -------------------------
 
-FROM gcr.io/distroless/nodejs18-debian11:nonroot as runner
+FROM node:18-alpine as runner
 
 LABEL name "kaogeek-discord-bot"
 
