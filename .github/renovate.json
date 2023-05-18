@@ -3,7 +3,9 @@
   "extends": [
     "config:base"
   ],
-  "prConcurrentLimit": 3,
+  "autoApprove": true,
+  "automerge": true,
+  "prConcurrentLimit": 2,
   "lockFileMaintenance": {
     "enabled": false
   },
