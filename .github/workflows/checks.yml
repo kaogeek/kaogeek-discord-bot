@@ -55,10 +55,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Run Type Checks
-        run: pnpm test:ci
       - name: 'Test'
-        run: pnpm test:ci
+        run: pnpm test:coverage
       - name: 'Report Coverage'
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v1
