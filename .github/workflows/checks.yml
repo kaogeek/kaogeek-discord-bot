@@ -5,7 +5,8 @@ on:
   push:
     branches: [main]
 jobs:
-  checks:
+  lint-checks:
+    name: Check Code Formatting
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -13,9 +14,24 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version-file: '.nvmrc'
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
       - name: Build and lint
         run: pnpm lint
+  type-checks:
+    name: Check Type
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run Type Checks
+        run: pnpm typecheck
