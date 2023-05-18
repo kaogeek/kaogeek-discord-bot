@@ -4,6 +4,7 @@ import { globSync } from 'glob'
 import path from 'path'
 
 import { Environment } from './config.js'
+import { prisma } from './prisma.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import {
   validateCommandHandlerConfig,
@@ -106,4 +107,13 @@ export default class Bot extends Client {
   }
 }
 
-new Bot().init()
+if (process.argv.includes('--smoke')) {
+  // Performs a basic smoke test
+  console.info('[SMOKE] Running smoke test...')
+  const result = await prisma.messageReportCount.count()
+  console.info(`[SMOKE] Number of message reports: ${result}`)
+  console.info(`[SMOKE] OK, database connection is working!`)
+} else {
+  // Run the bot
+  new Bot().init()
+}
