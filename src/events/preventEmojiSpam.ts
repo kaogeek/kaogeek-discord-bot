@@ -1,4 +1,4 @@
-import { Events, Message } from 'discord.js'
+import { Events } from 'discord.js'
 
 import { EventHandlerConfig } from '../types/EventHandlerConfig'
 
