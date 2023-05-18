@@ -30,12 +30,9 @@ export default {
     }
 
     // Delete message in all channel
-    client.channels.cache.forEach(async (channel) => {
+    for (const [channelId, channel] of client.channels.cache) {
       if (channel.type === ChannelType.GuildText) {
-        const message = await interaction.channel?.messages.fetch(
-          interaction.targetId,
-        )
-
+        const message = await channel.messages.fetch(interaction.targetId)
         const messages = await channel.messages.fetch()
         const userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
@@ -47,8 +44,8 @@ export default {
             console.info(
               `Deleted ${userMessages.size} messages from ${interaction.targetId} in channel ${channel.name}.`,
             )
-            // Tell the user that the successfully prune message
-            await interaction.editReply('Successfully prune message')
+            // Tell the user that the messages were successfully pruned
+            await interaction.editReply('Successfully prune messages')
           } catch (error) {
             // Reply about the error
             await interaction.editReply(
@@ -58,6 +55,6 @@ export default {
           }
         }
       }
-    })
+    }
   },
 } satisfies CommandHandlerConfig
