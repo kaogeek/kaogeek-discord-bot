@@ -2,7 +2,6 @@ import {
   ApplicationCommandType,
   ChannelType,
   DiscordAPIError,
-  InteractionType,
   PermissionsBitField,
 } from 'discord.js'
 
