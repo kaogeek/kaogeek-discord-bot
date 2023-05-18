@@ -23,7 +23,6 @@
     "prisma": "4.14.1",
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
-    "glob": "^10.2.4",
     "zod": "3.21.4"
   },
   "devDependencies": {
