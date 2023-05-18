@@ -1,7 +1,9 @@
+import { Events } from 'discord.js'
+
 import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 export default {
-  eventName: 'ready',
+  eventName: Events.ClientReady,
   once: true,
   execute: async (client) => {
     console.log(`Helloworld, Online as ${client.user?.tag}.`)
@@ -14,4 +16,4 @@ export default {
       console.log(error)
     }
   },
-} satisfies EventHandlerConfig<'ready'>
+} satisfies EventHandlerConfig<Events.ClientReady>
