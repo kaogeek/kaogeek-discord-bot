@@ -100,6 +100,9 @@ export default {
               components: [],
             })
             console.error('Error deleting messages:', error)
+            if ((error as DiscordAPIError).status === 404) {
+              return
+            }
           }
         }
       }
