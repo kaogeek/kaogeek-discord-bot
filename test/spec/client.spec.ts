@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import Bot from '../../src/client'
 
@@ -9,11 +9,17 @@ vi.mock('../../src/config.js', () => {
 })
 
 describe('Bot', () => {
+  let client: Bot
+
+  beforeEach(() => {
+    client = new Bot()
+  })
   afterEach(() => {
     vi.clearAllMocks()
   })
 
   it('should defined', async () => {
-    expect(new Bot()).toBeDefined()
+    client.init = vi.fn()
+    expect(client).toBeDefined()
   })
 })
