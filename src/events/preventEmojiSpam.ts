@@ -3,9 +3,6 @@ import { Events } from 'discord.js'
 import { EventHandlerConfig } from '../types/EventHandlerConfig'
 import isOnlyEmoji from '../utils/isOnlyEmoji'
 
-const emojiRegex =
-  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component})\s*/gu
-
 export default {
   eventName: Events.MessageCreate,
   once: false,
