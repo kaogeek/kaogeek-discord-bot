@@ -31,14 +31,14 @@ export default class Bot extends Client {
     this.commands = new Collection()
   }
 
-  async init() {
+  async initAndStart() {
     console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
-    await this.handler()
+    await this.loadHandlers()
 
     this.login(Environment.BOT_TOKEN)
   }
 
-  async handler() {
+  async loadHandlers() {
     console.info('[HANDLER] Loading events and commands ...')
     const eventFiles = globSync('events/*.{js,ts}', {
       cwd: this.__dirname,
@@ -51,11 +51,11 @@ export default class Bot extends Client {
       absolute: true,
     })
 
-    this.handleEvents(eventFiles)
-    this.handleCommands(commandFolders)
+    this.loadEventHandlers(eventFiles)
+    this.loadCommandHandlers(commandFolders)
   }
 
-  async handleEvents(eventFiles: string[]) {
+  async loadEventHandlers(eventFiles: string[]) {
     for (const file of eventFiles) {
       if (!file[0].startsWith('-')) {
         try {
@@ -82,7 +82,7 @@ export default class Bot extends Client {
     }
   }
 
-  async handleCommands(commandFiles: string[] = []) {
+  async loadCommandHandlers(commandFiles: string[] = []) {
     for (const cmdfile of commandFiles) {
       if (!cmdfile[0].startsWith('-')) {
         try {
@@ -115,5 +115,5 @@ if (process.argv.includes('--smoke')) {
   console.info(`[SMOKE] OK, database connection is working!`)
 } else {
   // Run the bot
-  new Bot().init()
+  new Bot().initAndStart()
 }
