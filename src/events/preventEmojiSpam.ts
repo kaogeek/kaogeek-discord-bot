@@ -3,7 +3,7 @@ import { Events, Message } from 'discord.js'
 import { EventHandlerConfig } from '../types/EventHandlerConfig'
 
 const emojiRegex =
-  /<a?(:\w+:\d+)>\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}/gu
+  /<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}/gu
 
 export default {
   eventName: Events.MessageCreate,
