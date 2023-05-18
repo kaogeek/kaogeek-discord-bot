@@ -1,7 +1,9 @@
+import { Events } from 'discord.js'
+
 import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 export default {
-  eventName: 'interactionCreate',
+  eventName: Events.InteractionCreate,
   once: false,
   execute: async (client, interaction) => {
     if (interaction.isCommand()) {
@@ -24,4 +26,4 @@ export default {
       }
     }
   },
-} satisfies EventHandlerConfig<'interactionCreate'>
+} satisfies EventHandlerConfig<Events.InteractionCreate>

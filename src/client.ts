@@ -4,6 +4,7 @@ import { globSync } from 'glob'
 import path from 'path'
 
 import { Environment } from './config.js'
+import { prisma } from './prisma.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import {
   validateCommandHandlerConfig,
@@ -34,11 +35,11 @@ export default class Bot extends Client {
     console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     await this.handler()
 
-    void this.login(Environment.BOT_TOKEN)
+    this.login(Environment.BOT_TOKEN)
   }
 
   async handler() {
-    console.info('[HANDLER] Loading...')
+    console.info('[HANDLER] Loading events and commands ...')
     const eventFiles = globSync('events/*.{js,ts}', {
       cwd: this.__dirname,
       root: this.__dirname,
@@ -49,9 +50,9 @@ export default class Bot extends Client {
       root: this.__dirname,
       absolute: true,
     })
-    void this.handleEvents(eventFiles)
-    void this.handleCommands(commandFolders)
-    return Promise.resolve(true)
+
+    this.handleEvents(eventFiles)
+    this.handleCommands(commandFolders)
   }
 
   async handleEvents(eventFiles: string[]) {
@@ -59,7 +60,7 @@ export default class Bot extends Client {
       if (!file[0].startsWith('-')) {
         try {
           const eventHandlerConfig = await import(`file:///${file}`).then(
-            ({ default: defaultExport }) => defaultExport,
+            (module) => module.default,
           )
 
           console.info(`[EVENT] "${eventHandlerConfig.eventName}" => "${file}"`)
@@ -106,9 +107,13 @@ export default class Bot extends Client {
   }
 }
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type Dictionary<V = any, K extends string | symbol = string> = Record<K, V>
+if (process.argv.includes('--smoke')) {
+  // Performs a basic smoke test
+  console.info('[SMOKE] Running smoke test...')
+  const result = await prisma.messageReportCount.count()
+  console.info(`[SMOKE] Number of message reports: ${result}`)
+  console.info(`[SMOKE] OK, database connection is working!`)
+} else {
+  // Run the bot
+  new Bot().init()
 }
-
-void new Bot().init()
