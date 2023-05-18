@@ -5,6 +5,7 @@ export default {
     name: 'ping',
     description: 'Ping!',
   },
+  ephemeral: true,
   execute: async (client, interaction) => {
     await interaction.editReply({
       embeds: [

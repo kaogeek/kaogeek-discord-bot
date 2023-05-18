@@ -6,16 +6,6 @@ export default {
   execute: async (client, interaction) => {
     if (interaction.isCommand()) {
       const commandName = interaction.commandName
-
-      // Warning: Shit code
-      if (commandName === 'Report to mod') {
-        await interaction.reply({
-          ephemeral: true,
-          content: 'Ok, reported, kthx',
-        })
-        return
-      }
-
       const command = client.commands.get(commandName)
       if (!command) return
       let bypass = true
