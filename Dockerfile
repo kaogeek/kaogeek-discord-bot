@@ -45,7 +45,7 @@ ENV NODE_ENV production
 # copy all files from layers above
 COPY package.json ./
 COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
+COPY --chown=node:node --from=deps-prod /app/prisma ./prisma
 COPY --chown=node:node --from=builder /app/dist ./dist
-COPY --chown=node:node --from=builder /app/prisma ./prisma
 
 CMD ["dist/client.js"]
