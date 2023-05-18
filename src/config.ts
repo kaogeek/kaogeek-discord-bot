@@ -8,6 +8,14 @@ export const EnvironmentSchema = z.object({
   BOT_TOKEN: z.string(),
   GUILD_ID: z.string(),
   MOD_CHANNEL_ID: z.string(),
+  FLOOD_SPAM_MAX_MESSAGES: z.preprocess(
+    (a) => parseInt(a as string, 10),
+    z.number().positive(),
+  ),
+  FLOOD_SPAM_MAX_TIME_MS: z.preprocess(
+    (a) => parseInt(a as string, 10),
+    z.number().positive(),
+  ),
 })
 
 export const Environment = Env(EnvironmentSchema)
