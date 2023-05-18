@@ -1,6 +1,7 @@
 import {
   ApplicationCommandType,
   ChannelType,
+  DiscordAPIError,
   GuildMember,
   PermissionsBitField,
 } from 'discord.js'
@@ -46,14 +47,17 @@ export default {
             console.info(
               `Deleted ${userMessages.size} messages from ${interaction.targetId} in channel ${channel.name}.`,
             )
+            // Tell the user that the successfully delete all message
+            await interaction.editReply('Successfully delete all message')
           } catch (error) {
+            // Tell the user that the successfully delete all message
+            await interaction.editReply(
+              `Error deleting messages: ${(error as DiscordAPIError).message}`,
+            )
             console.error('Error deleting messages:', error)
           }
         }
       }
     })
-
-    // Tell the user that the successfully delete all message
-    await interaction.editReply('Successfully delete all message')
   },
 } satisfies CommandHandlerConfig
