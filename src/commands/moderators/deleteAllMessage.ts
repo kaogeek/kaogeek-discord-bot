@@ -20,9 +20,14 @@ export default {
   execute: async (client, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
-    // TODO: Confirmation banner
+    // Fetch reference message by target id
+    const message = await interaction.channel?.messages.fetch(
+      interaction.targetId,
+    )
+
+    // Confirmation banner
     await interaction.followUp({
-      content: 'Are you sure you want to prune all messages from this user?',
+      content: `Are you sure you want to prune all messages from **${message?.author.username}**?`,
       components: [
         {
           type: ComponentType.ActionRow,
@@ -44,26 +49,30 @@ export default {
       ],
     })
 
-    // Await button interaction for confirmation
-    const buttonInteraction = await interaction.channel?.awaitMessageComponent({
-      filter: (i) => i.customId === 'yes' || i.customId === 'no',
-      time: 10000, // Adjust timeout as needed
-    })
-
-    if (buttonInteraction?.customId === 'no') {
-      // Reply about the cancel action
+    try {
+      // Await button interaction for confirmation
+      const buttonInteraction =
+        await interaction.channel?.awaitMessageComponent({
+          filter: (i) => i.customId === 'yes' || i.customId === 'no',
+          time: 10000, // Adjust timeout as needed
+        })
+      if (buttonInteraction?.customId === 'no') {
+        // Reply about the cancel action
+        await interaction.editReply({
+          content: `Prune message was canceled`,
+          components: [],
+        })
+        return
+      }
+    } catch (err) {
       await interaction.editReply({
-        content: `Prune message was canceled`,
+        content: 'Confirmation not received within 10 seconds, cancelling',
         components: [],
       })
       return
     }
 
     // Delete message in all channel
-    const message = await interaction.channel?.messages.fetch(
-      interaction.targetId,
-    )
-
     for (const [channelId, channel] of client.channels.cache) {
       if (channel.type === ChannelType.GuildText) {
         const messages = await channel.messages.fetch()
