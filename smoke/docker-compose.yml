@@ -1,0 +1,7 @@
+services:
+  bot:
+    image: bot
+    volumes:
+      - ./.data:/data
+    environment:
+      DATABASE_URL: file:/data/bot.db
