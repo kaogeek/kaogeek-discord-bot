@@ -1,7 +1,6 @@
 name: Deployment
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   depoly:
@@ -14,8 +13,8 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v6
       name: Build & push Docker image
       with:
-        image: repo/image
-        tags: v1, latest
+        image: kaogeek-discord-bot
+        tags: latest
         registry: registry.yue.sh
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
