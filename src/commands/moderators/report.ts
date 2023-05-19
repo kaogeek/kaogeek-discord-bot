@@ -56,14 +56,14 @@ export default {
     // Count the number of times a user has been reported
     const { _count: reporteeReportCount } =
       await prisma.messageReport.aggregate({
-        where: { reporteeId: reporteeMemberId },
+        where: { reporteeId },
         _count: true,
       })
 
     // Count the number of times a user has sent a report
     const { _count: reporterReportCount } =
       await prisma.messageReport.aggregate({
-        where: { reporterId: reporterMemberId },
+        where: { reporterId },
         _count: true,
       })
 
