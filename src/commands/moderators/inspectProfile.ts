@@ -28,7 +28,7 @@ export default [
   },
   {
     data: {
-      name: 'Inspect author profile',
+      name: 'Inspect author',
       type: ApplicationCommandType.Message,
       defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
       dmPermission: false,
