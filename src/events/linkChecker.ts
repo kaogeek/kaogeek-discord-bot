@@ -14,6 +14,16 @@ export default {
             const check = await isLinkSafe(url); // Check if the link is safe.
             if (!check) {
                 await message.delete(); // Delete the message if the link is not safe.
+                // Send a DM to the user
+                await message.author.send({
+                    embeds: [
+                        {
+                            title: 'Unsafe Link Detected',
+                            description: `Your message in ${message.guild?.name} was removed because it contained a potentially unsafe link: ${url}`,
+                            color: 0x00ff00
+                        },
+                    ],
+                });
                 break;
             }
         }
