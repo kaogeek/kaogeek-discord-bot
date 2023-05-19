@@ -137,3 +137,4 @@ dist
 # Datastore files
 .data
 /prisma/dev.db
+data/dock/db.sqlite
