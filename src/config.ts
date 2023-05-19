@@ -8,6 +8,7 @@ export const EnvironmentSchema = z.object({
   GUILD_ID: z.string(),
   MOD_CHANNEL_ID: z.string(),
   DATABASE_URL: z.string(),
+  PRISMA_LOG: z.coerce.boolean().default(false),
 })
 
 export const Environment = Env(EnvironmentSchema)

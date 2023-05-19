@@ -14,6 +14,10 @@ RUN npx pnpm -r i --frozen-lockfile
 COPY src ./src
 COPY tsconfig.json ./
 
+# prisma
+COPY ./prisma ./prisma
+RUN npx prisma generate
+
 # compile
 RUN npx pnpm build
 
