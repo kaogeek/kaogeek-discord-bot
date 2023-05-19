@@ -9,10 +9,10 @@
     "dev": "tsx src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "prettier --check \"**/*.{md,yml}\" && eslint . --max-warnings=0",
+    "format": "prettier --write \"**/*.{md,yml}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "format": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "generate:prisma": "prisma generate"
   },

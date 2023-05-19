@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Report bug to help us improve the service
-title: "[BUG]"
+title: '[BUG]'
 labels: bug
-assignees: ""
+assignees: ''
 ---
 
 ## Describe the bug
@@ -11,6 +11,7 @@ assignees: ""
 <!-- A clear and concise description of what the bug is. -->
 
 ## To Reproduce
+
 Steps to reproduce the behavior:
 
 1. Go to '...'
