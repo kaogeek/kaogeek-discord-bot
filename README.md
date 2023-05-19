@@ -54,6 +54,12 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   ```bash
   pnpm dev
   ```
+  
+- Or run the bot in watch mode with automatic rerun on changes
+
+  ```bash
+  pnpm dev:watch
+  ```
 
 ## Deploy
 

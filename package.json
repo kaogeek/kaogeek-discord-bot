@@ -7,6 +7,7 @@
   "main": "dist/client.js",
   "scripts": {
     "dev": "tsx src/client.ts",
+    "dev:watch": "tsx watch src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
     "lint": "eslint . --max-warnings=0",
