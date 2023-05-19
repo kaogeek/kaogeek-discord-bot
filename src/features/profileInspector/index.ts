@@ -5,6 +5,7 @@ import {
   CommandInteraction,
   ComponentType,
   GuildMember,
+  Message,
 } from 'discord.js'
 import { InteractionButtonComponentData } from 'discord.js'
 import { TextInputStyle } from 'discord.js'
@@ -18,6 +19,7 @@ export async function inspectProfile(
   client: Client,
   interaction: CommandInteraction,
   member: GuildMember,
+  messageContext?: Message,
 ): Promise<void> {
   const logs = await prisma.userModerationLog.findMany({
     where: { userId: member.user.id },
@@ -131,7 +133,7 @@ export async function inspectProfile(
         content: 'Timed out',
         ephemeral: true,
       })
-      return inspectProfile(client, interaction, member)
+      return inspectProfile(client, interaction, member, messageContext)
     }
 
     const reason = submitted.fields.getTextInputValue('reason')
@@ -139,17 +141,19 @@ export async function inspectProfile(
       where: { id: userProfile.id },
       data: { strikes },
     })
+
+    const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
     await logActivity(
       'strike',
-      `strike #${strikes} added by ${interaction.user.tag}: ${reason}`,
-      { strikes },
+      `strike #${strikes} added by ${interaction.user.tag}: ${reason}${suffix}`,
+      { strikes, message: messageContext?.url },
     )
 
     await submitted.reply({
       content: `strike #${strikes} added to ${userProfile.tag}`,
       ephemeral: true,
     })
-    return inspectProfile(client, interaction, member)
+    return inspectProfile(client, interaction, member, messageContext)
   }
 
   if (selectedInteraction.customId === resetStrikeActionId) {
@@ -166,7 +170,7 @@ export async function inspectProfile(
       content: `strikes reset for ${userProfile.tag}`,
       ephemeral: true,
     })
-    return inspectProfile(client, interaction, member)
+    return inspectProfile(client, interaction, member, messageContext)
   }
 }
 

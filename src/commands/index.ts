@@ -4,4 +4,4 @@ import inspectProfile from './moderators/inspectProfile.js'
 import report from './moderators/report.js'
 import user from './moderators/user.js'
 
-export default [ping, deleteAllMessage, inspectProfile, report, user]
+export default [ping, deleteAllMessage, ...inspectProfile, report, user]
