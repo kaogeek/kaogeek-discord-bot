@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
@@ -11,17 +11,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// @deprecated - Replaced with MessageReport
 model MessageReportCount {
   messageId BigInt @id
   count     Int
 }
 
+// @deprecated - Replaced with MessageReport
 model ReporteeReportCount {
   userId BigInt @id
   count  Int
 }
 
+// @deprecated - Replaced with MessageReport
 model ReporterReportCount {
   userId BigInt @id
   count  Int
+}
+
+model MessageReport {
+  id         String   @id @default(uuid())
+  messageId  BigInt
+  reporterId BigInt
+  reporteeId BigInt
+  reason     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([messageId, reporterId, reporteeId])
+  @@index([messageId])
+  @@index([reporterId])
+  @@index([reporteeId])
 }
