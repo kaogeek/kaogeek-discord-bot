@@ -13,6 +13,12 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   If not installed, use `nvm install` to install specified version in `.nvmrc`
   (at the time of writing `lts/hydrogen`)
 
+- Install [pnpm](https://pnpm.io/installation) if you don't have one installed, you can install using npm
+
+  ```bash
+  npm install -g pnpm
+  ```
+
 - Install dependencies
 
   ```bash
