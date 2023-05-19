@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "autoApprove": true,
   "automerge": true,
   "prConcurrentLimit": 2,
@@ -11,10 +9,12 @@
   },
   "packageRules": [
     {
-      "packagePatterns": [
-        "*"
-      ],
+      "packagePatterns": ["*"],
       "enabled": true
+    },
+    {
+      "packageNames": ["node"],
+      "enabled": false
     }
   ],
   "vulnerabilityAlerts": {
