@@ -18,9 +18,9 @@ export default {
     const member = message?.member
     if (!member) return
 
-    const messageId = BigInt(message.id)
-    const reporterMemberId = BigInt(interaction.user.id)
-    const reporteeMemberId = BigInt(member.id)
+    const messageId = message.id
+    const reporterMemberId = interaction.user.id
+    const reporteeMemberId = member.id
 
     // TODO: Maybe allow a reason to be specified? e.g. by using a modal
     const reason = 'Reported via context menu'

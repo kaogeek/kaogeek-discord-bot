@@ -13,27 +13,30 @@ datasource db {
 
 // @deprecated - Replaced with MessageReport
 model MessageReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
   messageId BigInt @id
   count     Int
 }
 
 // @deprecated - Replaced with MessageReport
 model ReporteeReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
   userId BigInt @id
   count  Int
 }
 
 // @deprecated - Replaced with MessageReport
 model ReporterReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
   userId BigInt @id
   count  Int
 }
 
 model MessageReport {
   id         String   @id @default(uuid())
-  messageId  BigInt
-  reporterId BigInt
-  reporteeId BigInt
+  messageId  String
+  reporterId String
+  reporteeId String
   reason     String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
