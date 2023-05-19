@@ -136,3 +136,7 @@ dist
 
 # Datastore files
 .data
+
+#MacOS
+.DS_Store
+__MACOSX
