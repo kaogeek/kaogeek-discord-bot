@@ -7,8 +7,9 @@ const prisma = new PrismaClient()
   try {
     await prisma.messageReportCount.findFirst()
   } catch (error) {
+    const errorTypeCasted: Error = error as Error
     if (
-      error.message.includes(
+      errorTypeCasted.message.includes(
         'The table `main.MessageReportCount` does not exist in the current database',
       )
     )
