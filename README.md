@@ -13,6 +13,12 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   If not installed, use `nvm install` to install specified version in `.nvmrc`
   (at the time of writing `lts/hydrogen`)
 
+- Install [pnpm](https://pnpm.io/installation) if you don't have one installed, you can install using npm
+
+  ```bash
+  npm install -g pnpm
+  ```
+
 - Install dependencies
 
   ```bash
@@ -21,7 +27,7 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
 
 ## Discord Bot & Server Setup (For Development)
 
-- <details><summary>Open Discord app, create your own Discord server for bot development</summary><img width="416" alt="00" src="https://github.com/narze/kaogeek-discord-bot/assets/248741/7cfc809c-42b0-4587-8ed7-113ffa4a8edd"></details
+- <details><summary>Open Discord app, create your own Discord server for bot development</summary><img width="416" alt="00" src="https://github.com/narze/kaogeek-discord-bot/assets/248741/7cfc809c-42b0-4587-8ed7-113ffa4a8edd"></details>
 - <details><summary>Right click at your server's icon, copy server ID (This will be <code>GUILD_ID</code> in your <code>.env</code>)</summary><img width="191" alt="01-copy-server-id" src="https://github.com/narze/kaogeek-discord-bot/assets/248741/86d029de-16a6-4686-ae7d-9586f522e956"></details>
 - <details><summary> Right clict at your text channel, copy channel ID (This will be <code>MOD_CHANNEL_ID</code> in your <code>.env</code>)</summary><img width="332" alt="4" src="https://github.com/narze/kaogeek-discord-bot/assets/248741/a0c19b2f-6985-4fa4-bda1-030a3679bac4"></details>
 - <details><summary>Go to <a href="https://discord.com/developerQs/applications" target="_blank">Discord Developer Portal</a> and create a new application, name it whatever you want</summary><img width="1259" alt="1" src="https://github.com/narze/kaogeek-discord-bot/assets/248741/a6b79d46-ca2c-4dad-8ed0-e419cbe8dda7"></details>
@@ -53,6 +59,12 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
 
   ```bash
   pnpm dev
+  ```
+
+- Or run the bot in watch mode with automatic rerun on changes
+
+  ```bash
+  pnpm dev:watch
   ```
 
 ## Deploy
