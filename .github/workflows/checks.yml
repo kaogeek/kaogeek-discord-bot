@@ -4,6 +4,9 @@ on:
   merge_group:
   push:
     branches: [main]
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   lint-checks:
     name: Check ESLint and Format
