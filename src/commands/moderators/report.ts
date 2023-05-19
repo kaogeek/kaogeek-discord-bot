@@ -1,7 +1,7 @@
 import { ApplicationCommandType, TextChannel } from 'discord.js'
 
 import { Environment } from '../../config.js'
-import { Prisma, prisma } from '../../prisma.js'
+import { Prisma, isUniqueConstraintViolation, prisma } from '../../prisma.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
@@ -19,8 +19,8 @@ export default {
     if (!member) return
 
     const messageId = message.id
-    const reporterMemberId = interaction.user.id
-    const reporteeMemberId = member.id
+    const reporterId = interaction.user.id
+    const reporteeId = member.id
 
     // TODO: Maybe allow a reason to be specified? e.g. by using a modal
     const reason = 'Reported via context menu'
@@ -28,18 +28,10 @@ export default {
     // Save the report
     try {
       await prisma.messageReport.create({
-        data: {
-          messageId,
-          reporterId: reporterMemberId,
-          reporteeId: reporteeMemberId,
-          reason: reason,
-        },
+        data: { messageId, reporterId, reporteeId, reason },
       })
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
+      if (isUniqueConstraintViolation(error)) {
         await interaction.editReply({
           embeds: [
             {

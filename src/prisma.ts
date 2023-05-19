@@ -8,4 +8,8 @@ export const prisma = new PrismaClient({
     : {}),
 })
 
-export { Prisma }
+export const isUniqueConstraintViolation = (
+  error: unknown,
+): error is Prisma.PrismaClientKnownRequestError =>
+  error instanceof Prisma.PrismaClientKnownRequestError &&
+  error.code === 'P2002'
