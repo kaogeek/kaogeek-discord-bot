@@ -12,7 +12,6 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
 
   If not installed, use `nvm install` to install specified version in `.nvmrc`
   (at the time of writing `lts/hydrogen`)
-
 - Install dependencies
 
   ```bash
@@ -37,7 +36,6 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   ```bash
   cp .env.example .env
   ```
-
 - Then, set all variables in `.env` file
 
   <details>
@@ -47,12 +45,18 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   - `GUILD_ID` Discord server ID
   - `MOD_CHANNEL_ID` Discord channel ID for bot to report moderation actions
   - `DATABASE_URL` Prisma database URL, you can use SQLite for development, set it to `file:./dev.db`
-  </details>
 
+  </details>
 - To run the bot in development mode
 
   ```bash
   pnpm dev
+  ```
+
+  you may face the error "The table `main.MessageReportCount` does not exist in the current database", this happend because the table does not exist yet. To fix run
+
+  ```bash
+  pnpm prisma db push
   ```
 
 ## Deploy
