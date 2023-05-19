@@ -22,6 +22,9 @@ export default {
     const reporterMemberId = BigInt(interaction.user.id)
     const reporteeMemberId = BigInt(member.id)
 
+    // TODO: Maybe allow a reason to be specified? e.g. by using a modal
+    const reason = 'Reported via context menu'
+
     // Save the report
     try {
       await prisma.messageReport.create({
@@ -29,7 +32,7 @@ export default {
           messageId,
           reporterId: reporterMemberId,
           reporteeId: reporteeMemberId,
-          reason: 'Reported via context menu',
+          reason: reason,
         },
       })
     } catch (error) {
