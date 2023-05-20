@@ -9,8 +9,9 @@ import {
 } from 'discord.js'
 import { InteractionButtonComponentData } from 'discord.js'
 import { TextInputStyle } from 'discord.js'
+import { MessageComponentInteraction } from 'discord.js'
 
-import { UserModerationLog } from '@prisma/client'
+import { UserModerationLog, UserProfile } from '@prisma/client'
 import { randomUUID } from 'crypto'
 
 import { prisma } from '../../prisma.js'
@@ -35,7 +36,7 @@ export async function inspectProfile(
 async function inspectProfileMain(
   context: InspectProfileContext,
 ): Promise<void> {
-  const { interaction, member, messageContext } = context.options
+  const { interaction, member } = context.options
   const logs = await prisma.userModerationLog.findMany({
     where: { userId: member.user.id },
     orderBy: { createdAt: 'desc' },
@@ -99,94 +100,105 @@ async function inspectProfileMain(
     return
   }
 
-  const logActivity = (
-    type: string,
-    message: string,
-    metadata: object = {},
-  ) => {
-    return prisma.userModerationLog.create({
-      data: {
-        userId: userProfile.id,
-        actorId: interaction.user.id,
-        type,
-        message,
-        metadata: JSON.stringify(metadata),
-      },
-    })
+  const logContext: LogContext = {
+    userId: userProfile.id,
+    actorId: interaction.user.id,
   }
 
   if (selectedInteraction.customId === strikeActionId) {
-    const strikes = userProfile.strikes + 1
-    const promptId = randomUUID() as string
-    await selectedInteraction.showModal({
-      customId: promptId,
-      title: `Strike #${strikes}`,
-      components: [
-        {
-          type: ComponentType.ActionRow,
-          components: [
-            {
-              customId: 'reason',
-              label: 'Reason',
-              type: ComponentType.TextInput,
-              style: TextInputStyle.Short,
-              required: true,
-              placeholder: '…',
-            },
-          ],
-        },
-      ],
-    })
-    const submitted = await selectedInteraction
-      .awaitModalSubmit({
-        time: 5 * 60000,
-        filter: (i) => i.customId === promptId,
-      })
-      .catch(() => null)
-    if (!submitted) {
-      await selectedInteraction.reply({
-        content: 'Timed out',
-        ephemeral: true,
-      })
-      return inspectProfileMain(context)
-    }
-
-    const reason = submitted.fields.getTextInputValue('reason')
-    await prisma.userProfile.update({
-      where: { id: userProfile.id },
-      data: { strikes },
-    })
-
-    const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
-    await logActivity(
-      'strike',
-      `strike #${strikes} added by ${interaction.user.tag}: ${reason}${suffix}`,
-      { strikes, message: messageContext?.url },
-    )
-
-    await submitted.reply({
-      content: `strike #${strikes} added to ${userProfile.tag}`,
-      ephemeral: true,
-    })
-    return inspectProfileMain(context)
+    return strike(context, userProfile, logContext, selectedInteraction)
   }
 
   if (selectedInteraction.customId === resetStrikeActionId) {
-    await prisma.userProfile.update({
-      where: { id: userProfile.id },
-      data: { strikes: 0 },
+    return resetStrike(context, userProfile, logContext, selectedInteraction)
+  }
+}
+
+async function strike(
+  context: InspectProfileContext,
+  userProfile: UserProfile,
+  logContext: LogContext,
+  buttonInteraction: MessageComponentInteraction,
+) {
+  const strikes = userProfile.strikes + 1
+  const promptId = randomUUID() as string
+  await buttonInteraction.showModal({
+    customId: promptId,
+    title: `Strike #${strikes}`,
+    components: [
+      {
+        type: ComponentType.ActionRow,
+        components: [
+          {
+            customId: 'reason',
+            label: 'Reason',
+            type: ComponentType.TextInput,
+            style: TextInputStyle.Short,
+            required: true,
+            placeholder: '…',
+          },
+        ],
+      },
+    ],
+  })
+  const submitted = await buttonInteraction
+    .awaitModalSubmit({
+      time: 5 * 60000,
+      filter: (i) => i.customId === promptId,
     })
-    await logActivity(
-      'strike',
-      `strikes reset to 0 by ${interaction.user.tag}`,
-      { strikes: 0 },
-    )
-    await selectedInteraction.reply({
-      content: `strikes reset for ${userProfile.tag}`,
+    .catch(() => null)
+  if (!submitted) {
+    await buttonInteraction.reply({
+      content: 'Timed out',
       ephemeral: true,
     })
     return inspectProfileMain(context)
   }
+
+  const reason = submitted.fields.getTextInputValue('reason')
+  await prisma.userProfile.update({
+    where: { id: userProfile.id },
+    data: { strikes },
+  })
+
+  const { messageContext, interaction } = context.options
+  const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
+  await logActivity(
+    logContext,
+    'strike',
+    `strike #${strikes} added by ${interaction.user.tag}: ${reason}${suffix}`,
+    { strikes, message: messageContext?.url },
+  )
+
+  await submitted.reply({
+    content: `strike #${strikes} added to ${userProfile.tag}`,
+    ephemeral: true,
+  })
+  return inspectProfileMain(context)
+}
+
+async function resetStrike(
+  context: InspectProfileContext,
+  userProfile: UserProfile,
+  logContext: LogContext,
+  buttonInteraction: MessageComponentInteraction,
+) {
+  await prisma.userProfile.update({
+    where: { id: userProfile.id },
+    data: { strikes: 0 },
+  })
+  const { interaction } = context.options
+  await logActivity(
+    logContext,
+    'strike',
+    `strikes reset to 0 by ${interaction.user.tag}`,
+    { strikes: 0 },
+  )
+  await buttonInteraction.reply({
+    content: `strikes reset for ${userProfile.tag}`,
+    ephemeral: true,
+  })
+  return inspectProfileMain(context)
 }
 
 const formatLog = (log: UserModerationLog) =>
@@ -222,5 +234,22 @@ export function addUserModerationLogEntry(
       message,
       metadata: JSON.stringify(metadata),
     },
+  })
+}
+
+interface LogContext {
+  userId: string
+  actorId: string
+}
+
+const logActivity = (
+  { userId, actorId }: LogContext,
+  type: string,
+  message: string,
+  metadataObject: object = {},
+) => {
+  const metadata = JSON.stringify(metadataObject)
+  return prisma.userModerationLog.create({
+    data: { userId, actorId, type, message, metadata },
   })
 }
