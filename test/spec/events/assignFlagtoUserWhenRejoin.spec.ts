@@ -2,7 +2,6 @@ import { GuildMember } from 'discord.js'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import Bot from '../../../src/client.js'
 import { Environment } from '../../../src/config.js'
 import guildMemberAddHandler from '../../../src/events/guildMemberAdd.js'
 import { BotContext } from '../../../src/types/BotContext.js'
