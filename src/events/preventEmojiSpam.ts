@@ -10,7 +10,8 @@ export default defineEventHandler({
     // if has only emoji -> delete message
     if (isOnlyEmoji(message.content)) {
       try {
-        await message.delete()
+        // Disabling for now due to #99 - bot erroneously deleting messages with only number
+        // await message.delete()
       } catch (err) {
         console.error(err)
       }
