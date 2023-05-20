@@ -1,9 +1,9 @@
 import { Events } from 'discord.js'
 
 import { Environment } from '../config.js'
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.ClientReady,
   once: true,
   execute: async (client) => {
@@ -35,4 +35,4 @@ export default {
       console.error('[ready] Unable to clear application commands:', error)
     }
   },
-} satisfies EventHandlerConfig<Events.ClientReady>
+})

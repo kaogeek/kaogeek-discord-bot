@@ -1,8 +1,8 @@
 import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.GuildMemberAdd,
   once: false,
   execute: async (_client, member) => {
@@ -10,4 +10,4 @@ export default {
       `[guildMemberAdd] "${member.user.tag}" [${member.id}] joined "${member.guild.name}" [${member.guild.id}]`,
     )
   },
-} satisfies EventHandlerConfig<Events.GuildMemberAdd>
+})

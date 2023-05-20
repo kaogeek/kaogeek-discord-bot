@@ -1,8 +1,8 @@
 import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.InteractionCreate,
   once: false,
   execute: async (client, interaction) => {
@@ -26,4 +26,4 @@ export default {
       }
     }
   },
-} satisfies EventHandlerConfig<Events.InteractionCreate>
+})
