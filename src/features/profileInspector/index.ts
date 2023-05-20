@@ -32,7 +32,9 @@ export async function inspectProfile(
   return inspectProfileMain({ options })
 }
 
-async function inspectProfileMain(context: InspectProfileContext) {
+async function inspectProfileMain(
+  context: InspectProfileContext,
+): Promise<void> {
   const { interaction, member, messageContext } = context.options
   const logs = await prisma.userModerationLog.findMany({
     where: { userId: member.user.id },
