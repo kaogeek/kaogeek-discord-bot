@@ -7,6 +7,7 @@ export const EnvironmentSchema = z.object({
   BOT_TOKEN: z.string(),
   GUILD_ID: z.string(),
   MOD_CHANNEL_ID: z.string(),
+  FLAG_ROLE_ID: z.string(),
   DATABASE_URL: z.string(),
   PRISMA_LOG: z.coerce.boolean().default(false),
 })
