@@ -2,9 +2,9 @@ import { ApplicationCommandType, TextChannel } from 'discord.js'
 
 import { Environment } from '../../config.js'
 import { isUniqueConstraintViolation, prisma } from '../../prisma.js'
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Report to moderator',
     type: ApplicationCommandType.Message,
@@ -89,4 +89,4 @@ export default {
       ],
     })
   },
-} satisfies CommandHandlerConfig
+})
