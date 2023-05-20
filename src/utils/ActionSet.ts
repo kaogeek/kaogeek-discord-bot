@@ -42,19 +42,45 @@ export class ActionSet<
   filter = ({ customId }: { customId: string }) => this.map.has(customId)
 
   /**
+   * Like `filter`, but also checks if the user ID matches the given user ID.
+   * If the user ID does not match, the user will get a reply saying they are not allowed to use this action.
+   * @param userId - the user ID to check against
+   * @returns a filter function that can be passed to interaction collectors
+   */
+  createFilterWithUserIdProtection(userId: string) {
+    return (interaction: MessageComponentInteraction) => {
+      const match = this.filter(interaction)
+      if (match && interaction.user.id !== userId) {
+        interaction
+          .reply({
+            content: `You are not allowed to use this action. Only <@${userId}> is allowed to use this action.`,
+            ephemeral: true,
+          })
+          .catch(console.error)
+        return false
+      }
+      return match
+    }
+  }
+
+  /**
    * Waits for a registered action to occur in a channel.
    * @param channel - the channel to wait for the action in
    * @param timeout - the timeout in milliseconds
+   * @param user - the user to wait for the action from (other users will get a reply saying they are not allowed)
    * @returns the interaction and the registered action, or undefined if the timeout was reached
    */
   awaitInChannel = async (
     channel?: TextBasedChannel | null,
     timeout = 60000,
+    user?: { id: string },
   ) => {
     if (!channel) return undefined
     const interaction = await channel
       .awaitMessageComponent({
-        filter: this.filter,
+        filter: user
+          ? this.createFilterWithUserIdProtection(user.id)
+          : this.filter,
         time: timeout,
       })
       .catch(() => null)
