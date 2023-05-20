@@ -2,7 +2,6 @@ import {
   APIThreadChannel,
   ApplicationCommandType,
   AttachmentBuilder,
-  Channel,
   ComponentType,
   MessageActionRowComponentData,
   MessageComponentInteraction,
