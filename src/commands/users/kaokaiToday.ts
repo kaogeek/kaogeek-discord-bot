@@ -91,12 +91,9 @@ export default {
       const postLinks = []
       let description_highlight = ''
 
-      let counter = 0 // Counter variable to track iterations
+      const postsToDisplay = posts.slice(0, 7); // Get only the first 7 posts
 
-      posts.each((index, element) => {
-        if (counter >= 7) {
-          return false; // ดึงแค่ 7 โพสต์ใน slider
-        }
+      postsToDisplay.each((index, element) => {
 
         const post: any = $(element);
         if (!post || post === undefined) return;
@@ -109,9 +106,7 @@ export default {
         postLinks.push(postLink);
 
         description_highlight += `[${title}](${postLink})\n---------------------\n`
-
-        counter++ // Increment the counter after each iteration
-      })
+      });
       await interaction.editReply({
         embeds: [
           {
