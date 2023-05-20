@@ -72,6 +72,12 @@ export default defineCommandHandler({
       return
     }
 
+    //Discord expects bot to acknowledge the interaction within 3 seconds so reply something first
+    await interaction.editReply({
+      content: 'กำลังประมวลผล... โปรดรอสักครู่',
+      components: [],
+    })
+
     // Delete message in all channel
     let numDeleted = 0
     const { client } = botContext
@@ -83,8 +89,13 @@ export default defineCommandHandler({
         channel.type === ChannelType.PublicThread //for public thread and forum
       ) {
         const messages = await channel.messages.fetch()
-        const userMessages = messages.filter(
+        let userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
+        )
+        //? Filter messages older than 24 hours and delete it all (need to discuus about this)
+        const twoWeeksAgo = Date.now() - 24 * 60 * 60 * 1000
+        userMessages = userMessages.filter(
+          (msg) => msg.createdTimestamp > twoWeeksAgo,
         )
 
         if (userMessages.size > 0) {
@@ -95,24 +106,17 @@ export default defineCommandHandler({
             )
             numDeleted += userMessages.size
           } catch (error) {
-            // Reply about the error
-            //for error 400 : you can bulk delete messages that are under 14 days old.
-            if (error instanceof DiscordAPIError && error.status === 400) {
+            console.error('Error deleting messages:', error)
+            if (error instanceof DiscordAPIError) {
+              // Reply about the error
+              //for error 400 : cant occur because the time period has been set for how many days to delete
               await interaction.editReply({
-                content: error.message,
+                content: `Error deleting messages: ${error.message}`,
                 components: [],
               })
-              continue
-            }
-            await interaction.editReply({
-              content: `Error deleting messages: ${
-                (error as DiscordAPIError).message
-              }`,
-              components: [],
-            })
-            console.error('Error deleting messages:', error)
-            if ((error as DiscordAPIError).status === 404) {
-              return
+              if (error.status === 404) {
+                return
+              }
             }
           }
         }
