@@ -8,7 +8,7 @@ export default defineCommandHandler({
     type: ApplicationCommandType.User,
   },
   ephemeral: true,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
     const member = interaction.guild.members.cache.get(interaction.targetId)
     if (!member) return
