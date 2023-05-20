@@ -82,7 +82,7 @@ export default {
         ],
       })
     } else if (option === 'highlight') {
-      const news_websiteURL = 'https://www.moveforwardparty.org/'
+      const news_websiteURL = 'https://www.moveforwardparty.org/pin/'
       const html = await fetchHTML(news_websiteURL)
 
       const $ = cheerio.load(html)
@@ -92,20 +92,22 @@ export default {
       const postLinks = []
       let description_highlight = ''
 
-      const postsToDisplay = posts.slice(0, 7) // Get only the first 7 posts
-
-      postsToDisplay.each((index, element) => {
+      posts.each((index, element) => {
         const post: any = $(element)
         if (!post || post === undefined) return
 
         const titleElement = post.find('div.info > header > h2 > a')
         const title = titleElement.text()
 
-        const postID = post.attr('id').replace('post-', '')
-        const postLink = `https://www.moveforwardparty.org/news/${postID}`
-        postLinks.push(postLink)
+        const dateElement = post.find('a > div > small')
+        const date = dateElement.text()
 
-        description_highlight += `[${title}](${postLink})\n---------------------\n`
+        const postID = post.attr('id').replace('post-', '') // ดึง ID ของโพสต์
+
+        const postLink = `https://www.moveforwardparty.org/pin/${postID}` // สร้างลิงก์ของโพสต์
+        postLinks.push(postLink) // เพิ่มลิงก์ในรายการ
+
+        description_highlight += `[${title}](${postLink})\nDate: ${date}\n---------------------\n`
       })
       await interaction.editReply({
         embeds: [
