@@ -6,8 +6,10 @@ import {
   PermissionsBitField,
   RESTGetAPIGuildThreadsResult,
   Routes,
+  SelectMenuComponentOptionData,
 } from 'discord.js'
 
+import Bot from '../../client.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
 
@@ -21,13 +23,39 @@ export default {
   ephemeral: false,
   execute: async (client, interaction) => {
     if (!interaction.guild || !interaction.isChatInputCommand()) return
-    const data = (await client.rest.get(
-      Routes.guildActiveThreads(interaction.guild.id),
-    )) as RESTGetAPIGuildThreadsResult
+
+    // Load active threads
+    const data = await getActiveThreads(client, interaction.guild)
+
+    // Sort threads by last message (more recent first)
     const threads = (data.threads as APIThreadChannel[])
       .slice()
-      .sort((a, b) => +(a.last_message_id || 0) - +(b.last_message_id || 0))
+      .sort((a, b) => +(b.last_message_id || 0) - +(a.last_message_id || 0))
+
     const actionSet = new ActionSet()
+    const options: SelectMenuComponentOptionData[] = [
+      {
+        label: 'Generate report (unimplemented)',
+        value: actionSet.register(
+          'generate-report',
+          async (selectInteraction) => {
+            await selectInteraction.reply({
+              content: 'Unimplemented!',
+              ephemeral: true,
+            })
+          },
+        ),
+      },
+      {
+        label: 'Prune old threads (unimplemented)',
+        value: actionSet.register('prune', async (selectInteraction) => {
+          await selectInteraction.reply({
+            content: 'Unimplemented!',
+            ephemeral: true,
+          })
+        }),
+      },
+    ]
     const components: MessageActionRowComponentData[] = [
       {
         type: ComponentType.StringSelect,
@@ -39,29 +67,7 @@ export default {
           await resolved.handler(selectInteraction)
         }),
         placeholder: 'Select an action',
-        options: [
-          {
-            label: 'Generate report (unimplemented)',
-            value: actionSet.register(
-              'generate-report',
-              async (selectInteraction) => {
-                await selectInteraction.reply({
-                  content: 'Unimplemented!',
-                  ephemeral: true,
-                })
-              },
-            ),
-          },
-          {
-            label: 'Prune old threads (unimplemented)',
-            value: actionSet.register('prune', async (selectInteraction) => {
-              await selectInteraction.reply({
-                content: 'Unimplemented!',
-                ephemeral: true,
-              })
-            }),
-          },
-        ],
+        options,
       },
     ]
     await interaction.editReply({
@@ -73,13 +79,22 @@ export default {
         },
       ],
     })
+
     const action = await actionSet.awaitInChannel(
       interaction.channel,
       60e3,
       interaction.user,
     )
-    await interaction.editReply({ components: [] }).catch(console.error)
-    if (!action) return
+    await interaction.editReply({ components: [] })
+    if (!action) {
+      return
+    }
     await action.registeredAction.handler(action.interaction)
   },
 } satisfies CommandHandlerConfig
+
+async function getActiveThreads(client: Bot, guild: { id: string }) {
+  return (await client.rest.get(
+    Routes.guildActiveThreads(guild.id),
+  )) as RESTGetAPIGuildThreadsResult
+}
