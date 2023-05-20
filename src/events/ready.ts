@@ -19,7 +19,9 @@ export default defineEventHandler({
         throw new Error(`Guild ${Environment.GUILD_ID} not found`)
       }
       await guild.commands.set(commands_data)
-      console.info(`[ready] Guild commands registered on ${guild.name}`)
+      console.info(
+        `[ready] ${commands.size} guild commands registered on ${guild.name}`,
+      )
     } catch (error) {
       console.error('[ready] Unable to set guild commands:', error)
     }
