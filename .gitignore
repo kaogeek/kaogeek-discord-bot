@@ -140,3 +140,4 @@ __MACOSX
 
 # Datastore files
 .data
+/prisma/dev.db
