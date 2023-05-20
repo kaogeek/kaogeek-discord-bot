@@ -16,14 +16,14 @@ export default [
       dmPermission: false,
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
       const userId = interaction.targetId
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({ client, interaction, member })
+      await inspectProfile(botContext, { interaction, member })
     },
   }),
   defineCommandHandler({
@@ -34,7 +34,7 @@ export default [
       dmPermission: false,
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
       const messageId = interaction.targetId
@@ -45,8 +45,7 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({
-        client,
+      await inspectProfile(botContext, {
         interaction,
         member,
         messageContext: message,
@@ -68,7 +67,7 @@ export default [
       ],
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isChatInputCommand()) return
 
       const userId = interaction.options.getUser('user')?.id
@@ -76,7 +75,7 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({ client, interaction, member })
+      await inspectProfile(botContext, { interaction, member })
     },
   }),
 ]

@@ -4,12 +4,13 @@ import commands from './commands/index.js'
 import { Environment } from './config.js'
 import events from './events/index.js'
 import { prisma } from './prisma.js'
+import { BotContext } from './types/BotContext.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import { EventHandlerConfig } from './types/EventHandlerConfig.js'
 
 export default class Bot extends Client {
-  public commands: Collection<string, CommandHandlerConfig>
-  public isProduction = process.env.NODE_ENV === 'production'
+  private readonly commands = new Collection<string, CommandHandlerConfig>()
+  private readonly isProduction = process.env.NODE_ENV === 'production'
 
   constructor() {
     super({
@@ -20,8 +21,13 @@ export default class Bot extends Client {
         IntentsBitField.Flags.MessageContent,
       ],
     })
+  }
 
-    this.commands = new Collection()
+  private createBotContext() {
+    return {
+      client: this,
+      commands: this.commands,
+    } as BotContext
   }
 
   async initAndStart() {
@@ -42,10 +48,12 @@ export default class Bot extends Client {
     for (const handler of handlers) {
       if (handler.once) {
         this.once(handler.eventName, (...args) =>
-          handler.execute(this, ...args),
+          handler.execute(this.createBotContext(), ...args),
         )
       } else {
-        this.on(handler.eventName, (...args) => handler.execute(this, ...args))
+        this.on(handler.eventName, (...args) =>
+          handler.execute(this.createBotContext(), ...args),
+        )
       }
     }
   }
