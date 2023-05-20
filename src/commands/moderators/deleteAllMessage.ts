@@ -5,9 +5,12 @@ import {
   ComponentType,
   DiscordAPIError,
   PermissionsBitField,
+  TextChannel,
 } from 'discord.js'
 
 import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { supportedTextChannel } from '../../utils/supportedTextChannel.js'
+import { isInArray } from '../../utils/typeGuards.js'
 
 export default defineCommandHandler({
   data: {
@@ -81,14 +84,21 @@ export default defineCommandHandler({
     // Delete message in all channel
     let numDeleted = 0
     const { client } = botContext
+
+    const supportedTextChannel: supportedTextChannel[] = [
+      ChannelType.GuildText,
+      ChannelType.GuildVoice,
+      ChannelType.GuildStageVoice,
+      ChannelType.PublicThread,
+      ChannelType.PrivateThread,
+      ChannelType.AnnouncementThread,
+    ]
+
     for (const [channelId, channel] of client.channels.cache) {
-      if (
-        channel.type === ChannelType.GuildText || //for text channel
-        channel.type === ChannelType.GuildVoice || //for openchat at voice channel
-        channel.type === ChannelType.GuildStageVoice || //for openchat stage channel
-        channel.type === ChannelType.PublicThread //for public thread and forum
-      ) {
-        const messages = await channel.messages.fetch()
+      // Check if the channel type is in the supported text channel array
+      if (isInArray(channel.type, supportedTextChannel)) {
+        //supportedTextChannel only contains TextChannel,we can cast channel to TextChannel without any issues.
+        const messages = await (channel as TextChannel).messages.fetch()
         let userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
         )
@@ -100,9 +110,11 @@ export default defineCommandHandler({
 
         if (userMessages.size > 0) {
           try {
-            await channel.bulkDelete(userMessages)
+            await (channel as TextChannel).bulkDelete(userMessages)
             console.info(
-              `Deleted ${userMessages.size} messages from ${interaction.targetId} in channel ${channel.name} (${channelId}).`,
+              `Deleted ${userMessages.size} messages from ${
+                interaction.targetId
+              } in channel ${(channel as TextChannel).name} (${channelId}).`,
             )
             numDeleted += userMessages.size
           } catch (error) {
