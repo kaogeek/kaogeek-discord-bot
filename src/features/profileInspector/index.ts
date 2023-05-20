@@ -15,12 +15,17 @@ import { randomUUID } from 'crypto'
 
 import { prisma } from '../../prisma.js'
 
+export interface InspectProfileOptions {
+  client: Client
+  interaction: CommandInteraction
+  member: GuildMember
+  messageContext?: Message
+}
+
 export async function inspectProfile(
-  client: Client,
-  interaction: CommandInteraction,
-  member: GuildMember,
-  messageContext?: Message,
+  options: InspectProfileOptions,
 ): Promise<void> {
+  const { client, interaction, member, messageContext } = options
   const logs = await prisma.userModerationLog.findMany({
     where: { userId: member.user.id },
     orderBy: { createdAt: 'desc' },

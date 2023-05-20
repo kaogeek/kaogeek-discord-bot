@@ -23,7 +23,7 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile(client, interaction, member)
+      await inspectProfile({ client, interaction, member })
     },
   },
   {
@@ -45,7 +45,12 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile(client, interaction, member, message)
+      await inspectProfile({
+        client,
+        interaction,
+        member,
+        messageContext: message,
+      })
     },
   },
   {
@@ -71,7 +76,7 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile(client, interaction, member)
+      await inspectProfile({ client, interaction, member })
     },
   },
 ] satisfies CommandHandlerConfig[]
