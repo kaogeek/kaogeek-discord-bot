@@ -1,9 +1,13 @@
 import {
+  APIThreadChannel,
   ApplicationCommandType,
+  AttachmentBuilder,
   ComponentType,
   MessageActionRowComponentData,
+  MessageComponentInteraction,
   PermissionsBitField,
   SelectMenuComponentOptionData,
+  SnowflakeUtil,
 } from 'discord.js'
 
 import {
@@ -12,6 +16,7 @@ import {
 } from '../../features/threadPruner/index.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
+import { toLocalDate } from '../../utils/toLocalDate.js'
 
 export default {
   data: {
@@ -29,16 +34,11 @@ export default {
     const stats = getThreadStats(threads)
     const options: SelectMenuComponentOptionData[] = [
       {
-        label: 'Generate report (unimplemented)',
+        label: 'Generate report',
         value: actionSet.register(
           'generate-report',
-          async (selectInteraction) => {
-            // TODO: Implement
-            await selectInteraction.reply({
-              content: 'Unimplemented!',
-              ephemeral: true,
-            })
-          },
+          async (selectInteraction) =>
+            generateReport(selectInteraction, threads),
         ),
       },
       ...stats.pruningCriteria.map((item) => ({
@@ -91,3 +91,29 @@ export default {
     await action.registeredAction.handler(action.interaction)
   },
 } satisfies CommandHandlerConfig
+
+async function generateReport(
+  interaction: MessageComponentInteraction,
+  threads: APIThreadChannel[],
+) {
+  const tsv = [
+    ['ID', 'Name', 'Last Message', 'Message Count'],
+    ...threads.map((thread) => {
+      return [
+        thread.id,
+        thread.name,
+        thread.last_message_id
+          ? toLocalDate(SnowflakeUtil.timestampFrom(thread.last_message_id))
+          : '-',
+        thread.message_count,
+      ]
+    }),
+  ]
+    .map((row) => row.join('\t'))
+    .join('\n')
+  await interaction.reply({
+    content: 'Here is the report.',
+    files: [new AttachmentBuilder(Buffer.from(tsv), { name: 'threads.tsv' })],
+    ephemeral: true,
+  })
+}
