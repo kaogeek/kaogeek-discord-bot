@@ -18,16 +18,22 @@ async function fetchHTML(url: string): Promise<string> {
 export default {
   data: {
     name: 'kaokai-today',
-    description: 'Show 10 forum topics sorted according to your preferences.',
+    description: 'News from Move Forward Partys',
     options: [
       {
-        name: 'latest',
-        description: 'ข่าวสารก้าวไกลทั้งหมดอัพเดตล่าสุด',
+        name: 'latest', 
+        description: 'Latest and up to date news from Move Forward Party',
+        descriptionLocalizations: {
+          th: 'ข่าวสารก้าวไกลทั้งหมดอัพเดตล่าสุด',
+        },
         type: 1,
       },
       {
         name: 'highlight',
-        description: 'ไฮไลต์ข่าวสารก้าวไกล',
+        description: 'Highlight news from Move Forward Party',
+        descriptionLocalizations: {
+          th: 'ไฮไลต์ข่าวสารก้าวไกล',
+        },
         type: 1,
       },
     ],
@@ -35,7 +41,6 @@ export default {
   execute: async (client, interaction: any) => {
     const option = await interaction.options.getSubcommand() // รับค่า sub-command ที่ถูกเรียกใช้
     if (option === 'latest') {
-      // โค้ดสำหรับตัวเลือก descendings
       const news_websiteURL = 'https://www.moveforwardparty.org/news/'
       const html = await fetchHTML(news_websiteURL)
 
@@ -73,7 +78,6 @@ export default {
         ],
       })
     } else if (option === 'highlight') {
-      // โค้ดสำหรับตัวเลือก descendings
       const news_websiteURL = 'https://www.moveforwardparty.org/'
       const html = await fetchHTML(news_websiteURL)
 
