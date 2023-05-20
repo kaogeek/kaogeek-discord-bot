@@ -71,7 +71,11 @@ export default {
       await interaction.editReply({
         embeds: [
           {
-            description: `**Kao Kai Today (latest)**\n\n${description}`,
+            title: 'Kao Kai Today (latest)',
+            description: `${description}`,
+            thumbnail: {
+              url: 'https://www.moveforwardparty.org/wp-content/uploads/2021/03/400px-Move_Forward_Party_Logo.svg.png',
+            },
             color: 0xff7f00,
           },
         ],
@@ -111,7 +115,11 @@ export default {
       await interaction.editReply({
         embeds: [
           {
-            description: `**Kao Kai Today (highlight)**\n\n${description_highlight}`,
+            title: 'Kao Kai Today (highlight)',
+            description: `${description_highlight}`,
+            thumbnail: {
+              url: 'https://www.moveforwardparty.org/wp-content/uploads/2021/03/400px-Move_Forward_Party_Logo.svg.png',
+            },
             color: 0xff7f00,
           },
         ],
