@@ -37,6 +37,7 @@ export default {
         value: actionSet.register(
           'generate-report',
           async (selectInteraction) => {
+            // TODO: Implement
             await selectInteraction.reply({
               content: 'Unimplemented!',
               ephemeral: true,
@@ -46,12 +47,16 @@ export default {
       },
       {
         label: 'Prune old threads (unimplemented)',
-        value: actionSet.register('prune', async (selectInteraction) => {
-          await selectInteraction.reply({
-            content: 'Unimplemented!',
-            ephemeral: true,
-          })
-        }),
+        value: actionSet.register(
+          'prune-old-threads',
+          async (selectInteraction) => {
+            // TODO: Implement
+            await selectInteraction.reply({
+              content: 'Unimplemented!',
+              ephemeral: true,
+            })
+          },
+        ),
       },
     ]
     const components: MessageActionRowComponentData[] = [
