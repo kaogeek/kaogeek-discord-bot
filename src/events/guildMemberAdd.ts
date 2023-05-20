@@ -7,7 +7,7 @@ import { defineEventHandler } from '../types/defineEventHandler.js'
 export default defineEventHandler({
   eventName: Events.GuildMemberAdd,
   once: false,
-  execute: async (_client, member) => {
+  execute: async (botContext, member) => {
     try {
       const userRole = await prisma.userRole.findUnique({
         where: {
