@@ -4,14 +4,14 @@ import isOnlyEmoji from '../../../src/utils/isOnlyEmoji'
 
 describe('isOnlyEmoji', () => {
   it.each([{ msg: '🫠' }, { msg: '🅰️' }, { msg: '🅾' }, { msg: '<:test:000>' }])(
-    'should match emoji',
+    'should match emoji ($msg)',
     async ({ msg }) => {
       expect(isOnlyEmoji(msg)).toBeTruthy()
     },
   )
 
   it.each([{ msg: '' }, { msg: 'hello' }, { msg: 'a' }, { msg: '<html>' }])(
-    'should not match emoji',
+    'should not match emoji ($msg)',
     async ({ msg }) => {
       expect(isOnlyEmoji(msg)).toBeFalsy()
     },
