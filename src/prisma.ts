@@ -7,15 +7,18 @@ const prisma = new PrismaClient()
   try {
     await prisma.messageReportCount.findFirst()
   } catch (error) {
-    const errorTypeCasted: Error = error as Error
     if (
-      errorTypeCasted.message.includes(
+      error instanceof Error &&
+      error.message.includes(
         'The table `main.MessageReportCount` does not exist in the current database',
       )
-    )
+    ) {
       console.error(
         'It seems like you haven\'t initialized database yet, please run command "pnpm prisma db push"',
       )
+    } else {
+      console.log(error)
+    }
   }
 }
 
