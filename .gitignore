@@ -50,7 +50,6 @@ web_modules/
 
 # Optional npm cache directory
 .npm
-package-lock.json
 
 # Optional eslint cache
 .eslintcache
@@ -138,10 +137,4 @@ dist
 
 # Datastore files
 .data
-
 /prisma/dev.db
-
-
-#MacOS
-.DS_Store
-__MACOSX
