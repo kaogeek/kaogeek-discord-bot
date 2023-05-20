@@ -1,8 +1,8 @@
 import { ApplicationCommandType } from 'discord.js'
 
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Show user info',
     type: ApplicationCommandType.User,
@@ -39,4 +39,4 @@ export default {
       ],
     })
   },
-} satisfies CommandHandlerConfig
+})

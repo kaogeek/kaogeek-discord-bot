@@ -5,10 +5,10 @@ import {
 } from 'discord.js'
 
 import { inspectProfile } from '../../features/profileInspector/index.js'
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
 export default [
-  {
+  defineCommandHandler({
     data: {
       name: 'Inspect profile',
       type: ApplicationCommandType.User,
@@ -25,8 +25,8 @@ export default [
 
       await inspectProfile({ client, interaction, member })
     },
-  },
-  {
+  }),
+  defineCommandHandler({
     data: {
       name: 'Inspect author',
       type: ApplicationCommandType.Message,
@@ -52,8 +52,8 @@ export default [
         messageContext: message,
       })
     },
-  },
-  {
+  }),
+  defineCommandHandler({
     data: {
       name: 'inspect',
       description: 'Inspect a user profile',
@@ -78,5 +78,5 @@ export default [
 
       await inspectProfile({ client, interaction, member })
     },
-  },
-] satisfies CommandHandlerConfig[]
+  }),
+]

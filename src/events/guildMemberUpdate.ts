@@ -1,8 +1,8 @@
 import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.GuildMemberUpdate,
   once: false,
   execute: async (_client, prev, next) => {
@@ -40,4 +40,4 @@ export default {
       )
     }
   },
-} satisfies EventHandlerConfig<Events.GuildMemberUpdate>
+})
