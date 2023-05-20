@@ -6,7 +6,7 @@ import isOnlyEmoji from '../utils/isOnlyEmoji.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (client, message) => {
+  execute: async (botContext, message) => {
     // if has only emoji -> delete message
     if (isOnlyEmoji(message.content)) {
       try {

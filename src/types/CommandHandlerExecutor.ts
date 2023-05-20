@@ -1,8 +1,8 @@
 import type { Awaitable, CommandInteraction } from 'discord.js'
 
-import type Bot from '../client.js'
+import { BotContext } from './BotContext.js'
 
 export type CommandHandlerExecutor = (
-  client: Bot,
+  botContext: BotContext,
   interaction: CommandInteraction,
 ) => Awaitable<void>
