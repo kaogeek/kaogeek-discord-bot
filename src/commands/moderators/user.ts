@@ -1,14 +1,14 @@
 import { ApplicationCommandType } from 'discord.js'
 
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Show user info',
     type: ApplicationCommandType.User,
   },
   ephemeral: true,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
     const member = interaction.guild.members.cache.get(interaction.targetId)
     if (!member) return
@@ -39,4 +39,4 @@ export default {
       ],
     })
   },
-} satisfies CommandHandlerConfig
+})

@@ -7,9 +7,9 @@ import {
   PermissionsBitField,
 } from 'discord.js'
 
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Prune messages',
     type: ApplicationCommandType.Message,
@@ -17,7 +17,7 @@ export default {
     dmPermission: false,
   },
   ephemeral: true,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
     // Fetch reference message by target id
@@ -74,6 +74,7 @@ export default {
 
     // Delete message in all channel
     let numDeleted = 0
+    const { client } = botContext
     for (const [channelId, channel] of client.channels.cache) {
       if (
         channel.type === ChannelType.GuildText  //for text channel
@@ -123,4 +124,4 @@ export default {
       components: [],
     })
   },
-} satisfies CommandHandlerConfig
+})

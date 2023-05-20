@@ -5,10 +5,10 @@ import {
 } from 'discord.js'
 
 import { inspectProfile } from '../../features/profileInspector/index.js'
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
 export default [
-  {
+  defineCommandHandler({
     data: {
       name: 'Inspect profile',
       type: ApplicationCommandType.User,
@@ -16,17 +16,17 @@ export default [
       dmPermission: false,
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
       const userId = interaction.targetId
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({ client, interaction, member })
+      await inspectProfile(botContext, { interaction, member })
     },
-  },
-  {
+  }),
+  defineCommandHandler({
     data: {
       name: 'Inspect author',
       type: ApplicationCommandType.Message,
@@ -34,7 +34,7 @@ export default [
       dmPermission: false,
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
       const messageId = interaction.targetId
@@ -45,15 +45,14 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({
-        client,
+      await inspectProfile(botContext, {
         interaction,
         member,
         messageContext: message,
       })
     },
-  },
-  {
+  }),
+  defineCommandHandler({
     data: {
       name: 'inspect',
       description: 'Inspect a user profile',
@@ -68,7 +67,7 @@ export default [
       ],
     },
     ephemeral: true,
-    execute: async (client, interaction) => {
+    execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isChatInputCommand()) return
 
       const userId = interaction.options.getUser('user')?.id
@@ -76,7 +75,7 @@ export default [
       const member = interaction.guild.members.cache.get(userId)
       if (!member) return
 
-      await inspectProfile({ client, interaction, member })
+      await inspectProfile(botContext, { interaction, member })
     },
-  },
-] satisfies CommandHandlerConfig[]
+  }),
+]

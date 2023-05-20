@@ -1,16 +1,16 @@
 import { Events } from 'discord.js'
 
 import { Environment } from '../config.js'
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.ClientReady,
   once: true,
-  execute: async (client) => {
+  execute: async (botContext) => {
+    const { client, commands } = botContext
+
     console.log(`[ready] Now online as ${client.user?.tag}.`)
-    const commands_data = [...client.commands.values()].map(
-      (command) => command.data,
-    )
+    const commands_data = [...commands.values()].map((command) => command.data)
 
     // Set guild commands
     try {
@@ -19,7 +19,9 @@ export default {
         throw new Error(`Guild ${Environment.GUILD_ID} not found`)
       }
       await guild.commands.set(commands_data)
-      console.info(`[ready] Guild commands registered on ${guild.name}`)
+      console.info(
+        `[ready] ${commands.size} guild commands registered on ${guild.name}`,
+      )
     } catch (error) {
       console.error('[ready] Unable to set guild commands:', error)
     }
@@ -35,4 +37,4 @@ export default {
       console.error('[ready] Unable to clear application commands:', error)
     }
   },
-} satisfies EventHandlerConfig<Events.ClientReady>
+})
