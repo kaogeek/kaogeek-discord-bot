@@ -1,7 +1,6 @@
 import {
   APIEmbed,
   ButtonStyle,
-  Client,
   CommandInteraction,
   ComponentType,
   GuildMember,
@@ -13,24 +12,26 @@ import { MessageComponentInteraction } from 'discord.js'
 import { UserModerationLog, UserProfile } from '@prisma/client'
 
 import { prisma } from '../../prisma.js'
+import { BotContext } from '../../types/BotContext.js'
 import { ActionSet } from '../../utils/ActionSet.js'
 import { prompt } from '../../utils/prompt.js'
 
 export interface InspectProfileOptions {
-  client: Client
   interaction: CommandInteraction
   member: GuildMember
   messageContext?: Message
 }
 
 interface InspectProfileContext {
+  botContext: BotContext
   options: InspectProfileOptions
 }
 
 export async function inspectProfile(
+  botContext: BotContext,
   options: InspectProfileOptions,
 ): Promise<void> {
-  return inspectProfileMain({ options })
+  return inspectProfileMain({ botContext, options })
 }
 
 async function inspectProfileMain(
