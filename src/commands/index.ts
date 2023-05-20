@@ -1,6 +1,7 @@
 import { CommandHandlerConfig } from '../types/CommandHandlerConfig.js'
 
-import ping from './info/ping.js'
+import ping from './info/ping.js';
+import kaokaiToday from './users/kaokaiToday.js';
 import activeThreads from './moderators/activeThreads.js'
 import deleteAllMessage from './moderators/deleteAllMessage.js'
 import inspectProfile from './moderators/inspectProfile.js'
@@ -12,6 +13,7 @@ export default [
   deleteAllMessage,
   ...inspectProfile,
   ping,
+  kaokaiToday,
   report,
   user,
 ] satisfies CommandHandlerConfig[]
