@@ -2,6 +2,7 @@ import {
   APIThreadChannel,
   ApplicationCommandType,
   AttachmentBuilder,
+  Channel,
   ComponentType,
   MessageActionRowComponentData,
   MessageComponentInteraction,
@@ -14,6 +15,7 @@ import {
   getActiveThreads,
   getThreadStats,
 } from '../../features/threadPruner/index.js'
+import { BotContext } from '../../types/BotContext.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
 import { toLocalDate } from '../../utils/toLocalDate.js'
@@ -38,7 +40,7 @@ export default {
         value: actionSet.register(
           'generate-report',
           async (selectInteraction) =>
-            generateReport(selectInteraction, threads),
+            generateReport(botContext, selectInteraction, threads),
         ),
       },
       ...stats.pruningCriteria.map((item) => ({
@@ -93,15 +95,28 @@ export default {
 } satisfies CommandHandlerConfig
 
 async function generateReport(
+  botContext: BotContext,
   interaction: MessageComponentInteraction,
   threads: APIThreadChannel[],
 ) {
   const tsv = [
-    ['ID', 'Name', 'Last Message', 'Message Count'],
+    [
+      'ID',
+      'Name',
+      'Channel ID',
+      'Channel Name',
+      'Last Message',
+      'Message Count',
+    ],
     ...threads.map((thread) => {
+      const channel = thread.parent_id
+        ? botContext.client.channels.cache.get(thread.parent_id)
+        : undefined
       return [
         thread.id,
         thread.name,
+        thread.parent_id ?? '-',
+        (channel && 'name' in channel && channel.name) ?? '-',
         thread.last_message_id
           ? toLocalDate(SnowflakeUtil.timestampFrom(thread.last_message_id))
           : '-',
