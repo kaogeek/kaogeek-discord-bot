@@ -6,11 +6,11 @@ import { defineEventHandler } from '../types/defineEventHandler.js'
 export default defineEventHandler({
   eventName: Events.ClientReady,
   once: true,
-  execute: async (client) => {
+  execute: async (botContext) => {
+    const { client, commands } = botContext
+
     console.log(`[ready] Now online as ${client.user?.tag}.`)
-    const commands_data = [...client.commands.values()].map(
-      (command) => command.data,
-    )
+    const commands_data = [...commands.values()].map((command) => command.data)
 
     // Set guild commands
     try {

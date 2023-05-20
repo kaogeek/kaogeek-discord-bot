@@ -1,7 +1,6 @@
 import {
   APIEmbed,
   ButtonStyle,
-  Client,
   CommandInteraction,
   ComponentType,
   GuildMember,
