@@ -28,7 +28,7 @@ export default {
     // Sort threads by last message (more recent first)
     const threads = (data.threads as APIThreadChannel[])
       .slice()
-      .sort((a, b) => +(b.last_message_id || 0) - +(a.last_message_id || 0))
+      .sort((a, b) => +(b.last_message_id ?? 0) - +(a.last_message_id ?? 0))
 
     const actionSet = new ActionSet()
     const options: SelectMenuComponentOptionData[] = [
