@@ -1,15 +1,15 @@
 import {
-  APIThreadChannel,
   ApplicationCommandType,
-  Client,
   ComponentType,
   MessageActionRowComponentData,
   PermissionsBitField,
-  RESTGetAPIGuildThreadsResult,
-  Routes,
   SelectMenuComponentOptionData,
 } from 'discord.js'
 
+import {
+  getActiveThreads,
+  getThreadStats,
+} from '../../features/threadPruner/index.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
 
@@ -24,14 +24,9 @@ export default {
   execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isChatInputCommand()) return
     const { client } = botContext
-    const data = await getActiveThreads(client, interaction.guild)
-
-    // Sort threads by last message (more recent first)
-    const threads = (data.threads as APIThreadChannel[])
-      .slice()
-      .sort((a, b) => +(b.last_message_id ?? 0) - +(a.last_message_id ?? 0))
-
+    const threads = await getActiveThreads(client, interaction.guild)
     const actionSet = new ActionSet()
+    const stats = getThreadStats(threads)
     const options: SelectMenuComponentOptionData[] = [
       {
         label: 'Generate report (unimplemented)',
@@ -46,8 +41,8 @@ export default {
           },
         ),
       },
-      {
-        label: 'Prune old threads (unimplemented)',
+      ...stats.pruningCriteria.map((item) => ({
+        label: `${item.name} (${item.threadIds.length}) (unimplemented)`,
         value: actionSet.register(
           'prune-old-threads',
           async (selectInteraction) => {
@@ -58,7 +53,7 @@ export default {
             })
           },
         ),
-      },
+      })),
     ]
     const components: MessageActionRowComponentData[] = [
       {
@@ -96,9 +91,3 @@ export default {
     await action.registeredAction.handler(action.interaction)
   },
 } satisfies CommandHandlerConfig
-
-async function getActiveThreads(client: Client, guild: { id: string }) {
-  return (await client.rest.get(
-    Routes.guildActiveThreads(guild.id),
-  )) as RESTGetAPIGuildThreadsResult
-}
