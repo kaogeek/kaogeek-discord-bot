@@ -16,4 +16,12 @@ describe('isOnlyEmoji', () => {
       expect(isOnlyEmoji(msg)).toBeFalsy()
     },
   )
+
+  it('should not match emoji with text', async () => {
+    expect(isOnlyEmoji('hello 🫠')).toBeFalsy()
+  })
+
+  it.todo('should not match messages with only numbers', async () => {
+    expect(isOnlyEmoji('1 2 3')).toBeFalsy()
+  })
 })
