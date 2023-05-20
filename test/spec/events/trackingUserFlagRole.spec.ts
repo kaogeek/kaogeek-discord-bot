@@ -1,16 +1,20 @@
 import { Collection, GuildMember, Role } from 'discord.js'
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { Environment } from '../../../src/config.js'
 import guildMemberUpdateHandler from '../../../src/events/guildMemberUpdate.js'
 import { BotContext } from '../../../src/types/BotContext.js'
 
-vi.mock('../../../src/config.js')
+vi.mock('../../../src/config.js', async () => {
+  const Environment = { FLAG_ROLE_ID: 'MOCK_FLAG_ROLE_ID' }
+
+  return { Environment }
+})
 vi.mock('../../../src/prisma.js')
 
 const MockRole = {
-  id: 'MOCK_FLAG_ROLE_ID',
+  id: Environment.FLAG_ROLE_ID,
   name: 'TestRole',
 } as unknown as Role
 
@@ -18,7 +22,7 @@ const MockGuild = {
   name: 'TestGuild',
   id: '456',
   roles: {
-    cache: new Collection<string, Role>([['MOCK_FLAG_ROLE_ID', MockRole]]),
+    cache: new Collection<string, Role>([[Environment.FLAG_ROLE_ID, MockRole]]),
   },
 }
 
@@ -45,12 +49,6 @@ const MockNextMember = {
 const MockClient = {} as unknown as BotContext
 
 describe('guildMemberUpdate', () => {
-  beforeEach(async () => {
-    // Mock environment
-    const { Environment } = await import('../../../src/config.js')
-    Environment.FLAG_ROLE_ID = 'MOCK_FLAG_ROLE_ID'
-  })
-
   afterEach(() => {
     // Reset mock functions
     vi.clearAllMocks()

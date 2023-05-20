@@ -2,17 +2,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import Bot from '../../src/client'
 
-vi.mock('../../src/config.js')
+vi.mock('../../src/config.js', async () => {
+  const Environment = { BOT_TOKEN: 'MOCK_TOKEN' }
+
+  return { Environment }
+})
 
 describe('Bot', () => {
   let client: Bot
 
   beforeEach(async () => {
-    const { Environment } = await import('../../src/config.js')
-    Environment.FLAG_ROLE_ID = 'MOCK_FLAG_ROLE_ID'
-
     client = new Bot()
   })
+
   afterEach(() => {
     vi.clearAllMocks()
   })

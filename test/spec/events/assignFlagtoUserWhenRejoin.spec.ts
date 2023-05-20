@@ -1,12 +1,17 @@
 import { GuildMember } from 'discord.js'
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { Environment } from '../../../src/config.js'
 import guildMemberAddHandler from '../../../src/events/guildMemberAdd.js'
 import { BotContext } from '../../../src/types/BotContext.js'
 
-vi.mock('../../../src/config.js')
+vi.mock('../../../src/config.js', async () => {
+  const Environment = { FLAG_ROLE_ID: 'MOCK_FLAG_ROLE_ID' }
+
+  return { Environment }
+})
+
 vi.mock('../../../src/prisma.js')
 
 // Mock newMember object
@@ -25,12 +30,6 @@ const mockNewMember = {
 }
 
 describe('guildMemberAddHandler', () => {
-  beforeEach(async () => {
-    // Mock environment
-    const { Environment } = await import('../../../src/config.js')
-    Environment.FLAG_ROLE_ID = 'MOCK_FLAG_ROLE_ID'
-  })
-
   afterEach(() => {
     // Reset mock functions
     vi.clearAllMocks()
