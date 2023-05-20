@@ -8,3 +8,4 @@ services:
       BOT_TOKEN: dummy
       GUILD_ID: dummy
       MOD_CHANNEL_ID: dummy
+      FLAG_ROLE_ID: dummy
