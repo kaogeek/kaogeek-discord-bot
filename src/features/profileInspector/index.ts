@@ -8,13 +8,13 @@ import {
   Message,
 } from 'discord.js'
 import { InteractionButtonComponentData } from 'discord.js'
-import { TextInputStyle } from 'discord.js'
 import { MessageComponentInteraction } from 'discord.js'
 
 import { UserModerationLog, UserProfile } from '@prisma/client'
-import { randomUUID } from 'crypto'
 
 import { prisma } from '../../prisma.js'
+import { ActionSet } from '../../utils/ActionSet.js'
+import { prompt } from '../../utils/prompt.js'
 
 export interface InspectProfileOptions {
   client: Client
@@ -61,57 +61,39 @@ async function inspectProfileMain(
     },
   ]
 
-  const strikeActionId = randomUUID() as string
-  const resetStrikeActionId = randomUUID() as string
+  const logContext: LogContext = {
+    userId: userProfile.id,
+    actorId: interaction.user.id,
+  }
+  const actions = new ActionSet()
   const buttons: InteractionButtonComponentData[] = []
   buttons.push({
     type: ComponentType.Button,
     style: ButtonStyle.Primary,
     label: 'Strike',
-    customId: strikeActionId,
+    customId: actions.register('strike', (buttonInteraction) =>
+      strike(context, userProfile, logContext, buttonInteraction),
+    ),
   })
   if (userProfile.strikes > 0) {
     buttons.push({
       type: ComponentType.Button,
       style: ButtonStyle.Primary,
       label: 'Reset strike',
-      customId: resetStrikeActionId,
+      customId: actions.register('resetStrike', (buttonInteraction) =>
+        resetStrike(context, userProfile, logContext, buttonInteraction),
+      ),
     })
   }
   await interaction.editReply({
     embeds,
-    components: [
-      {
-        type: ComponentType.ActionRow,
-        components: buttons,
-      },
-    ],
+    components: [{ type: ComponentType.ActionRow, components: buttons }],
   })
+  const result = await actions.awaitInChannel(interaction.channel, 60000)
+  await interaction.editReply({ components: [] })
 
-  const selectedInteraction = await Promise.resolve(
-    interaction.channel?.awaitMessageComponent({
-      filter: (i) => buttons.map((b) => b.customId).includes(i.customId),
-      time: 60000,
-    }),
-  ).catch(() => null)
-
-  if (!selectedInteraction) {
-    await interaction.editReply({ components: [] })
-    return
-  }
-
-  const logContext: LogContext = {
-    userId: userProfile.id,
-    actorId: interaction.user.id,
-  }
-
-  if (selectedInteraction.customId === strikeActionId) {
-    return strike(context, userProfile, logContext, selectedInteraction)
-  }
-
-  if (selectedInteraction.customId === resetStrikeActionId) {
-    return resetStrike(context, userProfile, logContext, selectedInteraction)
-  }
+  if (!result) return
+  return result.registeredAction.handler(result.interaction)
 }
 
 async function strike(
@@ -121,33 +103,12 @@ async function strike(
   buttonInteraction: MessageComponentInteraction,
 ) {
   const strikes = userProfile.strikes + 1
-  const promptId = randomUUID() as string
-  await buttonInteraction.showModal({
-    customId: promptId,
-    title: `Strike #${strikes}`,
-    components: [
-      {
-        type: ComponentType.ActionRow,
-        components: [
-          {
-            customId: 'reason',
-            label: 'Reason',
-            type: ComponentType.TextInput,
-            style: TextInputStyle.Short,
-            required: true,
-            placeholder: '…',
-          },
-        ],
-      },
-    ],
-  })
-  const submitted = await buttonInteraction
-    .awaitModalSubmit({
-      time: 5 * 60000,
-      filter: (i) => i.customId === promptId,
-    })
-    .catch(() => null)
-  if (!submitted) {
+  const submission = await prompt(
+    buttonInteraction,
+    `Strike #${strikes}`,
+    'Reason',
+  )
+  if (!submission) {
     await buttonInteraction.reply({
       content: 'Timed out',
       ephemeral: true,
@@ -155,7 +116,7 @@ async function strike(
     return inspectProfileMain(context)
   }
 
-  const reason = submitted.fields.getTextInputValue('reason')
+  const reason = submission.text
   await prisma.userProfile.update({
     where: { id: userProfile.id },
     data: { strikes },
@@ -170,7 +131,7 @@ async function strike(
     { strikes, message: messageContext?.url },
   )
 
-  await submitted.reply({
+  await submission.interaction.reply({
     content: `strike #${strikes} added to ${userProfile.tag}`,
     ephemeral: true,
   })
@@ -187,11 +148,12 @@ async function resetStrike(
     where: { id: userProfile.id },
     data: { strikes: 0 },
   })
-  const { interaction } = context.options
+  const { interaction, messageContext } = context.options
+  const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
   await logActivity(
     logContext,
     'strike',
-    `strikes reset to 0 by ${interaction.user.tag}`,
+    `strikes reset to 0 by ${interaction.user.tag}${suffix}`,
     { strikes: 0 },
   )
   await buttonInteraction.reply({
