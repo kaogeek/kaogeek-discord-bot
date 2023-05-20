@@ -77,10 +77,10 @@ export default defineCommandHandler({
     const { client } = botContext
     for (const [channelId, channel] of client.channels.cache) {
       if (
-        channel.type === ChannelType.GuildText  //for text channel
-        || channel.type === ChannelType.GuildVoice  //for openchat at voice channel
-        || channel.type === ChannelType.GuildStageVoice //for openchat stage channel
-        || channel.type === ChannelType.PublicThread //for public thread and forum
+        channel.type === ChannelType.GuildText || //for text channel
+        channel.type === ChannelType.GuildVoice || //for openchat at voice channel
+        channel.type === ChannelType.GuildStageVoice || //for openchat stage channel
+        channel.type === ChannelType.PublicThread //for public thread and forum
       ) {
         const messages = await channel.messages.fetch()
         const userMessages = messages.filter(
@@ -97,7 +97,7 @@ export default defineCommandHandler({
           } catch (error) {
             // Reply about the error
             //for error 400 : you can bulk delete messages that are under 14 days old.
-            if((error as DiscordAPIError).status === 400){ 
+            if ((error as DiscordAPIError).status === 400) {
               await interaction.editReply({
                 content: `${(error as DiscordAPIError).message}`,
                 components: [],
