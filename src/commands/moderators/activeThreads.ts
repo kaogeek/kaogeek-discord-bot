@@ -23,8 +23,6 @@ export default {
   ephemeral: false,
   execute: async (client, interaction) => {
     if (!interaction.guild || !interaction.isChatInputCommand()) return
-
-    // Load active threads
     const data = await getActiveThreads(client, interaction.guild)
 
     // Sort threads by last message (more recent first)
