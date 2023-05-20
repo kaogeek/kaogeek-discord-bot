@@ -4,6 +4,8 @@ import { Environment } from '../config.js'
 import { prisma } from '../prisma.js'
 import { defineEventHandler } from '../types/defineEventHandler.js'
 
+const trackingRoles = new Set([Environment.FLAG_ROLE_ID])
+
 export default defineEventHandler({
   eventName: Events.GuildMemberUpdate,
   once: false,
@@ -34,7 +36,7 @@ export default defineEventHandler({
       if (!role) continue
 
       // add flag role to database
-      if (roleId === Environment.FLAG_ROLE_ID) {
+      if (trackingRoles.has(roleId)) {
         try {
           await prisma.userRole.create({
             data: {
@@ -58,7 +60,7 @@ export default defineEventHandler({
       if (!role) continue
 
       // remove flag role from database
-      if (roleId === Environment.FLAG_ROLE_ID) {
+      if (trackingRoles.has(roleId)) {
         try {
           await prisma.userRole.delete({
             where: { userId_roleId: { roleId, userId: next.user.id } },
