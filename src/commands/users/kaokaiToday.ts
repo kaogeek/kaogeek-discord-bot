@@ -18,7 +18,7 @@ async function fetchHTML(url: string): Promise<string> {
 export default {
   data: {
     name: 'kaokai-today',
-    description: 'News from Move Forward Partys',
+    description: 'News from Move Forward Party',
     options: [
       {
         name: 'latest', 
