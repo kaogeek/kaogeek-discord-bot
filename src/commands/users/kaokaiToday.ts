@@ -2,7 +2,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
-import { CommandInteraction } from '../../../node_modules/discord.js/typings/index.js'
+import { CommandInteraction } from 'discord.js';
 
 //Fetch HTML Func
 async function fetchHTML(url: string): Promise<string> {
