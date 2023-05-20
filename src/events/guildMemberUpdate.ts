@@ -7,9 +7,19 @@ export default {
   once: false,
   execute: async (_client, prev, next) => {
     if (prev.nickname !== next.nickname) {
-      console.info(
-        `[guildMemberUpdate] "${next.user.tag}" [${next.id}] changed nickname from "${prev.nickname}" to "${next.nickname}" in "${next.guild.name}" [${next.guild.id}]`,
-      )
+      if (!prev.nickname) {
+        console.info(
+          `[guildMemberUpdate] "${next.user.tag}" [${next.id}] set their nickname to "${next.nickname}" in "${next.guild.name}" [${next.guild.id}]`,
+        )
+      } else if (!next.nickname) {
+        console.info(
+          `[guildMemberUpdate] "${next.user.tag}" [${next.id}] removed their nickname "${prev.nickname}" in "${next.guild.name}" [${next.guild.id}]`,
+        )
+      } else {
+        console.info(
+          `[guildMemberUpdate] "${next.user.tag}" [${next.id}] changed nickname from "${prev.nickname}" to "${next.nickname}" in "${next.guild.name}" [${next.guild.id}]`,
+        )
+      }
     }
     const prevRoles = new Set(prev.roles.cache.map((role) => role.id))
     const nextRoles = new Set(next.roles.cache.map((role) => role.id))
