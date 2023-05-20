@@ -67,3 +67,11 @@ model UserProfile {
   displayName String
   strikes     Int    @default(0)
 }
+
+model UserRole {
+  userId   String
+  roleId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  @@id([userId, roleId])
+}
