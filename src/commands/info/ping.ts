@@ -1,6 +1,6 @@
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'ping',
     description: 'Ping!',
@@ -13,4 +13,4 @@ export default {
       ],
     })
   },
-} satisfies CommandHandlerConfig
+})

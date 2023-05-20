@@ -1,9 +1,9 @@
 import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 import isOnlyEmoji from '../utils/isOnlyEmoji.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
   execute: async (client, message) => {
@@ -16,4 +16,4 @@ export default {
       }
     }
   },
-} satisfies EventHandlerConfig<Events.MessageCreate>
+})

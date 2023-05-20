@@ -1,10 +1,10 @@
 import { ApplicationCommandType, TextChannel } from 'discord.js'
 
 import { Environment } from '../../config.js'
-import { prisma } from '../../prisma.js'
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { isUniqueConstraintViolation, prisma } from '../../prisma.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Report to moderator',
     type: ApplicationCommandType.Message,
@@ -18,41 +18,63 @@ export default {
     const member = message?.member
     if (!member) return
 
-    const messageId = BigInt(message.id)
+    const messageId = message.id
+    const reporterId = interaction.user.id
+    const reporteeId = member.id
+
+    // TODO: Maybe allow a reason to be specified? e.g. by using a modal
+    const reason = 'Reported via context menu'
+
+    // Save the report
+    try {
+      await prisma.messageReport.create({
+        data: { messageId, reporterId, reporteeId, reason },
+      })
+    } catch (error) {
+      if (isUniqueConstraintViolation(error)) {
+        await interaction.editReply({
+          embeds: [
+            {
+              title: 'Error',
+              description: 'You have already reported this message',
+              color: 0xff0000,
+            },
+          ],
+        })
+        return
+      }
+    }
 
     // Count the number of times a message has been reported
-    const messageReportCount = await prisma.messageReportCount.upsert({
-      where: { messageId },
-      update: { count: { increment: 1 } },
-      create: { messageId, count: 1 },
-    })
-
-    const reporteeMemberId = BigInt(member.id)
+    const { _count: messageReportCount } = await prisma.messageReport.aggregate(
+      {
+        where: { messageId },
+        _count: true,
+      },
+    )
 
     // Count the number of times a user has been reported
-    const reporteeReportCount = await prisma.reporteeReportCount.upsert({
-      where: { userId: reporteeMemberId },
-      update: { count: { increment: 1 } },
-      create: { userId: reporteeMemberId, count: 1 },
-    })
+    const { _count: reporteeReportCount } =
+      await prisma.messageReport.aggregate({
+        where: { reporteeId },
+        _count: true,
+      })
 
-    const reporterMemberId = BigInt(interaction.user.id)
-
-    // Count the number of times a user has reported
-    const reporterReportCount = await prisma.reporterReportCount.upsert({
-      where: { userId: reporterMemberId },
-      update: { count: { increment: 1 } },
-      create: { userId: reporterMemberId, count: 1 },
-    })
+    // Count the number of times a user has sent a report
+    const { _count: reporterReportCount } =
+      await prisma.messageReport.aggregate({
+        where: { reporterId },
+        _count: true,
+      })
 
     // Send the link to the message into the mod channel
     const channel = client.channels.cache.get(Environment.MOD_CHANNEL_ID)
     if (!(channel instanceof TextChannel)) return
     await channel.send(
       [
-        `Reported message: https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount.count} times)`,
-        `Message author: ${member.user} (reported ${reporteeReportCount.count} times)`,
-        `Reported by: ${interaction.user} (sent ${reporterReportCount.count} reports)`,
+        `Reported message: https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount} times)`,
+        `Message author: ${member.user} (reported ${reporteeReportCount} times)`,
+        `Reported by: ${interaction.user} (sent ${reporterReportCount} reports)`,
       ].join('\n'),
     )
 
@@ -67,4 +89,4 @@ export default {
       ],
     })
   },
-} satisfies CommandHandlerConfig
+})

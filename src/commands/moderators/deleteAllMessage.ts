@@ -7,9 +7,9 @@ import {
   PermissionsBitField,
 } from 'discord.js'
 
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'Prune messages',
     type: ApplicationCommandType.Message,
@@ -110,4 +110,4 @@ export default {
       components: [],
     })
   },
-} satisfies CommandHandlerConfig
+})
