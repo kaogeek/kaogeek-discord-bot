@@ -75,7 +75,12 @@ export default {
     // Delete message in all channel
     let numDeleted = 0
     for (const [channelId, channel] of client.channels.cache) {
-      if (channel.type === ChannelType.GuildText) {
+      if (
+        channel.type === ChannelType.GuildText  //for text channel
+        || channel.type === ChannelType.GuildVoice  //for openchat at voice channel
+        || channel.type === ChannelType.GuildStageVoice //for openchat stage channel
+        || channel.type === ChannelType.PublicThread //for public thread and forum
+      ) {
         const messages = await channel.messages.fetch()
         const userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
