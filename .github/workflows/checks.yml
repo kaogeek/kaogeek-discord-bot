@@ -4,9 +4,12 @@ on:
   merge_group:
   push:
     branches: [main]
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   lint-checks:
-    name: Check Code Formatting
+    name: Check ESLint and Format
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -20,6 +23,7 @@ jobs:
         run: pnpm install
       - name: Build and lint
         run: pnpm lint
+
   type-checks:
     name: Check Type
     timeout-minutes: 10
@@ -33,5 +37,62 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
+      - name: Generate prisma types
+        run: pnpm generate:prisma
       - name: Run Type Checks
         run: pnpm typecheck
+
+  unit-test-check:
+    name: Run Test
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+      - name: 'Test'
+        run: pnpm test:coverage
+      - name: 'Report Coverage'
+        if: github.event_name == 'pull_request'
+        uses: davelosert/vitest-coverage-report-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  docker-smoke:
+    name: Run Docker Smoke Test
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Workaround: https://github.com/docker/build-push-action/issues/461
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@a946f06b5ddbde456d0115dc585e8dc3c7a0c3e0
+      - name: Build Docker image
+        id: build-and-push
+        uses: docker/build-push-action@91df6b874e498451163feb47610c87c4a218c1ee
+        with:
+          context: .
+          load: true
+          tags: bot
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Show Docker image history
+        run: docker history bot
+      - name: Create .data directory
+        run: cd smoke && mkdir -p .data && chmod a+rw .data
+      - name: Perform database migrations
+        run: cd smoke && docker compose run --rm bot npx prisma db push && test -f .data/bot.db
+      - name: Run smoke test
+        run: cd smoke && docker compose run --rm bot dist/client.js --smoke

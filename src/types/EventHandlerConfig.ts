@@ -9,3 +9,7 @@ export interface EventHandlerConfig<
   execute: EventHandlerExecutor<K>
   once?: boolean
 }
+
+// This is for use in an array, e.g. [...] satisfies AnyEventHandlerConfig[]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyEventHandlerConfig = EventHandlerConfig<any>

@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// @deprecated - Replaced with MessageReport
+model MessageReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
+  messageId BigInt @id
+  count     Int
+}
+
+// @deprecated - Replaced with MessageReport
+model ReporteeReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
+  userId BigInt @id
+  count  Int
+}
+
+// @deprecated - Replaced with MessageReport
+model ReporterReportCount {
+  // @deprecated - Discord.js uses strings for ids, so going forward, we should use a string instead of a BigInt
+  userId BigInt @id
+  count  Int
+}
+
+model MessageReport {
+  id         String   @id @default(uuid())
+  messageId  String
+  reporterId String
+  reporteeId String
+  reason     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([messageId, reporterId, reporteeId])
+  @@index([messageId])
+  @@index([reporterId])
+  @@index([reporteeId])
+}
+
+model UserModerationLog {
+  id       String @id @default(uuid())
+  userId   String
+  actorId  String
+  type     String
+  message  String
+  metadata String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+model UserProfile {
+  id          String @id
+  tag         String
+  displayName String
+  strikes     Int    @default(0)
+}

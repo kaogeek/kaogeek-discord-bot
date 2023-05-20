@@ -7,37 +7,44 @@
   "main": "dist/client.js",
   "scripts": {
     "dev": "tsx src/client.ts",
+    "dev:watch": "tsx watch src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
-    "lint": "eslint .",
-    "format": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "lint": "prettier --check \"**/*.{md,yml,json}\" && eslint . --max-warnings=0",
+    "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "generate:prisma": "prisma generate",
+    "migrate": "prisma db push"
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
     "@keyv/sqlite": "3.6.5",
     "cheerio": "1.0.0-rc.12",
+    "@prisma/client": "4.14.1",
+    "prisma": "4.14.1",
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
-    "glob": "^10.2.4",
-    "keyv": "4.5.2",
     "zod": "3.21.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
     "@tsconfig/node18": "2.0.1",
     "@types/eslint": "^8.37.0",
-    "@types/node": "18.16.7",
+    "@types/node": "18.16.13",
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
-    "eslint": "8.40.0",
+    "@vitest/coverage-c8": "0.31.1",
+    "eslint": "8.41.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.8",
-    "rimraf": "5.0.0",
+    "rimraf": "5.0.1",
     "tsx": "3.12.7",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "vitest": "0.31.1"
   },
   "engines": {
     "node": "^16.13 || ^18.12",

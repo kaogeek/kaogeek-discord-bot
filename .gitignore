@@ -129,6 +129,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+yarn.lock
 
 dist
 
@@ -137,6 +138,9 @@ dist
 
 # Datastore files
 .data
+
+/prisma/dev.db
+
 
 #MacOS
 .DS_Store

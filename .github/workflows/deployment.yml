@@ -1,0 +1,29 @@
+name: Deployment
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out code
+
+      - uses: mr-smithers-excellent/docker-build-push@v6
+        name: Build & push Docker image to registry
+        with:
+          image: kaogeek-discord-bot
+          tags: latest
+          registry: registry.yue.sh
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Run deploy script
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: public.yue.sh
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: ./deploy-bot.sh

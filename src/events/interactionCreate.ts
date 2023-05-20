@@ -1,21 +1,13 @@
+import { Events } from 'discord.js'
+
 import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
 
 export default {
-  eventName: 'interactionCreate',
+  eventName: Events.InteractionCreate,
   once: false,
   execute: async (client, interaction) => {
     if (interaction.isCommand()) {
       const commandName = interaction.commandName
-
-      // Warning: Shit code
-      if (commandName === 'Report to mod') {
-        await interaction.reply({
-          ephemeral: true,
-          content: 'Ok, reported, kthx',
-        })
-        return
-      }
-
       const command = client.commands.get(commandName)
       if (!command) return
       let bypass = true
@@ -34,4 +26,4 @@ export default {
       }
     }
   },
-} satisfies EventHandlerConfig<'interactionCreate'>
+} satisfies EventHandlerConfig<Events.InteractionCreate>
