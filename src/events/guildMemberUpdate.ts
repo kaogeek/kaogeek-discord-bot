@@ -5,7 +5,7 @@ import { defineEventHandler } from '../types/defineEventHandler.js'
 export default defineEventHandler({
   eventName: Events.GuildMemberUpdate,
   once: false,
-  execute: async (_client, prev, next) => {
+  execute: async (botContext, prev, next) => {
     if (prev.nickname !== next.nickname) {
       if (!prev.nickname) {
         console.info(

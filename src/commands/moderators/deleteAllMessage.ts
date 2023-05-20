@@ -17,7 +17,7 @@ export default defineCommandHandler({
     dmPermission: false,
   },
   ephemeral: true,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
 
     // Fetch reference message by target id
@@ -74,6 +74,7 @@ export default defineCommandHandler({
 
     // Delete message in all channel
     let numDeleted = 0
+    const { client } = botContext
     for (const [channelId, channel] of client.channels.cache) {
       if (channel.type === ChannelType.GuildText) {
         const messages = await channel.messages.fetch()

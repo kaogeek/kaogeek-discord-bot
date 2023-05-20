@@ -10,7 +10,7 @@ export default defineCommandHandler({
     type: ApplicationCommandType.Message,
   },
   ephemeral: true,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
     const message = await interaction.channel?.messages.fetch(
       interaction.targetId,
@@ -68,6 +68,7 @@ export default defineCommandHandler({
       })
 
     // Send the link to the message into the mod channel
+    const { client } = botContext
     const channel = client.channels.cache.get(Environment.MOD_CHANNEL_ID)
     if (!(channel instanceof TextChannel)) return
     await channel.send(
