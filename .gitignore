@@ -137,4 +137,3 @@ dist
 
 # Datastore files
 .data
-/prisma/dev.db
