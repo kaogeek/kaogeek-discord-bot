@@ -10,7 +10,7 @@ export default defineEventHandler({
     // if has only emoji -> delete message
     if (isOnlyEmoji(message.content)) {
       try {
-        await message.delete()
+        // await message.delete()
       } catch (err) {
         console.error(err)
       }
