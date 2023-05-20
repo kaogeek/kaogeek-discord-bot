@@ -22,10 +22,18 @@ export interface InspectProfileOptions {
   messageContext?: Message
 }
 
+interface InspectProfileContext {
+  options: InspectProfileOptions
+}
+
 export async function inspectProfile(
   options: InspectProfileOptions,
 ): Promise<void> {
-  const { client, interaction, member, messageContext } = options
+  return inspectProfileMain({ options })
+}
+
+async function inspectProfileMain(context: InspectProfileContext) {
+  const { interaction, member, messageContext } = context.options
   const logs = await prisma.userModerationLog.findMany({
     where: { userId: member.user.id },
     orderBy: { createdAt: 'desc' },
@@ -138,7 +146,7 @@ export async function inspectProfile(
         content: 'Timed out',
         ephemeral: true,
       })
-      return inspectProfile(client, interaction, member, messageContext)
+      return inspectProfileMain(context)
     }
 
     const reason = submitted.fields.getTextInputValue('reason')
@@ -158,7 +166,7 @@ export async function inspectProfile(
       content: `strike #${strikes} added to ${userProfile.tag}`,
       ephemeral: true,
     })
-    return inspectProfile(client, interaction, member, messageContext)
+    return inspectProfileMain(context)
   }
 
   if (selectedInteraction.customId === resetStrikeActionId) {
@@ -175,7 +183,7 @@ export async function inspectProfile(
       content: `strikes reset for ${userProfile.tag}`,
       ephemeral: true,
     })
-    return inspectProfile(client, interaction, member, messageContext)
+    return inspectProfileMain(context)
   }
 }
 
