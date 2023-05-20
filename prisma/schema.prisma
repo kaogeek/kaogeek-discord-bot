@@ -46,3 +46,24 @@ model MessageReport {
   @@index([reporterId])
   @@index([reporteeId])
 }
+
+model UserModerationLog {
+  id       String @id @default(uuid())
+  userId   String
+  actorId  String
+  type     String
+  message  String
+  metadata String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+model UserProfile {
+  id          String @id
+  tag         String
+  displayName String
+  strikes     Int    @default(0)
+}

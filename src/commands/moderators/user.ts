@@ -4,7 +4,7 @@ import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 
 export default {
   data: {
-    name: 'user',
+    name: 'Show user info',
     type: ApplicationCommandType.User,
   },
   ephemeral: true,
