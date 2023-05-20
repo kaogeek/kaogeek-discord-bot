@@ -1,6 +1,7 @@
 import {
   APIThreadChannel,
   ApplicationCommandType,
+  Client,
   ComponentType,
   MessageActionRowComponentData,
   PermissionsBitField,
@@ -9,7 +10,6 @@ import {
   SelectMenuComponentOptionData,
 } from 'discord.js'
 
-import Bot from '../../client.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
 
@@ -21,8 +21,9 @@ export default {
     type: ApplicationCommandType.ChatInput,
   },
   ephemeral: false,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isChatInputCommand()) return
+    const { client } = botContext
     const data = await getActiveThreads(client, interaction.guild)
 
     // Sort threads by last message (more recent first)
@@ -96,7 +97,7 @@ export default {
   },
 } satisfies CommandHandlerConfig
 
-async function getActiveThreads(client: Bot, guild: { id: string }) {
+async function getActiveThreads(client: Client, guild: { id: string }) {
   return (await client.rest.get(
     Routes.guildActiveThreads(guild.id),
   )) as RESTGetAPIGuildThreadsResult
