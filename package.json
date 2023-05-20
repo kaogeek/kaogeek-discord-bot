@@ -15,7 +15,8 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "generate:prisma": "prisma generate"
+    "generate:prisma": "prisma generate",
+    "migrate": "prisma db push"
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
