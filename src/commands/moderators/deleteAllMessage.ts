@@ -92,7 +92,7 @@ export default defineCommandHandler({
         let userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
         )
-        //? Filter messages older than 24 hours and delete it all (need to discuus about this)
+        //? Filter messages within 24 hours and delete it all (need to discuus about this)
         const twoWeeksAgo = Date.now() - 24 * 60 * 60 * 1000
         userMessages = userMessages.filter(
           (msg) => msg.createdTimestamp > twoWeeksAgo,
