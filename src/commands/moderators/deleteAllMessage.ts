@@ -97,9 +97,9 @@ export default defineCommandHandler({
           } catch (error) {
             // Reply about the error
             //for error 400 : you can bulk delete messages that are under 14 days old.
-            if ((error as DiscordAPIError).status === 400) {
+            if (error instanceof DiscordAPIError && error.status === 400) {
               await interaction.editReply({
-                content: `${(error as DiscordAPIError).message}`,
+                content: error.message,
                 components: [],
               })
               continue
