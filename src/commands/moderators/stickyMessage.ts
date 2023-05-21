@@ -72,7 +72,7 @@ export default [
           },
         })
 
-        saveCache(interaction.channelId, stickyMessage)
+        saveCache(`sticky-${interaction.channelId}`, stickyMessage)
 
         // successfully create sticky message
         console.info(`Sticky message saved: ${message}`)

@@ -3,6 +3,7 @@ import { Events } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 
 import {
+  ChannelLockType,
   isChannelLock,
   lockChannel,
   unlockChannel,
@@ -25,12 +26,12 @@ export default defineEventHandler({
     const stickyMessage = getCache(message.channelId) as StickyMessage
     console.debug(stickyMessage)
     console.debug(getCounter(message.channelId))
-    console.debug(isChannelLock(message.channelId))
-    console.debug(isChannelLock(message.channelId, true))
+    console.debug(isChannelLock(message.channelId, ChannelLockType.COOLDOWN))
+    console.debug(isChannelLock(message.channelId, ChannelLockType.AVAILABLE))
 
     // if message exceed max count push sticky message to bottom
     if (stickyMessage && isNeedToUpdateMessage(message.channelId)) {
-      lockChannel(message.channelId, true)
+      lockChannel(message.channelId, ChannelLockType.AVAILABLE)
       resetCooldown(message.channelId)
       try {
         const oldMessage = await message.channel.messages.fetch(
@@ -55,7 +56,7 @@ export default defineEventHandler({
 
         saveCache(message.channelId, updatedMessage)
         resetCounter(message.channelId)
-        unlockChannel(message.channelId, true)
+        unlockChannel(message.channelId, ChannelLockType.AVAILABLE)
       } catch (err) {
         console.error(
           `error while update sticky message ${(err as Error).message}`,

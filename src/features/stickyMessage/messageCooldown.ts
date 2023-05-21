@@ -1,6 +1,11 @@
 import { Environment } from '../../config.js'
 
-import { isChannelLock, lockChannel, unlockChannel } from './lockChannel.js'
+import {
+  ChannelLockType,
+  isChannelLock,
+  lockChannel,
+  unlockChannel,
+} from './lockChannel.js'
 
 interface ChannelCounter {
   [channelId: string]: number
@@ -82,8 +87,8 @@ export function isNeedToUpdateMessage(channelId: string): boolean {
   }
 
   return (
-    !isChannelLock(channelId, true) &&
-    isChannelLock(channelId) &&
+    !isChannelLock(channelId, ChannelLockType.AVAILABLE) &&
+    isChannelLock(channelId, ChannelLockType.COOLDOWN) &&
     count < Environment.MESSAGE_MAX
   )
 }
