@@ -22,7 +22,7 @@ import { getCache, saveCache } from '../utils/cache.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (botContext, message) => {
+  execute: async (_botContext, message) => {
     const stickyMessage = getCache(
       `sticky-${message.channelId}`,
     ) as StickyMessage
@@ -31,9 +31,13 @@ export default defineEventHandler({
     console.debug(isChannelLock(message.channelId, ChannelLockType.COOLDOWN))
     console.debug(isChannelLock(message.channelId, ChannelLockType.AVAILABLE))
 
-    // if message exceed max count push sticky message to bottom
+    // if message need to update -> push sticky message to bottom
     if (stickyMessage && isNeedToUpdateMessage(message.channelId)) {
-      lockChannel(message.channelId, ChannelLockType.AVAILABLE)
+      if (isChannelLock(message.channelId)) {
+        return
+      }
+
+      lockChannel(message.channelId)
       resetCooldown(message.channelId)
       try {
         const oldMessage = await message.channel.messages.fetch(
@@ -58,7 +62,7 @@ export default defineEventHandler({
 
         saveCache(`sticky-${message.channelId}`, updatedMessage)
         resetCounter(message.channelId)
-        unlockChannel(message.channelId, ChannelLockType.AVAILABLE)
+        unlockChannel(message.channelId)
       } catch (err) {
         console.error(
           `error while update sticky message ${(err as Error).message}`,
