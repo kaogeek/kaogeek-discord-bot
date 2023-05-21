@@ -4,59 +4,22 @@ import { StickyMessage } from '@prisma/client'
 
 import { Environment } from '../../config.js'
 
-import {
-  ChannelLockType,
-  isChannelLock,
-  lockChannel,
-  unlockChannel,
-} from './lockChannel.js'
-import { pushMessageToBottom } from './pushMessageToBottom.js'
+import { pushMessageToBottom } from './index.js'
+import { ChannelLockType, lockChannel, unlockChannel } from './lockChannel.js'
 
-interface ChannelCounter {
-  [channelId: string]: number
-}
-
-const messageInChannelCounter: ChannelCounter = {}
-
-/**
- * Increase counter of the message that was sent in the channel
- *
- * @param {string} channelId - the id of channel that message want sent
- *
- */
-export function incCounter(channelId: string): void {
-  if (!++messageInChannelCounter[channelId]) {
-    messageInChannelCounter[channelId] = 1
-  }
-}
-
-/**
- * Reset the counter
- *
- * @param {string} channelId - the id of channel of counter that want to reset
- *
- */
-export function resetCounter(channelId: string): void {
-  messageInChannelCounter[channelId] = 1
-}
-
-/**
- * Get current message count
- *
- * @param {string} channelId - the id of channel that message want sent
- *
- */
-export function getCounter(channelId: string): number {
-  return messageInChannelCounter[channelId]
-}
-
-interface ChannelCooldown {
+interface IChannelCooldownContainer {
   [channelId: string]: NodeJS.Timeout
 }
 
-const channelCooldown: ChannelCooldown = {}
+const channelCooldown: IChannelCooldownContainer = {}
 
-export async function startCooldown(channelId: string) {
+/**
+ * Start the cooldown for the specified channel.
+ *
+ * @param {string} channelId - The ID of the channel to start the cooldown.
+ * @returns {Promise<void>} A Promise that resolves once the cooldown is set.
+ */
+export async function startCooldown(channelId: string): Promise<void> {
   lockChannel(channelId, ChannelLockType.COOLDOWN)
 
   const cooldown = channelCooldown[channelId]
@@ -73,11 +36,12 @@ export async function startCooldown(channelId: string) {
 }
 
 /**
- * set cooldown of the channel
- *
- * @param {string} channelId - the id of channel that want to reset cooldown
- *
+ * Set the cooldown of the channel.
+ * @param {Message} message - The message object associated with the channel.
+ * @param {StickyMessage} stickyMessage - The sticky message associated with the channel.
+ * @returns {Promise<void>} A Promise that resolves once the cooldown is set.
  */
+
 export async function resetCooldown(
   message: Message,
   stickyMessage: StickyMessage,
@@ -96,22 +60,4 @@ export async function resetCooldown(
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
   channelCooldown[message.channelId] = timeoutId
-}
-
-/**
- * Check if it is necessary to update the sticky message at the bottom of the channel.
- *
- * @param {string} channelId - The ID of the channel to check.
- * @returns `true` if the conditions for updating the message are met, otherwise `false`.
- *
- */
-export function isNeedToUpdateMessage(channelId: string): boolean {
-  //! message >= 5 (even it is cooldown) -> true
-  //! channel lock (available) and message >= 5 -> false
-  // channel unlock and message < 5 -> true
-  // channel lock (cooldown) and message < 5 -> false
-  return (
-    !isChannelLock(channelId, ChannelLockType.COOLDOWN) ||
-    getCounter(channelId) >= Environment.MESSAGE_MAX
-  )
 }

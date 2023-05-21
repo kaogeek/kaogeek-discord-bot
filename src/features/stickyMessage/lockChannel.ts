@@ -3,12 +3,12 @@ export enum ChannelLockType {
   COOLDOWN,
 }
 
-export interface ChannelLock {
+export interface IChannelLockContainer {
   [channelId: string]: boolean
 }
 
-const channelLock: ChannelLock = {}
-const channelLockCooldown: ChannelLock = {}
+const channelLock: IChannelLockContainer = {}
+const channelLockCooldown: IChannelLockContainer = {}
 
 /**
  * Set the channel status to locked

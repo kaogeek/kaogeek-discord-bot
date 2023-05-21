@@ -2,12 +2,12 @@ import { Events } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 
-import { isChannelLock } from '../features/stickyMessage/lockChannel.js'
 import {
-  incCounter,
   isNeedToUpdateMessage,
-} from '../features/stickyMessage/messageCooldown.js'
-import { pushMessageToBottom } from '../features/stickyMessage/pushMessageToBottom.js'
+  pushMessageToBottom,
+} from '../features/stickyMessage/index.js'
+import { isChannelLock } from '../features/stickyMessage/lockChannel.js'
+import { incCounter } from '../features/stickyMessage/messageCounter.js'
 import { defineEventHandler } from '../types/defineEventHandler.js'
 import { getCache } from '../utils/cache.js'
 
