@@ -85,18 +85,16 @@ export default defineCommandHandler({
     let numDeleted = 0
     const { client } = botContext
 
-    const supportedTextChannel: supportedTextChannel[] = [
+    const selectedChannel: supportedTextChannel[] = [
       ChannelType.GuildText,
       ChannelType.GuildVoice,
       ChannelType.GuildStageVoice,
       ChannelType.PublicThread,
-      ChannelType.PrivateThread,
-      ChannelType.AnnouncementThread,
     ]
 
     for (const [channelId, channel] of client.channels.cache) {
       // Check if the channel type is in the supported text channel array
-      if (isInArray(channel.type, supportedTextChannel)) {
+      if (isInArray(channel.type, selectedChannel)) {
         //supportedTextChannel only contains TextChannel,we can cast channel to TextChannel without any issues.
         const messages = await (channel as TextChannel).messages.fetch()
         let userMessages = messages.filter(
