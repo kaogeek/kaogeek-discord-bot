@@ -14,7 +14,6 @@ export default defineCommandHandler({
     await interaction.editReply({
       content: [
         'Configuration has been reloaded.',
-        '',
         '```json',
         JSON.stringify(data, null, 2),
         '```',
