@@ -9,6 +9,8 @@ export const EnvironmentSchema = z.object({
   MOD_CHANNEL_ID: z.string(),
   DATABASE_URL: z.string(),
   PRISMA_LOG: z.coerce.boolean().default(false),
+  MESSAGE_COOLDOWN_SEC: z.coerce.number().default(15),
+  MESSAGE_MAX: z.coerce.number().default(5),
 })
 
 export const Environment = Env(EnvironmentSchema)
