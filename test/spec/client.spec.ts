@@ -18,8 +18,7 @@ describe('Bot', () => {
     vi.clearAllMocks()
   })
 
-  it('should defined', async () => {
-    client.init = vi.fn()
+  it('should be defined', async () => {
     expect(client).toBeDefined()
   })
 })
