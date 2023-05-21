@@ -4,12 +4,12 @@ import {
   ChannelType,
   ComponentType,
   DiscordAPIError,
+  GuildTextBasedChannelTypes,
   PermissionsBitField,
   TextChannel,
 } from 'discord.js'
 
 import { defineCommandHandler } from '../../types/defineCommandHandler.js'
-import { supportedTextChannel } from '../../utils/supportedTextChannel.js'
 import { isInArray } from '../../utils/typeGuards.js'
 
 export default defineCommandHandler({
@@ -85,7 +85,7 @@ export default defineCommandHandler({
     let numDeleted = 0
     const { client } = botContext
 
-    const selectedChannel: supportedTextChannel[] = [
+    const selectedChannel: GuildTextBasedChannelTypes[] = [
       ChannelType.GuildText,
       ChannelType.GuildVoice,
       ChannelType.GuildStageVoice,
