@@ -142,8 +142,8 @@ async function pruneThreads(
     let count = 0
     for (const threadId of threadIds) {
       const thread = botContext.client.channels.cache.get(threadId)
-      if (!thread || !('edit' in thread)) continue
-      await thread.edit({ archived: true })
+      if (!thread || !('setArchived' in thread)) continue
+      await thread.setArchived(true)
       count++
       if (Date.now() - lastUpdate > 5e3) {
         await selectInteraction.editReply({
