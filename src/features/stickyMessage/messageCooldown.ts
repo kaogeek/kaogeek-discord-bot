@@ -32,7 +32,7 @@ export function incCounter(channelId: string): void {
  *
  */
 export function resetCounter(channelId: string): void {
-  messageInChannelCounter[channelId] = 0
+  messageInChannelCounter[channelId] = 1
 }
 
 /**
