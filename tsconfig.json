@@ -7,10 +7,5 @@
     "module": "esnext",
     "moduleResolution": "nodenext"
   },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ]
+  "include": ["src"]
 }

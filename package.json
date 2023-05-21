@@ -14,7 +14,7 @@
     "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p test/tsconfig.json",
     "generate:prisma": "prisma generate",
     "migrate": "prisma db push"
   },

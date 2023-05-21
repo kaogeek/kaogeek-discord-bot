@@ -2,8 +2,7 @@
   "extends": "@tsconfig/node18",
   "compilerOptions": {
     "noEmit": true,
-    "composite": true,
     "moduleResolution": "nodenext"
   },
-  "include": ["test", "src"]
+  "include": [".", "../src"]
 }
