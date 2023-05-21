@@ -12,5 +12,10 @@ export const EnvironmentSchema = z.object({
   PRISMA_LOG: z.coerce.boolean().default(false),
 })
 
+export const RuntimeConfigurationSchema = z.object({})
+export type RuntimeConfigurationSchema = z.infer<
+  typeof RuntimeConfigurationSchema
+>
+
 export const Environment = Env(EnvironmentSchema)
 export type Environment = z.infer<typeof EnvironmentSchema>

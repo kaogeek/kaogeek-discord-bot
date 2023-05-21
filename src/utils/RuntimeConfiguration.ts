@@ -1,14 +1,7 @@
 import { copyFileSync, existsSync, readFileSync } from 'fs'
 import * as toml from 'toml'
-import { z } from 'zod'
 
-import { Environment } from '../config.js'
-
-export const RuntimeConfigurationSchema = z.object({})
-
-export type RuntimeConfigurationSchema = z.infer<
-  typeof RuntimeConfigurationSchema
->
+import { Environment, RuntimeConfigurationSchema } from '../config.js'
 
 export class RuntimeConfiguration {
   private _data?: RuntimeConfigurationSchema
