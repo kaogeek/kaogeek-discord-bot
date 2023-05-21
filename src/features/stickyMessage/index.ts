@@ -76,10 +76,6 @@ export async function pushMessageToBottom(
  *
  */
 export function isNeedToUpdateMessage(channelId: string): boolean {
-  //! message >= 5 (even it is cooldown) -> true
-  //! channel lock (available) and message >= 5 -> false
-  // channel unlock and message < 5 -> true
-  // channel lock (cooldown) and message < 5 -> false
   return (
     !isChannelLock(channelId, ChannelLockType.COOLDOWN) ||
     getCounter(channelId) >= Environment.MESSAGE_MAX

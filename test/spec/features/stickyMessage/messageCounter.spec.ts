@@ -15,13 +15,6 @@ vi.mock('../../../../src/config.js', async () => {
   return { Environment }
 })
 
-vi.mock('../../../../src/stickyMessage/messageCooldown', async () => {
-  const getCounter = vi.fn()
-  const incCounter = vi.fn()
-
-  return { getCounter, incCounter }
-})
-
 describe('incCounter', () => {
   afterEach(() => {
     vi.clearAllMocks()

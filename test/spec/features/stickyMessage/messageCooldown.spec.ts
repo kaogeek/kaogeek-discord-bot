@@ -25,14 +25,6 @@ vi.mock('../../../../src/features/stickyMessage/index', async () => {
   return { pushMessageToBottom }
 })
 
-vi.mock('../../../../src/features/stickyMessage/lockChannel', async () => {
-  const lockChannel = vi.fn()
-  const unlockChannel = vi.fn()
-  const ChannelLockType = { COOLDOWN: 1 }
-
-  return { lockChannel, unlockChannel, ChannelLockType }
-})
-
 describe('startCooldown', () => {
   afterEach(() => {
     vi.clearAllMocks()

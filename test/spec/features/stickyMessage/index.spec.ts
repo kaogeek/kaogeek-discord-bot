@@ -13,29 +13,6 @@ vi.mock('../../../../src/config.js', async () => {
   return { Environment }
 })
 
-vi.mock('../../../../src/features/stickyMessage/messageCounter', async () => {
-  const getCounter = vi.fn()
-  const incCounter = vi.fn()
-  const resetCounter = vi.fn()
-
-  return { getCounter, incCounter, resetCounter }
-})
-
-vi.mock('../../../../src/features/stickyMessage/messageCooldown', async () => {
-  const resetCooldown = vi.fn()
-
-  return { resetCooldown }
-})
-
-vi.mock('../../../../src/features/stickyMessage/lockChannel', async () => {
-  const lockChannel = vi.fn()
-  const unlockChannel = vi.fn()
-  const isChannelLock = vi.fn()
-  const ChannelLockType = { COOLDOWN: 1 }
-
-  return { lockChannel, unlockChannel, isChannelLock, ChannelLockType }
-})
-
 describe('isNeedToUpdateMessage', () => {
   afterEach(() => {
     vi.clearAllMocks()
