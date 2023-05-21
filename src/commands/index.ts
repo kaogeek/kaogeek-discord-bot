@@ -7,6 +7,7 @@ import inspectProfile from './moderators/inspectProfile.js'
 import report from './moderators/report.js'
 import user from './moderators/user.js'
 import reloadConfig from './runtimeConfig/reloadConfig.js'
+import showConfig from './runtimeConfig/showConfig.js'
 
 export default [
   activeThreads,
@@ -15,5 +16,6 @@ export default [
   ping,
   reloadConfig,
   report,
+  showConfig,
   user,
 ] satisfies CommandHandlerConfig[]
