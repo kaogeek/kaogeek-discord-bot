@@ -24,6 +24,7 @@
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
     "prisma": "4.14.1",
+    "toml": "3.0.0",
     "zod": "3.21.4"
   },
   "devDependencies": {

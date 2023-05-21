@@ -7,8 +7,10 @@ import { prisma } from './prisma.js'
 import { BotContext } from './types/BotContext.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import { EventHandlerConfig } from './types/EventHandlerConfig.js'
+import { RuntimeConfiguration } from './utils/RuntimeConfiguration.js'
 
 export default class Bot extends Client {
+  private readonly runtimeConfiguration = new RuntimeConfiguration()
   private readonly commands = new Collection<string, CommandHandlerConfig>()
   private readonly isProduction = process.env.NODE_ENV === 'production'
 
@@ -27,12 +29,16 @@ export default class Bot extends Client {
     return {
       client: this,
       commands: this.commands,
+      runtimeConfiguration: this.runtimeConfiguration,
     } as BotContext
   }
 
   async initAndStart() {
     console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     this.loadHandlers()
+
+    const initialRuntimeConfig = await this.runtimeConfiguration.init()
+    console.info('[CONFIG] Runtime configuration loaded', initialRuntimeConfig)
 
     await this.login(Environment.BOT_TOKEN)
   }
