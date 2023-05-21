@@ -5,3 +5,6 @@ services:
       - ./.data:/data
     environment:
       DATABASE_URL: file:/data/bot.db
+      BOT_TOKEN: dummy
+      GUILD_ID: dummy
+      MOD_CHANNEL_ID: dummy

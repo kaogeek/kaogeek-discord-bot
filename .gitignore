@@ -128,11 +128,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+yarn.lock
+package-lock.json
 
 dist
 
 .idea
 .envrc.data
+.DS_Store
+__MACOSX
 
 # Datastore files
 .data

@@ -1,14 +1,15 @@
 import { Events } from 'discord.js'
 
-import { EventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { defineEventHandler } from '../types/defineEventHandler.js'
 
-export default {
+export default defineEventHandler({
   eventName: Events.InteractionCreate,
   once: false,
-  execute: async (client, interaction) => {
+  execute: async (botContext, interaction) => {
     if (interaction.isCommand()) {
       const commandName = interaction.commandName
-      const command = client.commands.get(commandName)
+      const { commands } = botContext
+      const command = commands.get(commandName)
       if (!command) return
       let bypass = true
       await interaction
@@ -19,11 +20,11 @@ export default {
         console.log(
           `[Command] ${interaction.user.tag} (${interaction.user.id}) > ${interaction.commandName}`,
         )
-        await command.execute(client, interaction)
+        await command.execute(botContext, interaction)
       } catch (error) {
         console.error(error)
         await interaction.deleteReply()
       }
     }
   },
-} satisfies EventHandlerConfig<Events.InteractionCreate>
+})

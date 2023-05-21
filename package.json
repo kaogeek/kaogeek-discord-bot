@@ -7,22 +7,23 @@
   "main": "dist/client.js",
   "scripts": {
     "dev": "tsx src/client.ts",
+    "dev:watch": "tsx watch src/client.ts",
     "build": "rimraf dist && tsc --build",
     "start": "NODE_ENV=production node dist/client.js",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "prettier --check \"**/*.{md,yml,json}\" && eslint . --max-warnings=0",
+    "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "format": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "generate:prisma": "prisma generate"
+    "generate:prisma": "prisma generate",
+    "migrate": "prisma db push"
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
-    "@keyv/sqlite": "3.6.5",
     "@prisma/client": "4.14.1",
-    "prisma": "4.14.1",
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
+    "prisma": "4.14.1",
     "zod": "3.21.4"
   },
   "devDependencies": {
@@ -33,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
     "@vitest/coverage-c8": "0.31.1",
-    "eslint": "8.40.0",
+    "eslint": "8.41.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
