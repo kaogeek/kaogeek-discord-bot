@@ -43,16 +43,11 @@ export default {
         ),
       },
       ...stats.pruningCriteria.map((item) => ({
-        label: `${item.name} (${item.threadIds.length}) (unimplemented)`,
+        label: `${item.name} (${item.threadIds.length})`,
         value: actionSet.register(
           'prune-old-threads',
-          async (selectInteraction) => {
-            // TODO: Implement
-            await selectInteraction.reply({
-              content: 'Unimplemented!',
-              ephemeral: true,
-            })
-          },
+          async (selectInteraction) =>
+            pruneThreads(botContext, selectInteraction, item.threadIds),
         ),
       })),
     ]
@@ -130,4 +125,40 @@ async function generateReport(
     files: [new AttachmentBuilder(Buffer.from(tsv), { name: 'threads.tsv' })],
     ephemeral: true,
   })
+}
+
+async function pruneThreads(
+  botContext: BotContext,
+  selectInteraction: MessageComponentInteraction,
+  threadIds: string[],
+) {
+  await selectInteraction.reply({
+    content: `Archiving ${threadIds.length} threads...`,
+    ephemeral: true,
+  })
+
+  try {
+    let lastUpdate = 0
+    let count = 0
+    for (const threadId of threadIds) {
+      const thread = botContext.client.channels.cache.get(threadId)
+      if (!thread || !('edit' in thread)) continue
+      await thread.edit({ archived: true })
+      count++
+      if (Date.now() - lastUpdate > 5e3) {
+        await selectInteraction.editReply({
+          content: `Archived ${count}/${threadIds.length} threads...`,
+        })
+        lastUpdate = Date.now()
+      }
+    }
+
+    await selectInteraction.editReply({
+      content: `Finished archiving ${threadIds.length} threads.`,
+    })
+  } catch (error) {
+    await selectInteraction.editReply({
+      content: `Error archiving threads: ${error}`,
+    })
+  }
 }

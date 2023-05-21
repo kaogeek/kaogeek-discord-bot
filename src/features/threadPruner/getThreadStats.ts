@@ -14,7 +14,7 @@ export function getThreadStats(threads: APIThreadChannel[]) {
   let pruningCriteria: PruningCriteria[] = []
 
   // By last message timestamp
-  for (const h of [1, 3, 6, 24, 48, 72]) {
+  for (const h of [72, 48, 24, 6, 3, 1]) {
     const name = `Prune threads with last message older than ${h}h`
     const threadIds = threads
       .filter((thread) => {
