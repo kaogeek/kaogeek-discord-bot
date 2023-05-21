@@ -5,6 +5,6 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json-summary', 'json'],
     },
-    exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
+    include: ['test/**/*.e2e.spec.ts'],
   },
 })
