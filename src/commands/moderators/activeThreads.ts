@@ -93,6 +93,9 @@ async function generateReport(
   interaction: MessageComponentInteraction,
   threads: APIThreadChannel[],
 ) {
+  const sanitizeTsvCell = (cell: unknown) => {
+    return String(cell).replace(/\s+/g, ' ')
+  }
   const tsv = [
     [
       'ID',
@@ -118,7 +121,7 @@ async function generateReport(
       ]
     }),
   ]
-    .map((row) => row.join('\t'))
+    .map((row) => row.map(sanitizeTsvCell).join('\t'))
     .join('\n')
   await interaction.reply({
     content: 'Here is the report.',
