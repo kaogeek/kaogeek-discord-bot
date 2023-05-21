@@ -4,10 +4,6 @@ const numberRegex = /-?\d+(\.\d+)?/
 
 export default (msg: string): boolean => {
   const emoji = msg.match(emojiRegex)
-  // console.log(emoji)
-  // console.log(emoji.join('').trim())
-  // console.log(emoji?.map((emo)=>{return emo.codePointAt(0).toString(16)}))
-  // console.log(msg.replace(/\s+/g, ""))
   //the issue of #99(https://github.com/creatorsgarten/kaogeek-discord-bot/pull/99) only happend with only number message,
   //so detect number in message and return false if there is.
   if (msg.trim().match(numberRegex)) return false

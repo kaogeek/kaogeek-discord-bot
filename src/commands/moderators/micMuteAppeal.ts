@@ -21,7 +21,6 @@ export default defineCommandHandler({
       return
     }
     if (interaction.member instanceof GuildMember) {
-      //console.log(interaction.member.voice)
       //when start the bot, all user voice state might be null.This if statement is to prevent it.
       if (interaction.member.voice.serverMute === null) {
         interaction.editReply('please join voice channel')
@@ -33,7 +32,6 @@ export default defineCommandHandler({
           'you are not muted, you will be timed out for one minute due to the false mute appeal.',
         )
         setTimeout(async () => {
-          console.log('done waitting')
           await interaction.deleteReply()
         }, 5000)
         try {
