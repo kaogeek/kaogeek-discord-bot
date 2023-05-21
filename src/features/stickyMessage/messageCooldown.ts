@@ -62,7 +62,7 @@ export function resetCooldown(channelId: string): void {
 
   const timeoutId = setTimeout(() => {
     unlockChannel(channelId, ChannelLockType.COOLDOWN)
-  }, Environment.MESSAGE_COOLDOWN_SEC)
+  }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
   channelCooldown[channelId] = timeoutId
 }
@@ -79,16 +79,8 @@ export function isNeedToUpdateMessage(channelId: string): boolean {
   // channel unlock and message < 5 push
   // channel lock cooldown and message < 5 do nothing
   //! channel lock available and message >= 5 do nothing -> doing task
-
-  const count = getCounter(channelId)
-
-  if (count >= Environment.MESSAGE_MAX) {
-    return true
-  }
-
   return (
-    !isChannelLock(channelId, ChannelLockType.AVAILABLE) &&
-    isChannelLock(channelId, ChannelLockType.COOLDOWN) &&
-    count < Environment.MESSAGE_MAX
+    !isChannelLock(channelId, ChannelLockType.COOLDOWN) ||
+    getCounter(channelId) >= Environment.MESSAGE_MAX
   )
 }
