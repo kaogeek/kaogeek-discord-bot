@@ -1,5 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-it('works', () => {
-  expect(1 + 1).toBe(2)
+import Bot from '../../src/client'
+
+describe('bot client', () => {
+  it('should successfully connect to a discord server', async () => {
+    await expect(new Bot().initAndStart()).resolves.not.toThrowError()
+  })
 })
