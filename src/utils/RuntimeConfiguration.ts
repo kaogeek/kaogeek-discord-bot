@@ -8,6 +8,8 @@ import { RuntimeConfigurationSchema } from './RuntimeConfigurationSchema.js'
 export class RuntimeConfiguration {
   private _data?: RuntimeConfigurationSchema
 
+  constructor(private readonly url = Environment.BOT_CONFIG) {}
+
   async init() {
     return this._data ?? (await this.reload())
   }
@@ -20,7 +22,7 @@ export class RuntimeConfiguration {
   }
 
   private async fetch(): Promise<string> {
-    const url = Environment.BOT_CONFIG
+    const { url } = this
 
     // Handle local file
     if (url.startsWith('file:')) {
