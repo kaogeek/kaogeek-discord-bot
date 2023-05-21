@@ -58,10 +58,10 @@ const channelCooldown: ChannelCooldown = {}
  *
  */
 export function resetCooldown(channelId: string): void {
-  lockChannel(channelId)
+  lockChannel(channelId, ChannelLockType.COOLDOWN)
 
   const timeoutId = setTimeout(() => {
-    unlockChannel(channelId)
+    unlockChannel(channelId, ChannelLockType.COOLDOWN)
   }, Environment.MESSAGE_COOLDOWN_SEC)
 
   channelCooldown[channelId] = timeoutId
