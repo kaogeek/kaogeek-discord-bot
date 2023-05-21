@@ -56,6 +56,22 @@ interface ChannelCooldown {
 
 const channelCooldown: ChannelCooldown = {}
 
+export async function startCooldown(channelId: string) {
+  lockChannel(channelId, ChannelLockType.COOLDOWN)
+
+  const cooldown = channelCooldown[channelId]
+
+  if (cooldown) {
+    clearTimeout(cooldown)
+  }
+
+  const timeoutId = setTimeout(() => {
+    unlockChannel(channelId, ChannelLockType.COOLDOWN)
+  }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
+
+  channelCooldown[channelId] = timeoutId
+}
+
 /**
  * set cooldown of the channel
  *
