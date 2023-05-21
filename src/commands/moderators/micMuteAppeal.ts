@@ -38,7 +38,7 @@ export default defineCommandHandler({
           //time out does not work on user with higher role hierachy.
           await interaction.member.timeout(1000 * 60)
         } catch (err) {
-          console.log(err)
+          
         }
         return
       }
@@ -68,7 +68,7 @@ export default defineCommandHandler({
               `${interaction.member.user}, please connect to voice channel, so we can unmute you.`,
             )
           }
-          console.log(err)
+          
         }
       }
     }
