@@ -1,4 +1,4 @@
-import { GuildMember } from 'discord.js'
+import { CacheType, ChatInputCommandInteraction, GuildMember } from 'discord.js'
 
 import { Environment } from '../../config.js'
 import { addUserModerationLogEntry } from '../../features/profileInspector/index.js'
@@ -23,38 +23,33 @@ export default defineCommandHandler({
     if (interaction.member instanceof GuildMember) {
       //when start the bot, all user voice state might be null.This if statement is to prevent it.
       if (interaction.member.voice.serverMute === null) {
-        interaction.editReply('please join voice channel')
+        interaction.editReply('Please join voice channel')
         return
       }
       //prevent spamming appeal when the user is not mute
       if (interaction.member.voice.serverMute === false) {
         await interaction.editReply(
-          'you are not muted, you will be timed out for one minute due to the false mute appeal.',
+          'You are not muted, you will be timed out for one minute due to the false mute appeal.',
         )
-        setTimeout(async () => {
-          await interaction.deleteReply()
-        }, 5000)
         try {
           //time out does not work on user with higher role hierachy.
           await interaction.member.timeout(1000 * 60)
-        } catch (err) {
-          
-        }
+        } catch (err) {}
         return
       }
       //if the user is mute, unmute the user.
       //unmuting might be depended on reason why user is server muted.
       else {
         try {
-          if (true) {
+          if (isMutedForSeverePusnishment(interaction)) {
             //this if condition may vary to fit the reason why the user was banned.
             await interaction.member.voice.setMute(false)
-            await interaction.editReply(`unmute ${interaction.member.user}`)
+            await interaction.editReply(`Unmute ${interaction.member.user}`)
             await addUserModerationLogEntry(
               interaction.user.id,
               interaction.user.id,
               UserModerationLogEntryType.Mute,
-              `unmute ${interaction.member.user.tag} by auto mute appeal`,
+              `Unmute ${interaction.member.user.tag} by auto mute appeal`,
             )
           } else {
             //this scope is for future development when user server mute is for severe punishment like spamming or racial slur.
@@ -68,9 +63,15 @@ export default defineCommandHandler({
               `${interaction.member.user}, please connect to voice channel, so we can unmute you.`,
             )
           }
-          
         }
       }
     }
   },
 })
+
+function isMutedForSeverePusnishment(
+  interaction: ChatInputCommandInteraction<CacheType>,
+): boolean {
+  //TODO: will implement checking once the standard is agreed among a community.
+  return true
+}

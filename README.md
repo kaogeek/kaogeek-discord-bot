@@ -18,6 +18,7 @@ If not installed, use `nvm install` to install specified version in `.nvmrc`
   ```bash
   npm install -g pnpm
   ```
+
 - Install dependencies
 
   ```bash
@@ -42,6 +43,7 @@ If not installed, use `nvm install` to install specified version in `.nvmrc`
   ```bash
   cp .env.example .env
   ```
+
 - Then, set all variables in `.env` file
 
   <details>
@@ -54,11 +56,13 @@ If not installed, use `nvm install` to install specified version in `.nvmrc`
   - `DATABASE_URL` Prisma database URL, you can use SQLite for development, set it to `file:./dev.db`
 
   </details>
+
 - To run the bot in development mode
 
   ```bash
   pnpm dev
   ```
+
 - Or run the bot in watch mode with automatic rerun on changes
 
   ```bash
