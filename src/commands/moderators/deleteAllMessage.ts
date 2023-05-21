@@ -77,7 +77,7 @@ export default defineCommandHandler({
 
     //Discord expects bot to acknowledge the interaction within 3 seconds so reply something first
     await interaction.editReply({
-      content: 'กำลังประมวลผล... โปรดรอสักครู่',
+      content: 'Processing... Please wait a moment.',
       components: [],
     })
 
@@ -100,10 +100,11 @@ export default defineCommandHandler({
         let userMessages = messages.filter(
           (msg) => msg.author.id === message?.author.id,
         )
-        //? Filter messages within 24 hours and delete it all (need to discuus about this)
-        const twoWeeksAgo = Date.now() - 24 * 60 * 60 * 1000
+        //Filter messages within 2 weeks and delete it all
+        const duration =
+          Date.now() - (14 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000) // reduce by 1 hour
         userMessages = userMessages.filter(
-          (msg) => msg.createdTimestamp > twoWeeksAgo,
+          (msg) => msg.createdTimestamp > duration,
         )
 
         if (userMessages.size > 0) {
@@ -133,6 +134,7 @@ export default defineCommandHandler({
       }
     }
     // Tell the user that the messages were successfully pruned
+    console.info(`Successfully pruned ${numDeleted} messages.`)
     await interaction.editReply({
       content: `Successfully prune messages. Number of messages deleted: ${numDeleted}`,
       components: [],
