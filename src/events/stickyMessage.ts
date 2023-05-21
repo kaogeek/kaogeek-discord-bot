@@ -54,7 +54,7 @@ export default defineEventHandler({
           },
         })
 
-        saveCache(message.channelId, updatedMessage)
+        saveCache(`sticky-${message.channelId}`, updatedMessage)
         resetCounter(message.channelId)
         unlockChannel(message.channelId, ChannelLockType.AVAILABLE)
       } catch (err) {

@@ -11,7 +11,7 @@ import { resetCooldown } from './messageCooldown.js'
 export async function initStickyMessage() {
   const messages = await prisma.stickyMessage.findMany()
   for (const message of messages) {
-    saveCache(message.channelId, message)
+    saveCache(`sticky-${message.channelId}`, message)
     resetCooldown(message.channelId)
   }
 }
