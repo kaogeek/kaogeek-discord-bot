@@ -17,6 +17,7 @@ import {
 import { BotContext } from '../../types/BotContext.js'
 import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
 import { ActionSet } from '../../utils/ActionSet.js'
+import { generateTsv } from '../../utils/generateTsv.js'
 import { toLocalDate } from '../../utils/toLocalDate.js'
 
 export default {
@@ -93,10 +94,7 @@ async function generateReport(
   interaction: MessageComponentInteraction,
   threads: APIThreadChannel[],
 ) {
-  const sanitizeTsvCell = (cell: unknown) => {
-    return String(cell).replace(/\s+/g, ' ')
-  }
-  const tsv = [
+  const tsv = generateTsv([
     [
       'ID',
       'Name',
@@ -120,9 +118,7 @@ async function generateReport(
         thread.message_count,
       ]
     }),
-  ]
-    .map((row) => row.map(sanitizeTsvCell).join('\t'))
-    .join('\n')
+  ])
   await interaction.reply({
     content: 'Here is the report.',
     files: [new AttachmentBuilder(Buffer.from(tsv), { name: 'threads.tsv' })],
