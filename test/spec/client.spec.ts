@@ -19,7 +19,7 @@ describe('Bot', () => {
   })
 
   it('should defined', async () => {
-    client.init = vi.fn()
+    client.initAndStart = vi.fn()
     expect(client).toBeDefined()
   })
 })
