@@ -8,6 +8,12 @@ vi.mock('../../src/config.js', () => {
   return { Environment }
 })
 
+vi.mock('../../src/features/stickyMessage', () => {
+  const initStickyMessage = vi.fn()
+
+  return { initStickyMessage }
+})
+
 describe('Bot', () => {
   let client: Bot
 
@@ -19,7 +25,6 @@ describe('Bot', () => {
   })
 
   it('should defined', async () => {
-    client.initAndStart = vi.fn()
     expect(client).toBeDefined()
   })
 })
