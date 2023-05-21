@@ -37,7 +37,7 @@ export default defineCommandHandler({
           await interaction.deleteReply()
         }, 5000)
         try {
-          //time out does not work on user wiht higher role hierachy.
+          //time out does not work on user with higher role hierachy.
           await interaction.member.timeout(1000 * 60)
         } catch (err) {
           console.log(err)
