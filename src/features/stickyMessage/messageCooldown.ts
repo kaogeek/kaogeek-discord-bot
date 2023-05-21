@@ -1,3 +1,7 @@
+import { Message } from 'discord.js'
+
+import { StickyMessage } from '@prisma/client'
+
 import { Environment } from '../../config.js'
 
 import {
@@ -6,6 +10,7 @@ import {
   lockChannel,
   unlockChannel,
 } from './lockChannel.js'
+import { pushMessageToBottom } from './pushMessageToBottom.js'
 
 interface ChannelCounter {
   [channelId: string]: number
@@ -57,14 +62,24 @@ const channelCooldown: ChannelCooldown = {}
  * @param channelId - the id of channel that want to reset cooldown
  *
  */
-export function resetCooldown(channelId: string): void {
-  lockChannel(channelId, ChannelLockType.COOLDOWN)
+export async function resetCooldown(
+  message: Message,
+  stickyMessage: StickyMessage,
+): Promise<void> {
+  lockChannel(message.channelId, ChannelLockType.COOLDOWN)
+
+  const cooldown = channelCooldown[message.channelId]
+
+  if (cooldown) {
+    clearTimeout(cooldown)
+  }
 
   const timeoutId = setTimeout(() => {
-    unlockChannel(channelId, ChannelLockType.COOLDOWN)
+    unlockChannel(message.channelId, ChannelLockType.COOLDOWN)
+    pushMessageToBottom(message, stickyMessage)
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
-  channelCooldown[channelId] = timeoutId
+  channelCooldown[message.channelId] = timeoutId
 }
 
 /**
