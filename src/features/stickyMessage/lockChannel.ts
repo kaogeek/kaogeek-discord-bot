@@ -3,7 +3,7 @@ export enum ChannelLockType {
   COOLDOWN,
 }
 
-interface ChannelLock {
+export interface ChannelLock {
   [channelId: string]: boolean
 }
 
@@ -13,13 +13,13 @@ const channelLockCooldown: ChannelLock = {}
 /**
  * Set the channel status to locked
  *
- * @param channelId - the id of channel that want to lock
- * @param type - type of channel lock (default = AVAILABLE)
+ * @param {string} channelId - the id of channel that want to lock
+ * @param {ChannelLockType} type - type of channel lock (default = AVAILABLE)
  *
  */
 export function lockChannel(
   channelId: string,
-  type = ChannelLockType.AVAILABLE,
+  type: ChannelLockType = ChannelLockType.AVAILABLE,
 ): void {
   switch (type) {
     case ChannelLockType.AVAILABLE:
@@ -35,13 +35,13 @@ export function lockChannel(
 /**
  * Set the channel status to unlocked
  *
- * @param channelId - the id of channel that want to unlock
- * @param type - type of channel lock (default = AVAILABLE)
+ * @param {string} channelId - the id of channel that want to unlock
+ * @param {ChannelLockType} type - type of channel lock (default = AVAILABLE)
  *
  */
 export function unlockChannel(
   channelId: string,
-  type = ChannelLockType.AVAILABLE,
+  type: ChannelLockType = ChannelLockType.AVAILABLE,
 ): void {
   switch (type) {
     case ChannelLockType.AVAILABLE:
@@ -57,14 +57,14 @@ export function unlockChannel(
 /**
  * Check the channel status is lock
  *
- * @param channelId - the id of channel that want to check
- * @param type - type of channel lock (default = AVAILABLE)
+ * @param {string} channelId - the id of channel that want to check
+ * @param {ChannelLockType} type - type of channel lock (default = AVAILABLE)
  * @returns cooldown status (default) if available flag is true return channel available status
  *
  */
 export function isChannelLock(
   channelId: string,
-  type = ChannelLockType.AVAILABLE,
+  type: ChannelLockType = ChannelLockType.AVAILABLE,
 ): boolean {
   switch (type) {
     case ChannelLockType.AVAILABLE:

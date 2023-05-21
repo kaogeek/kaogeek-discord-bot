@@ -21,7 +21,7 @@ const messageInChannelCounter: ChannelCounter = {}
 /**
  * Increase counter of the message that was sent in the channel
  *
- * @param channelId - the id of channel that message want sent
+ * @param {string} channelId - the id of channel that message want sent
  *
  */
 export function incCounter(channelId: string): void {
@@ -33,7 +33,7 @@ export function incCounter(channelId: string): void {
 /**
  * Reset the counter
  *
- * @param channelId - the id of channel of counter that want to reset
+ * @param {string} channelId - the id of channel of counter that want to reset
  *
  */
 export function resetCounter(channelId: string): void {
@@ -43,7 +43,7 @@ export function resetCounter(channelId: string): void {
 /**
  * Get current message count
  *
- * @param channelId - the id of channel that message want sent
+ * @param {string} channelId - the id of channel that message want sent
  *
  */
 export function getCounter(channelId: string): number {
@@ -75,7 +75,7 @@ export async function startCooldown(channelId: string) {
 /**
  * set cooldown of the channel
  *
- * @param channelId - the id of channel that want to reset cooldown
+ * @param {string} channelId - the id of channel that want to reset cooldown
  *
  */
 export async function resetCooldown(
@@ -99,17 +99,17 @@ export async function resetCooldown(
 }
 
 /**
- * check is need to update the sticky message to bottom of channel
+ * Check if it is necessary to update the sticky message at the bottom of the channel.
  *
- * @param channelId - the id of channel that want to check
- * @returns true if need to update otherwise false.
+ * @param {string} channelId - The ID of the channel to check.
+ * @returns `true` if the conditions for updating the message are met, otherwise `false`.
  *
  */
 export function isNeedToUpdateMessage(channelId: string): boolean {
-  //! channel lock cooldown and message >= 5 push -> cooldown
-  // channel unlock and message < 5 push
-  // channel lock cooldown and message < 5 do nothing
-  //! channel lock available and message >= 5 do nothing -> doing task
+  //! message >= 5 (even it is cooldown) -> true
+  //! channel lock (available) and message >= 5 -> false
+  // channel unlock and message < 5 -> true
+  // channel lock (cooldown) and message < 5 -> false
   return (
     !isChannelLock(channelId, ChannelLockType.COOLDOWN) ||
     getCounter(channelId) >= Environment.MESSAGE_MAX

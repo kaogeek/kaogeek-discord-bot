@@ -8,6 +8,12 @@ import { saveCache } from '../../utils/cache.js'
 import { lockChannel, unlockChannel } from './lockChannel.js'
 import { resetCooldown, resetCounter } from './messageCooldown.js'
 
+/**
+ * Pushes the sticky message to the bottom of the channel.
+ * @param {Message} message - The message object representing the triggering message.
+ * @param {StickyMessage} stickyMessage - The sticky message to be pushed to the bottom of the channel.
+ * @returns {Promise<void>} A promise that resolves when the sticky message is successfully pushed to the bottom.
+ */
 export async function pushMessageToBottom(
   message: Message,
   stickyMessage: StickyMessage,
