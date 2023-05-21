@@ -11,6 +11,7 @@ import {
   getCounter,
   incCounter,
   isNeedToUpdateMessage,
+  resetCooldown,
   resetCounter,
 } from '../features/stickyMessage/messageCooldown.js'
 import { prisma } from '../prisma.js'
@@ -20,15 +21,17 @@ import { getCache, saveCache } from '../utils/cache.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (_botContext, message) => {
+  execute: async (botContext, message) => {
     const stickyMessage = getCache(message.channelId) as StickyMessage
     console.debug(stickyMessage)
     console.debug(getCounter(message.channelId))
     console.debug(isChannelLock(message.channelId))
+    console.debug(isChannelLock(message.channelId, true))
 
     // if message exceed max count push sticky message to bottom
     if (stickyMessage && isNeedToUpdateMessage(message.channelId)) {
-      lockChannel(message.channelId)
+      lockChannel(message.channelId, true)
+      resetCooldown(message.channelId)
       try {
         const oldMessage = await message.channel.messages.fetch(
           stickyMessage.messageId,
@@ -52,7 +55,7 @@ export default defineEventHandler({
 
         saveCache(message.channelId, updatedMessage)
         resetCounter(message.channelId)
-        unlockChannel(message.channelId)
+        unlockChannel(message.channelId, true)
       } catch (err) {
         console.error(
           `error while update sticky message ${(err as Error).message}`,
