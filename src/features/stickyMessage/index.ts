@@ -1,7 +1,7 @@
 import { prisma } from '../../prisma.js'
 import { saveCache } from '../../utils/cache.js'
 
-import { resetCooldown } from './messageCooldown.js'
+import { resetCooldown, resetCounter } from './messageCooldown.js'
 
 /**
  *
@@ -13,5 +13,6 @@ export async function initStickyMessage() {
   for (const message of messages) {
     saveCache(`sticky-${message.channelId}`, message)
     resetCooldown(message.channelId)
+    resetCounter(message.channelId)
   }
 }
