@@ -1,0 +1,2 @@
+[preventEmojiSpam]
+enabled = false # Disabled for now due to #99 (bot erroneously deleting messages with only numbers). Do not re-enable until issue #108 is fixed.
