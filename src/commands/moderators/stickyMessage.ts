@@ -57,11 +57,18 @@ export default [
 
       // save message
       try {
-        const stickyMessage = await prisma.stickyMessage.create({
-          data: {
+        const stickyMessage = await prisma.stickyMessage.upsert({
+          create: {
             messageId: sentMessage.id,
             channelId: interaction.channelId,
             message: message,
+          },
+          update: {
+            messageId: sentMessage.id,
+            message: message,
+          },
+          where: {
+            channelId: interaction.channelId,
           },
         })
 
