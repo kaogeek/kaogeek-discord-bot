@@ -23,7 +23,9 @@ export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
   execute: async (botContext, message) => {
-    const stickyMessage = getCache(message.channelId) as StickyMessage
+    const stickyMessage = getCache(
+      `sticky-${message.channelId}`,
+    ) as StickyMessage
     console.debug(stickyMessage)
     console.debug(getCounter(message.channelId))
     console.debug(isChannelLock(message.channelId, ChannelLockType.COOLDOWN))
