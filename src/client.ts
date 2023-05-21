@@ -3,6 +3,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import commands from './commands/index.js'
 import { Environment } from './config.js'
 import events from './events/index.js'
+import { initStickyMessageCache } from './features/stickyMessage/cache.js'
 import { prisma } from './prisma.js'
 import { BotContext } from './types/BotContext.js'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
@@ -33,6 +34,7 @@ export default class Bot extends Client {
   async initAndStart() {
     console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     this.loadHandlers()
+    initStickyMessageCache()
 
     await this.login(Environment.BOT_TOKEN)
   }
