@@ -135,7 +135,7 @@ describe('isNeedToUpdateMessage', () => {
 })
 
 describe('pushMessageToBottom', () => {
-  let channelId: string
+  const channelId = 'test-channel'
   let inputMessage: Message
   let oldMessage: Message<true>
   let newMessage: Message<true>
@@ -143,8 +143,6 @@ describe('pushMessageToBottom', () => {
   let updatedStickyMessageEntity: StickyMessage
 
   beforeEach(() => {
-    channelId = 'test-channel'
-
     inputMessage = {
       channelId,
       channel: {
@@ -302,7 +300,7 @@ describe('pushMessageToBottom', () => {
     )
   })
 
-  //! fix later
+  //! TODO: fix later
   it.skip('should reset channel cooldown when it has error occur', async () => {
     vi.spyOn(inputMessage.channel.messages, 'fetch').mockResolvedValue(
       new Collection<string, Message<true>>().set(oldMessage.id, oldMessage),
