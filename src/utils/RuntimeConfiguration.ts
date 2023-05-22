@@ -36,7 +36,7 @@ export class RuntimeConfiguration {
         )
       }
 
-      return readFileSync(path, 'utf-8')
+      return readFileSync(path, 'utf8')
     }
 
     const response = await fetch(url)

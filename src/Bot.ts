@@ -49,12 +49,12 @@ export class Bot {
 
     for (const handler of handlers) {
       if (handler.once) {
-        this.client.once(handler.eventName, (...args) =>
-          handler.execute(this.createBotContext(), ...args),
+        this.client.once(handler.eventName, (...arguments_) =>
+          handler.execute(this.createBotContext(), ...arguments_),
         )
       } else {
-        this.client.on(handler.eventName, (...args) =>
-          handler.execute(this.createBotContext(), ...args),
+        this.client.on(handler.eventName, (...arguments_) =>
+          handler.execute(this.createBotContext(), ...arguments_),
         )
       }
     }

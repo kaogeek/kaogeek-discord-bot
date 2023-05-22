@@ -72,10 +72,10 @@ export class ActionSet<
    */
   awaitInChannel = async (
     channel?: TextBasedChannel | null,
-    timeout = 60000,
+    timeout = 60_000,
     user?: { id: string },
   ) => {
-    if (!channel) return undefined
+    if (!channel) return
     const interaction = await channel
       .awaitMessageComponent({
         filter: user
@@ -84,9 +84,9 @@ export class ActionSet<
         time: timeout,
       })
       .catch(() => null)
-    if (!interaction) return undefined
+    if (!interaction) return
     const registeredAction = this.resolve(interaction)
-    if (!registeredAction) return undefined
+    if (!registeredAction) return
     return { interaction, registeredAction }
   }
 }
