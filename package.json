@@ -15,7 +15,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:smoke": "vitest --config vitest.e2e.config",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p test/tsconfig.json",
     "generate:prisma": "prisma generate",
     "migrate": "prisma db push"
   },
@@ -25,13 +25,14 @@
     "discord.js": "14.11.0",
     "dotenv": "16.0.3",
     "prisma": "4.14.1",
+    "toml": "3.0.0",
     "zod": "3.21.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
     "@tsconfig/node18": "2.0.1",
     "@types/eslint": "^8.37.0",
-    "@types/node": "18.16.13",
+    "@types/node": "18.16.14",
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
     "@vitest/coverage-c8": "0.31.1",
