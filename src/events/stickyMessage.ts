@@ -37,12 +37,6 @@ export default defineEventHandler({
     }
 
     // if message need to update -> push sticky message to bottom
-    try {
-      await pushMessageToBottom(message, stickyMessage)
-    } catch (err) {
-      console.error(
-        `error while update sticky message ${(err as Error).message}`,
-      )
-    }
+    await pushMessageToBottom(message, stickyMessage)
   },
 })
