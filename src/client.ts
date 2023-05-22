@@ -9,25 +9,22 @@ import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
 import { EventHandlerConfig } from './types/EventHandlerConfig.js'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration.js'
 
-export default class Bot extends Client {
+export default class Bot {
+  public readonly client = new Client({
+    intents: [
+      IntentsBitField.Flags.Guilds,
+      IntentsBitField.Flags.GuildMembers,
+      IntentsBitField.Flags.GuildMessages,
+      IntentsBitField.Flags.MessageContent,
+    ],
+  })
   private readonly runtimeConfiguration = new RuntimeConfiguration()
   private readonly commands = new Collection<string, CommandHandlerConfig>()
   private readonly isProduction = process.env.NODE_ENV === 'production'
 
-  constructor() {
-    super({
-      intents: [
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMembers,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent,
-      ],
-    })
-  }
-
   private createBotContext() {
     return {
-      client: this,
+      client: this.client,
       commands: this.commands,
       runtimeConfiguration: this.runtimeConfiguration,
     } as BotContext
@@ -40,7 +37,7 @@ export default class Bot extends Client {
     const initialRuntimeConfig = await this.runtimeConfiguration.init()
     console.info('[CONFIG] Runtime configuration loaded', initialRuntimeConfig)
 
-    await this.login(Environment.BOT_TOKEN)
+    await this.client.login(Environment.BOT_TOKEN)
   }
 
   loadHandlers() {
@@ -53,11 +50,11 @@ export default class Bot extends Client {
 
     for (const handler of handlers) {
       if (handler.once) {
-        this.once(handler.eventName, (...args) =>
+        this.client.once(handler.eventName, (...args) =>
           handler.execute(this.createBotContext(), ...args),
         )
       } else {
-        this.on(handler.eventName, (...args) =>
+        this.client.on(handler.eventName, (...args) =>
           handler.execute(this.createBotContext(), ...args),
         )
       }
