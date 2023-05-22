@@ -63,6 +63,29 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v1
 
+  smoke-e2e-check:
+    name: Run Smoke Test
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+      - name: 'Smoke Test'
+        env:
+          BOT_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+          GUILD_ID: ${{ secrets.CI_GUILD_ID }}
+          MOD_CHANNEL_ID: ${{ secrets.CI_MOD_CHANNEL_ID }}
+          SMOKE_TESTER_BOT_TOKEN: ${{ secrets.CI_SMOKE_TESTER_BOT_TOKEN }}
+        run: pnpm test:smoke
+
   docker-smoke:
     name: Run Docker Smoke Test
     timeout-minutes: 10
