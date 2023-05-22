@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as channelLock from '../../../../src/features/stickyMessage/channelLock.js'
 import {
   STICKY_CACHE_PREFIX,
+  initStickyMessage,
   isNeedToUpdateMessage,
   pushMessageToBottom,
 } from '../../../../src/features/stickyMessage/index.js'
@@ -21,6 +22,49 @@ vi.mock('../../../../src/config.js', async () => {
   }
 
   return { Environment }
+})
+
+describe('initStickyMessage', () => {
+  const channelId = 'test-channel'
+  let messages: StickyMessage[]
+
+  beforeEach(() => {
+    messages = [{ channelId } as unknown as StickyMessage]
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('should query all messages from database', async () => {
+    vi.spyOn(messageCounter, 'resetCounter')
+    vi.spyOn(messageCooldown, 'startCooldown')
+    prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
+
+    await initStickyMessage()
+
+    expect(prisma.stickyMessage.findMany).toHaveBeenCalled()
+  })
+
+  it("should query start cooldown of stickyMessage's channel", async () => {
+    vi.spyOn(messageCounter, 'resetCounter')
+    vi.spyOn(messageCooldown, 'startCooldown')
+    prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
+
+    await initStickyMessage()
+
+    expect(messageCooldown.startCooldown).toHaveBeenCalledWith(channelId)
+  })
+
+  it("should reset counter of stickyMessage's channel", async () => {
+    vi.spyOn(messageCounter, 'resetCounter')
+    vi.spyOn(messageCooldown, 'startCooldown')
+    prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
+
+    await initStickyMessage()
+
+    expect(messageCounter.resetCounter).toHaveBeenCalledWith(channelId)
+  })
 })
 
 describe('isNeedToUpdateMessage', () => {
