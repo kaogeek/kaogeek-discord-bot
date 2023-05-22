@@ -12,7 +12,7 @@ import { getCounter, resetCounter } from './messageCounter.js'
 
 export const STICKY_LOCK_PREFIX = 'sticky-lock'
 export const STICKY_COOLDOWN_PREFIX = 'sticky-cooldown'
-export const STICKY_CACHE_PREFIX = 'sticky'
+export const STICKY_CACHE_PREFIX = 'sticky-cache'
 
 /**
  *  Init sticky message memory cache
@@ -39,32 +39,41 @@ export async function pushMessageToBottom(
   // lock channel
   lockChannel(message.channelId)
 
-  // get old message for delete
-  const oldMessage = await message.channel.messages.fetch(
-    stickyMessage.messageId,
-  )
+  try {
+    // get old message for delete
+    const oldMessage = await message.channel.messages.fetch(
+      stickyMessage.messageId,
+    )
 
-  await oldMessage.delete()
+    await oldMessage.delete()
 
-  const newMessage = await message.channel.send({
-    content: stickyMessage.message,
-  })
+    const newMessage = await message.channel.send({
+      content: stickyMessage.message,
+    })
 
-  // update sticky message with new id
-  const updatedMessage = await prisma.stickyMessage.update({
-    data: {
-      messageId: newMessage.id,
-    },
-    where: {
-      channelId: message.channelId,
-    },
-  })
+    // update sticky message with new when successfully send new message
+    const stickyMessageEntity = await prisma.stickyMessage.update({
+      data: {
+        messageId: newMessage.id,
+      },
+      where: {
+        channelId: message.channelId,
+      },
+    })
 
-  // save new message to cache and reset everything
-  saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, updatedMessage)
-  resetCounter(message.channelId)
-  unlockChannel(message.channelId)
-  resetCooldown(newMessage, updatedMessage)
+    // save new message to cache and reset cooldown
+    saveCache(
+      `${STICKY_CACHE_PREFIX}-${message.channelId}`,
+      stickyMessageEntity,
+    )
+    //!! if error occur cooldown may not reset
+    resetCooldown(newMessage, stickyMessageEntity)
+  } catch (err) {
+    console.error(`error while update sticky message ${(err as Error).message}`)
+  } finally {
+    resetCounter(message.channelId)
+    unlockChannel(message.channelId)
+  }
 }
 
 /**
