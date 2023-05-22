@@ -16,6 +16,9 @@ dependencies:
   prisma:
     specifier: 4.14.1
     version: 4.14.1
+  toml:
+    specifier: 3.0.0
+    version: 3.0.0
   zod:
     specifier: 3.21.4
     version: 3.21.4
@@ -2835,6 +2838,10 @@ packages:
     dependencies:
       '@tokenizer/token': 0.3.0
       ieee754: 1.2.1
+    dev: false
+
+  /toml@3.0.0:
+    resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
     dev: false
 
   /ts-mixer@6.0.3:

@@ -141,3 +141,4 @@ __MACOSX
 # Datastore files
 .data
 /prisma/dev.db
+bot-config.toml

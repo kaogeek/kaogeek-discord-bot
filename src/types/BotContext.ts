@@ -1,5 +1,7 @@
 import { Client, Collection } from 'discord.js'
 
+import { RuntimeConfiguration } from '../utils/RuntimeConfiguration.js'
+
 import { CommandHandlerConfig } from './CommandHandlerConfig.js'
 
 /**
@@ -15,4 +17,9 @@ export interface BotContext {
    * A collection of registered command handlers.
    */
   readonly commands: Collection<string, CommandHandlerConfig>
+
+  /**
+   * Access runtime configuration.
+   */
+  readonly runtimeConfiguration: RuntimeConfiguration
 }
