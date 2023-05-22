@@ -34,7 +34,9 @@ export default defineCommandHandler({
         try {
           //time out does not work on user with higher role hierachy.
           await interaction.member.timeout(1000 * 60)
-        } catch (err) {}
+        } catch (err) {
+          console.log(err)
+        }
         return
       }
       //if the user is mute, unmute the user.

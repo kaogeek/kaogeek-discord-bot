@@ -1,7 +1,6 @@
 import { Bot } from './Bot.js'
 import { prisma } from './prisma.js'
 
-
 if (process.argv.includes('--smoke')) {
   // Performs a basic smoke test
   console.info('[SMOKE] Running smoke test...')
