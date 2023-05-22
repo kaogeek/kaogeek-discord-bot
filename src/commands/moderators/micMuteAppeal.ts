@@ -27,7 +27,7 @@ export default defineCommandHandler({
         return
       }
       //prevent spamming appeal when the user is not mute
-      if (interaction.member.voice.serverMute === false) {
+      if (!interaction.member.voice.serverMute) {
         await interaction.editReply(
           'You are not muted, you will be timed out for one minute due to the false mute appeal.',
         )
