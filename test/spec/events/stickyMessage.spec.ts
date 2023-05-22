@@ -3,12 +3,12 @@ import { Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import stickyMessageEventHandler from '../../../src/events/stickyMessage'
-import * as stickyMessage from '../../../src/features/stickyMessage'
-import * as channelLock from '../../../src/features/stickyMessage/channelLock'
-import * as messageCounter from '../../../src/features/stickyMessage/messageCounter'
-import { BotContext } from '../../../src/types/BotContext'
-import * as cache from '../../../src/utils/cache'
+import stickyMessageEventHandler from '../../../src/events/stickyMessage.js'
+import * as channelLock from '../../../src/features/stickyMessage/channelLock.js'
+import * as stickyMessage from '../../../src/features/stickyMessage/index.js'
+import * as messageCounter from '../../../src/features/stickyMessage/messageCounter.js'
+import { BotContext } from '../../../src/types/BotContext.js'
+import * as cache from '../../../src/utils/cache.js'
 
 vi.mock('../../../src/config.js', async () => {
   const Environment = {

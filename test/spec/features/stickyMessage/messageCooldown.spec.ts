@@ -3,11 +3,11 @@ import { Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import * as stickyMessage from '../../../../src/features/stickyMessage'
+import * as stickyMessage from '../../../../src/features/stickyMessage/index.js'
 import {
   resetCooldown,
   startCooldown,
-} from '../../../../src/features/stickyMessage/messageCooldown'
+} from '../../../../src/features/stickyMessage/messageCooldown.js'
 import * as cache from '../../../../src/utils/cache.js'
 
 vi.mock('../../../../src/config.js', async () => {

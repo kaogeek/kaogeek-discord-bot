@@ -3,14 +3,14 @@ import { Collection, Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import * as channelLock from '../../../../src/features/stickyMessage/channelLock.js'
 import {
   STICKY_CACHE_PREFIX,
   isNeedToUpdateMessage,
   pushMessageToBottom,
-} from '../../../../src/features/stickyMessage'
-import * as channelLock from '../../../../src/features/stickyMessage/channelLock'
-import * as messageCooldown from '../../../../src/features/stickyMessage/messageCooldown'
-import * as messageCounter from '../../../../src/features/stickyMessage/messageCounter'
+} from '../../../../src/features/stickyMessage/index.js'
+import * as messageCooldown from '../../../../src/features/stickyMessage/messageCooldown.js'
+import * as messageCounter from '../../../../src/features/stickyMessage/messageCounter.js'
 import { prisma } from '../../../../src/prisma.js'
 import * as cache from '../../../../src/utils/cache.js'
 

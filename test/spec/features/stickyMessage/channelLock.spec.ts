@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { STICKY_LOCK_PREFIX } from '../../../../src/features/stickyMessage'
 import {
   isChannelLock,
   lockChannel,
   unlockChannel,
-} from '../../../../src/features/stickyMessage/channelLock'
+} from '../../../../src/features/stickyMessage/channelLock.js'
+import { STICKY_LOCK_PREFIX } from '../../../../src/features/stickyMessage/index.js'
 
 vi.mock('../../../../src/config.js', async () => {
   const Environment = {

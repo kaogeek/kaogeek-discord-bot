@@ -4,7 +4,7 @@ import {
   getCounter,
   incCounter,
   resetCounter,
-} from '../../../../src/features/stickyMessage/messageCounter'
+} from '../../../../src/features/stickyMessage/messageCounter.js'
 
 vi.mock('../../../../src/config.js', async () => {
   const Environment = {
