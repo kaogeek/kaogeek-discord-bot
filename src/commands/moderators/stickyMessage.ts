@@ -5,6 +5,7 @@ import {
   TextChannel,
 } from 'discord.js'
 
+import { STICKY_CACHE_PREFIX } from '../../features/stickyMessage/index.js'
 import { prisma } from '../../prisma.js'
 import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 import { saveCache } from '../../utils/cache.js'
@@ -72,7 +73,10 @@ export default [
           },
         })
 
-        saveCache(`sticky-${interaction.channelId}`, stickyMessage)
+        saveCache(
+          `${STICKY_CACHE_PREFIX}-${interaction.channelId}`,
+          stickyMessage,
+        )
 
         // successfully create sticky message
         console.info(`Sticky message saved: ${message}`)

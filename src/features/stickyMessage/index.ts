@@ -6,9 +6,13 @@ import { Environment } from '../../config.js'
 import { prisma } from '../../prisma.js'
 import { saveCache } from '../../utils/cache.js'
 
-import { lockChannel, unlockChannel } from './lockChannel.js'
+import { lockChannel, unlockChannel } from './channelLock.js'
 import { isCooldown, resetCooldown, startCooldown } from './messageCooldown.js'
 import { getCounter, resetCounter } from './messageCounter.js'
+
+export const STICKY_LOCK_PREFIX = 'sticky-lock'
+export const STICKY_COOLDOWN_PREFIX = 'sticky-cooldown'
+export const STICKY_CACHE_PREFIX = 'sticky'
 
 /**
  *  Init sticky message memory cache
@@ -16,7 +20,7 @@ import { getCounter, resetCounter } from './messageCounter.js'
 export async function initStickyMessage() {
   const messages = await prisma.stickyMessage.findMany()
   for (const message of messages) {
-    saveCache(`sticky-${message.channelId}`, message)
+    saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, message)
     resetCounter(message.channelId)
     startCooldown(message.channelId)
   }
@@ -57,7 +61,7 @@ export async function pushMessageToBottom(
   })
 
   // save new message to cache and reset everything
-  saveCache(`sticky-${message.channelId}`, updatedMessage)
+  saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, updatedMessage)
   resetCounter(message.channelId)
   unlockChannel(message.channelId)
   resetCooldown(newMessage, updatedMessage)

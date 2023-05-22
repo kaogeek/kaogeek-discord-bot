@@ -2,11 +2,12 @@ import { Events } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 
+import { isChannelLock } from '../features/stickyMessage/channelLock.js'
 import {
+  STICKY_CACHE_PREFIX,
   isNeedToUpdateMessage,
   pushMessageToBottom,
 } from '../features/stickyMessage/index.js'
-import { isChannelLock } from '../features/stickyMessage/lockChannel.js'
 import { incCounter } from '../features/stickyMessage/messageCounter.js'
 import { defineEventHandler } from '../types/defineEventHandler.js'
 import { getCache } from '../utils/cache.js'
@@ -16,11 +17,16 @@ export default defineEventHandler({
   once: false,
   execute: async (_botContext, message) => {
     const stickyMessage = getCache(
-      `sticky-${message.channelId}`,
+      `${STICKY_CACHE_PREFIX}-${message.channelId}`,
     ) as StickyMessage
 
+    // if channel not has any sticky message -> do nothing
+    if (!stickyMessage) {
+      return
+    }
+
     // if message doesn't need to update -> increase message counter
-    if (!stickyMessage || !isNeedToUpdateMessage(message.channelId)) {
+    if (!isNeedToUpdateMessage(message.channelId)) {
       incCounter(message.channelId)
       return
     }

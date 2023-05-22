@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import * as stickyMessage from '../../../../src/features/stickyMessage'
 import {
-  COOLDOWN_PREFIX,
   resetCooldown,
   startCooldown,
 } from '../../../../src/features/stickyMessage/messageCooldown'
@@ -22,8 +21,9 @@ vi.mock('../../../../src/config.js', async () => {
 
 vi.mock('../../../../src/features/stickyMessage/index', async () => {
   const pushMessageToBottom = vi.fn()
+  const STICKY_COOLDOWN_PREFIX = 'MOCK_COOLDOWN_PREFIX'
 
-  return { pushMessageToBottom }
+  return { pushMessageToBottom, STICKY_COOLDOWN_PREFIX }
 })
 
 describe('startCooldown', () => {
@@ -39,7 +39,7 @@ describe('startCooldown', () => {
     startCooldown(channelId)
 
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       true,
     )
   })
@@ -58,11 +58,11 @@ describe('startCooldown', () => {
     await startCooldown(channelId)
 
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       true,
     )
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       false,
     )
   })
@@ -77,14 +77,14 @@ describe('resetCooldown', () => {
     const message = {
       channelId: '123456789',
     } as unknown as Message
-    const stickyMessage = {} as unknown as StickyMessage
+    const stickyMessageEntity = {} as unknown as StickyMessage
 
     const saveCacheSpy = vi.spyOn(cache, 'saveCache')
 
-    await resetCooldown(message, stickyMessage)
+    await resetCooldown(message, stickyMessageEntity)
 
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       true,
     )
   })
@@ -110,11 +110,11 @@ describe('resetCooldown', () => {
     await resetCooldown(message, stickyMessageEntity)
 
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       true,
     )
     expect(saveCacheSpy).toHaveBeenCalledWith(
-      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       false,
     )
     expect(pushMessageToBottomSpy).toHaveBeenCalledWith(

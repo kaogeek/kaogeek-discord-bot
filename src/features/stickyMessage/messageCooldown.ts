@@ -5,9 +5,7 @@ import { StickyMessage } from '@prisma/client'
 import { Environment } from '../../config.js'
 import { getCache, saveCache } from '../../utils/cache.js'
 
-import { pushMessageToBottom } from './index.js'
-
-export const COOLDOWN_PREFIX = 'sticky-cooldown'
+import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index.js'
 
 interface IChannelCooldownContainer {
   [channelId: string]: NodeJS.Timeout
@@ -22,7 +20,7 @@ const channelCooldown: IChannelCooldownContainer = {}
  *
  */
 function cooldown(channelId: string): void {
-  saveCache(`${COOLDOWN_PREFIX}-${channelId}`, true)
+  saveCache(`${STICKY_COOLDOWN_PREFIX}-${channelId}`, true)
 }
 
 /**
@@ -32,7 +30,7 @@ function cooldown(channelId: string): void {
  *
  */
 function available(channelId: string): void {
-  saveCache(`${COOLDOWN_PREFIX}-${channelId}`, false)
+  saveCache(`${STICKY_COOLDOWN_PREFIX}-${channelId}`, false)
 }
 
 /**
@@ -43,7 +41,7 @@ function available(channelId: string): void {
  *
  */
 export function isCooldown(channelId: string): boolean {
-  return getCache(`${COOLDOWN_PREFIX}-${channelId}`) === true
+  return getCache(`${STICKY_COOLDOWN_PREFIX}-${channelId}`) === true
 }
 
 /**
