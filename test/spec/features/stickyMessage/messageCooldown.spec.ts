@@ -4,11 +4,12 @@ import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import * as stickyMessage from '../../../../src/features/stickyMessage'
-import * as lockChannel from '../../../../src/features/stickyMessage/lockChannel'
 import {
+  COOLDOWN_PREFIX,
   resetCooldown,
   startCooldown,
 } from '../../../../src/features/stickyMessage/messageCooldown'
+import * as cache from '../../../../src/utils/cache.js'
 
 vi.mock('../../../../src/config.js', async () => {
   const Environment = {
@@ -33,28 +34,20 @@ describe('startCooldown', () => {
   it('should start the cooldown for the specified channel', async () => {
     const channelId = '123456789'
 
-    const lockChannelSpy = vi.spyOn(lockChannel, 'lockChannel')
+    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
 
     startCooldown(channelId)
 
-    expect(lockChannelSpy).toHaveBeenCalledWith(
-      channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${channelId}`,
+      true,
     )
   })
 
   it('should unlock channel when timeout', async () => {
-    const message = {
-      channelId: '123456789',
-    } as unknown as Message
-    const stickyMessageEntity = {} as unknown as StickyMessage
+    const channelId = '123456789'
 
-    const lockChannelSpy = vi.spyOn(lockChannel, 'lockChannel')
-    const unlockChannelSpy = vi.spyOn(lockChannel, 'unlockChannel')
-    const pushMessageToBottomSpy = vi.spyOn(
-      stickyMessage,
-      'pushMessageToBottom',
-    )
+    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
 
     // Mock the setTimeout function to immediately trigger the callback
     vi.spyOn(global, 'setTimeout').mockImplementation((callback) => {
@@ -62,19 +55,15 @@ describe('startCooldown', () => {
       return {} as unknown as NodeJS.Timeout
     })
 
-    await resetCooldown(message, stickyMessageEntity)
+    await startCooldown(channelId)
 
-    expect(lockChannelSpy).toHaveBeenCalledWith(
-      message.channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${channelId}`,
+      true,
     )
-    expect(unlockChannelSpy).toHaveBeenCalledWith(
-      message.channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
-    )
-    expect(pushMessageToBottomSpy).toHaveBeenCalledWith(
-      message,
-      stickyMessageEntity,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${channelId}`,
+      false,
     )
   })
 })
@@ -90,13 +79,13 @@ describe('resetCooldown', () => {
     } as unknown as Message
     const stickyMessage = {} as unknown as StickyMessage
 
-    const lockChannelSpy = vi.spyOn(lockChannel, 'lockChannel')
+    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
 
     await resetCooldown(message, stickyMessage)
 
-    expect(lockChannelSpy).toHaveBeenCalledWith(
-      message.channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      true,
     )
   })
 
@@ -106,8 +95,7 @@ describe('resetCooldown', () => {
     } as unknown as Message
     const stickyMessageEntity = {} as unknown as StickyMessage
 
-    const lockChannelSpy = vi.spyOn(lockChannel, 'lockChannel')
-    const unlockChannelSpy = vi.spyOn(lockChannel, 'unlockChannel')
+    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
     const pushMessageToBottomSpy = vi.spyOn(
       stickyMessage,
       'pushMessageToBottom',
@@ -121,13 +109,13 @@ describe('resetCooldown', () => {
 
     await resetCooldown(message, stickyMessageEntity)
 
-    expect(lockChannelSpy).toHaveBeenCalledWith(
-      message.channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      true,
     )
-    expect(unlockChannelSpy).toHaveBeenCalledWith(
-      message.channelId,
-      lockChannel.ChannelLockType.COOLDOWN,
+    expect(saveCacheSpy).toHaveBeenCalledWith(
+      `${COOLDOWN_PREFIX}-${message.channelId}`,
+      false,
     )
     expect(pushMessageToBottomSpy).toHaveBeenCalledWith(
       message,
