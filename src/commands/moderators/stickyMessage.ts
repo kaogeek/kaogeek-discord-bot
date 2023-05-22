@@ -1,14 +1,17 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  ChannelType,
   PermissionsBitField,
   TextChannel,
 } from 'discord.js'
 
+import { StickyMessage } from '@prisma/client'
+
 import { STICKY_CACHE_PREFIX } from '../../features/stickyMessage/index.js'
 import { prisma } from '../../prisma.js'
 import { defineCommandHandler } from '../../types/defineCommandHandler.js'
-import { saveCache } from '../../utils/cache.js'
+import { getCache, removeCache, saveCache } from '../../utils/cache.js'
 
 export default [
   defineCommandHandler({
@@ -36,22 +39,26 @@ export default [
     execute: async (botContext, interaction) => {
       if (!interaction.guild || !interaction.isChatInputCommand()) return
       const { client } = botContext
+      const message = interaction.options.getString('message') as string
 
       // Validate that the message input is not null
-      if (!interaction.options.getString('message')) {
+      if (!message) {
         interaction.editReply({
           content: 'Please provide a valid message for the sticky message.',
         })
         return
       }
 
-      const message = interaction.options.getString('message') as string
-
       // send message
       const channel = client.channels.cache.get(interaction.channelId)
-      if (!(channel instanceof TextChannel)) return
+      if (channel?.type !== ChannelType.GuildText) {
+        interaction.editReply({
+          content: 'Sticky text can create only in text channel.',
+        })
+        return
+      }
 
-      const sentMessage = await channel.send({
+      const sentMessage = await (channel as unknown as TextChannel).send({
         content: message,
         // embeds: [{}],
       })
@@ -113,43 +120,42 @@ export default [
       if (!interaction.guild || !interaction.isChatInputCommand()) return
 
       // Validate that the message input is not null
-      if (!interaction.options.getInteger('order')) {
-        interaction.editReply({
-          content: 'Please provide a order of message that want to remove',
-        })
-        return
-      }
+      // if (!interaction.options.getInteger('order')) {
+      //   interaction.editReply({
+      //     content: 'Please provide a order of message that want to remove',
+      //   })
+      //   return
+      // }
 
-      // Retrieve the sticky message with the specified order from the database
-      const stickyMessage = await prisma.stickyMessage.findUnique({
-        where: {
-          channelId: interaction.channelId,
-        },
-      })
+      try {
+        // Retrieve the sticky message with the specified order from the database
+        const stickyMessage = getCache(
+          `${STICKY_CACHE_PREFIX}-${interaction.channelId}`,
+        ) as StickyMessage
 
-      // If the sticky message exists, remove it from the database
-      if (stickyMessage) {
-        try {
+        // If the sticky message exists, remove it from the database
+        if (stickyMessage) {
           await prisma.stickyMessage.delete({
             where: {
               channelId: interaction.channelId,
             },
           })
+          removeCache(`${STICKY_CACHE_PREFIX}-${interaction.channelId}`)
           console.info(`Sticky message removed: ${stickyMessage.message}`)
           interaction.editReply({
             content: 'Successfully removed the sticky message.',
           })
-        } catch (err) {
-          console.error(
-            `Error removing sticky message: ${(err as Error).message}`,
-          )
+        } else {
           interaction.editReply({
-            content: 'An error occurred while removing the sticky message.',
+            content: 'Not found message in this channel',
           })
         }
-      } else {
+      } catch (err) {
+        console.error(
+          `Error removing sticky message: ${(err as Error).message}`,
+        )
         interaction.editReply({
-          content: 'Not found message in this channel',
+          content: 'An error occurred while removing the sticky message.',
         })
       }
     },
