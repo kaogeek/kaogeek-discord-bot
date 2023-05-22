@@ -1,6 +1,6 @@
 import { getCache, saveCache } from '../../utils/cache.js'
 
-export const LOCK_PREFIX = 'sticky-lock'
+import { STICKY_LOCK_PREFIX } from './index.js'
 
 /**
  * Set the channel status to locked
@@ -9,7 +9,7 @@ export const LOCK_PREFIX = 'sticky-lock'
  *
  */
 export function lockChannel(channelId: string): void {
-  saveCache(`${LOCK_PREFIX}-${channelId}`, true)
+  saveCache(`${STICKY_LOCK_PREFIX}-${channelId}`, true)
 }
 
 /**
@@ -19,7 +19,7 @@ export function lockChannel(channelId: string): void {
  *
  */
 export function unlockChannel(channelId: string): void {
-  saveCache(`${LOCK_PREFIX}-${channelId}`, false)
+  saveCache(`${STICKY_LOCK_PREFIX}-${channelId}`, false)
 }
 
 /**
@@ -30,5 +30,5 @@ export function unlockChannel(channelId: string): void {
  *
  */
 export function isChannelLock(channelId: string): boolean {
-  return getCache(`${LOCK_PREFIX}-${channelId}`) === true
+  return getCache(`${STICKY_LOCK_PREFIX}-${channelId}`) === true
 }
