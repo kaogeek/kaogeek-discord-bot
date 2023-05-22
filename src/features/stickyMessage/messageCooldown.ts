@@ -3,9 +3,11 @@ import { Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 
 import { Environment } from '../../config.js'
+import { getCache, saveCache } from '../../utils/cache.js'
 
 import { pushMessageToBottom } from './index.js'
-import { ChannelLockType, lockChannel, unlockChannel } from './lockChannel.js'
+
+export const COOLDOWN_PREFIX = 'sticky-cooldown'
 
 interface IChannelCooldownContainer {
   [channelId: string]: NodeJS.Timeout
@@ -14,22 +16,53 @@ interface IChannelCooldownContainer {
 const channelCooldown: IChannelCooldownContainer = {}
 
 /**
+ * Set the channel status to cooldown
+ *
+ * @param {string} channelId - the id of channel that want to lock
+ *
+ */
+function cooldown(channelId: string): void {
+  saveCache(`${COOLDOWN_PREFIX}-${channelId}`, true)
+}
+
+/**
+ * Set the channel status to available
+ *
+ * @param {string} channelId - the id of channel that want to unlock
+ *
+ */
+function available(channelId: string): void {
+  saveCache(`${COOLDOWN_PREFIX}-${channelId}`, false)
+}
+
+/**
+ * Check the channel status is lock
+ *
+ * @param {string} channelId - the id of channel that want to check
+ * @returns cooldown status (default) if available flag is true return channel available status
+ *
+ */
+export function isCooldown(channelId: string): boolean {
+  return getCache(`${COOLDOWN_PREFIX}-${channelId}`) === true
+}
+
+/**
  * Start the cooldown for the specified channel.
  *
  * @param {string} channelId - The ID of the channel to start the cooldown.
  * @returns {Promise<void>} A Promise that resolves once the cooldown is set.
  */
 export async function startCooldown(channelId: string): Promise<void> {
-  lockChannel(channelId, ChannelLockType.COOLDOWN)
+  cooldown(channelId)
 
-  const cooldown = channelCooldown[channelId]
+  const timeout = channelCooldown[channelId]
 
-  if (cooldown) {
-    clearTimeout(cooldown)
+  if (timeout) {
+    clearTimeout(timeout)
   }
 
   const timeoutId = setTimeout(() => {
-    unlockChannel(channelId, ChannelLockType.COOLDOWN)
+    available(channelId)
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
   channelCooldown[channelId] = timeoutId
@@ -37,6 +70,7 @@ export async function startCooldown(channelId: string): Promise<void> {
 
 /**
  * Set the cooldown of the channel.
+ *
  * @param {Message} message - The message object associated with the channel.
  * @param {StickyMessage} stickyMessage - The sticky message associated with the channel.
  * @returns {Promise<void>} A Promise that resolves once the cooldown is set.
@@ -46,16 +80,19 @@ export async function resetCooldown(
   message: Message,
   stickyMessage: StickyMessage,
 ): Promise<void> {
-  lockChannel(message.channelId, ChannelLockType.COOLDOWN)
+  // mark channel is cooldown
+  cooldown(message.channelId)
 
-  const cooldown = channelCooldown[message.channelId]
+  const timeout = channelCooldown[message.channelId]
 
-  if (cooldown) {
-    clearTimeout(cooldown)
+  // is has saved timeout -> clear it
+  if (timeout) {
+    clearTimeout(timeout)
   }
 
   const timeoutId = setTimeout(() => {
-    unlockChannel(message.channelId, ChannelLockType.COOLDOWN)
+    // mark channel is available
+    available(message.channelId)
     pushMessageToBottom(message, stickyMessage)
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 

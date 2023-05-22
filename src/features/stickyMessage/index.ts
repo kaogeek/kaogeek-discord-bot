@@ -6,13 +6,8 @@ import { Environment } from '../../config.js'
 import { prisma } from '../../prisma.js'
 import { saveCache } from '../../utils/cache.js'
 
-import {
-  ChannelLockType,
-  isChannelLock,
-  lockChannel,
-  unlockChannel,
-} from './lockChannel.js'
-import { resetCooldown, startCooldown } from './messageCooldown.js'
+import { lockChannel, unlockChannel } from './lockChannel.js'
+import { isCooldown, resetCooldown, startCooldown } from './messageCooldown.js'
 import { getCounter, resetCounter } from './messageCounter.js'
 
 /**
@@ -77,7 +72,6 @@ export async function pushMessageToBottom(
  */
 export function isNeedToUpdateMessage(channelId: string): boolean {
   return (
-    !isChannelLock(channelId, ChannelLockType.COOLDOWN) ||
-    getCounter(channelId) >= Environment.MESSAGE_MAX
+    !isCooldown(channelId) || getCounter(channelId) >= Environment.MESSAGE_MAX
   )
 }
