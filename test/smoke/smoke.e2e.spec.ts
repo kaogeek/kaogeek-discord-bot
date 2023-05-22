@@ -1,39 +1,46 @@
-import { Events, TextChannel } from 'discord.js'
+import { TextChannel } from 'discord.js'
 
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import Bot from '../../src/client'
+import { Bot } from '../../src/Bot.js'
 
-import SmokeTester from './smoke-client'
-import { Environment } from './smoke-config'
+import { Environment } from './smoke-config.js'
+import { SmokeTesterBot } from './smoke-tester-bot.js'
+
+let bot: Bot
+let smokeTesterBot: SmokeTesterBot
+
+beforeEach(() => {
+  bot = new Bot()
+  smokeTesterBot = new SmokeTesterBot()
+})
+
+afterEach(async () => {
+  // Remove all listeners instead of client.destroy() since destroy() does not work
+  bot.client.removeAllListeners()
+  smokeTesterBot.client.removeAllListeners()
+})
 
 describe('bot client', () => {
   it('should successfully connect to a discord server', async () => {
-    await expect(new Bot().initAndStart()).resolves.not.toThrowError()
+    await expect(bot.initAndStart()).resolves.not.toThrowError()
   })
 })
 
 describe('smoke tester client', () => {
   it('should successfully connect to a discord server', async () => {
-    await expect(new SmokeTester().initAndStart()).resolves.not.toThrowError()
+    await expect(smokeTesterBot.initAndStart()).resolves.not.toThrowError()
   }, 10000)
 
-  it('should be able to send /ping command and receive response', async () => {
-    const bot = new Bot()
-
-    // TODO: Remove me when we have a proper way to send slash command
-    bot.on(Events.MessageCreate, (message) => {
-      if (message.content !== '/ping') return
-
-      message.reply('pong!')
-    })
-
+  // Slash commands cannot be tested by another bots
+  // So we test only message listeners e.g. preventEmojiSpam
+  it('should be able to handle emoji spam', async () => {
     await bot.initAndStart()
+    await smokeTesterBot.initAndStart()
 
-    const smokeTester = new SmokeTester()
-    await smokeTester.initAndStart()
-
-    const channel = await smokeTester.channels.fetch(Environment.MOD_CHANNEL_ID)
+    const channel = await smokeTesterBot.client.channels.fetch(
+      Environment.MOD_CHANNEL_ID,
+    )
 
     if (!(channel instanceof TextChannel)) {
       throw new Error(
@@ -41,14 +48,27 @@ describe('smoke tester client', () => {
       )
     }
 
-    // TODO: Find out how to actually send slash command
-    await channel.send({ content: '/ping' })
-
-    const messages = await channel.awaitMessages({
-      max: 3,
-      time: 3000,
+    // Test by posting normal message
+    const normalMessage = await channel.send({
+      content: `Smoke testing: ${new Date()}`,
     })
 
-    expect(messages.map((msg) => msg.content)).toContain('pong!')
+    // Wait for bot
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    await expect(
+      channel.messages.fetch(normalMessage.id),
+    ).resolves.not.toThrowError()
+
+    // Test by spamming emoji
+    const message = await channel.send({ content: '🫠' })
+
+    // Wait for bot to delete the message
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    // Message should be deleted
+    await expect(channel.messages.fetch(message.id)).rejects.toThrowError(
+      'Unknown Message',
+    )
   }, 10000)
 })

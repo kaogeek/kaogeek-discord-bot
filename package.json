@@ -14,7 +14,7 @@
     "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:smoke": "vitest --config vitest.e2e.config",
+    "test:smoke": "BOT_CONFIG=file:./test/smoke/smoke-bot-config.toml vitest --config vitest.e2e.config",
     "typecheck": "tsc --noEmit && tsc -p test/tsconfig.json",
     "generate:prisma": "prisma generate",
     "migrate": "prisma db push"
