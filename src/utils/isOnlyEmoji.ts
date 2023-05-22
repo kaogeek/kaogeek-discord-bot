@@ -1,8 +1,5 @@
-import { boolean } from 'zod'
-
 const emojiRegex =
-  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu //new
-//const emojiRegex = /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component})\s*/gu
+  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu
 
 export default (msg: string): boolean => {
   const emoji = msg.match(emojiRegex)
