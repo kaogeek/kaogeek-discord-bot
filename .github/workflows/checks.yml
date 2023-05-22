@@ -84,6 +84,7 @@ jobs:
           GUILD_ID: ${{ secrets.CI_GUILD_ID }}
           MOD_CHANNEL_ID: ${{ secrets.CI_MOD_CHANNEL_ID }}
           SMOKE_TESTER_BOT_TOKEN: ${{ secrets.CI_SMOKE_TESTER_BOT_TOKEN }}
+          DATABASE_URL: 'file:./smoke.db'
         run: pnpm test:smoke
 
   docker-smoke:
