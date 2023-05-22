@@ -67,7 +67,7 @@ export default defineCommandHandler({
         })
         return
       }
-    } catch (err) {
+    } catch (error) {
       await interaction.editReply({
         content: 'Confirmation not received within 10 seconds, cancelling',
         components: [],

@@ -1,6 +1,6 @@
 import { MessageComponentInteraction, TextBasedChannel } from 'discord.js'
 
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 /**
  * A utility class to help with the creation and execution of ephemeral actions.

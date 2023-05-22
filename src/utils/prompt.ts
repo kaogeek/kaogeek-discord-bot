@@ -4,7 +4,7 @@ import {
   TextInputStyle,
 } from 'discord.js'
 
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 /**
  * Prompt for a single text input in Discord.
