@@ -54,7 +54,7 @@ export default [
   }),
   defineCommandHandler({
     data: {
-      name: 'inspect',
+      name: 'inspect-user',
       description: 'Inspect a user profile',
       defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
       type: ApplicationCommandType.ChatInput,

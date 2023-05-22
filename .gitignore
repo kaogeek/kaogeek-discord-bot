@@ -141,4 +141,5 @@ __MACOSX
 # Datastore files
 .data
 /prisma/dev.db
-data/dock/db.sqlite
+bot-config.toml
+

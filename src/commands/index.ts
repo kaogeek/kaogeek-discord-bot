@@ -7,12 +7,16 @@ import inspectProfile from './moderators/inspectProfile.js'
 import micMuteAppeal from './moderators/micMuteAppeal.js'
 import report from './moderators/report.js'
 import user from './moderators/user.js'
+import inspectConfig from './runtimeConfig/inspectConfig.js'
+import reloadConfig from './runtimeConfig/reloadConfig.js'
 
 export default [
   activeThreads,
   deleteAllMessage,
+  inspectConfig,
   ...inspectProfile,
   ping,
+  reloadConfig,
   report,
   user,
   micMuteAppeal,

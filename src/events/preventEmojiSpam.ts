@@ -6,12 +6,16 @@ import isOnlyEmoji from '../utils/isOnlyEmoji.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (botContext, message) => {
+  execute: async ({ runtimeConfiguration }, message) => {
     // if has only emoji -> delete message
     if (isOnlyEmoji(message.content)) {
       try {
-        // Disabling for now due to #99 - bot erroneously deleting messages with only number
-        await message.delete()
+        console.info(
+          `[preventEmojiSpam] Message with only emoji: ${message.id} by ${message.author}`,
+        )
+        if (runtimeConfiguration.data.preventEmojiSpam.enabled) {
+          await message.delete()
+        }
       } catch (err) {
         console.error(err)
       }
