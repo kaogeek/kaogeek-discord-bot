@@ -41,7 +41,7 @@ export default defineCommandHandler({
       //unmuting might be depended on reason why user is server muted.
       else {
         try {
-          if (isMutedForSeverePusnishment(interaction)) {
+          if (isMutedForSeverePunishment(interaction)) {
             //this if condition may vary to fit the reason why the user was banned.
             await interaction.member.voice.setMute(false)
             await interaction.editReply(`Unmute ${interaction.member.user}`)
@@ -69,7 +69,7 @@ export default defineCommandHandler({
   },
 })
 
-function isMutedForSeverePusnishment(
+function isMutedForSeverePunishment(
   interaction: ChatInputCommandInteraction<CacheType>,
 ): boolean {
   //TODO: will implement checking once the standard is agreed among a community.

@@ -1,7 +1,8 @@
 import { boolean } from 'zod'
 
 const emojiRegex =
-  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component})\s*/gu
+  /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu //new
+//const emojiRegex = /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component})\s*/gu
 
 export default (msg: string): boolean => {
   const emoji = msg.match(emojiRegex)
@@ -17,7 +18,7 @@ export default (msg: string): boolean => {
       }
     }
   }
-  return emoji !== null && emoji.join('').trim() === msg.trim()
+  return emoji !== null && emoji.join('').trim() === msg.replace(/\s/g, '')
 }
 
 function isNumber(input: string): boolean {
