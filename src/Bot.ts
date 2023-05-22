@@ -44,7 +44,7 @@ export class Bot {
     this.loadCommandHandlers(commands)
   }
 
-  loadEventHandlers(handlers: EventHandlerConfig[]) {
+  private loadEventHandlers(handlers: EventHandlerConfig[]) {
     console.info('[HANDLER] Setting up event handlers ...')
 
     for (const handler of handlers) {
@@ -60,7 +60,7 @@ export class Bot {
     }
   }
 
-  loadCommandHandlers(handlers: CommandHandlerConfig[]) {
+  private loadCommandHandlers(handlers: CommandHandlerConfig[]) {
     for (const handler of handlers) {
       this.commands.set(handler.data.name, handler)
     }
