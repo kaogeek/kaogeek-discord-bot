@@ -46,11 +46,6 @@ jobs:
     name: Run Test
     timeout-minutes: 10
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      pull-requests: write
-
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -67,8 +62,6 @@ jobs:
       - name: 'Report Coverage'
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   docker-smoke:
     name: Run Docker Smoke Test

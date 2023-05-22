@@ -1,0 +1,6 @@
+# To see the latest configuration values used in production, see this file:
+# https://github.com/creatorsgarten/kaogeek-discord-bot/blob/config/bot-config.toml
+
+[preventEmojiSpam]
+  # If true, the bot will delete messages that only contains emojis.
+  enabled = false
