@@ -4,10 +4,11 @@ import { Bot } from '../../src/Bot.js'
 
 vi.mock('../../src/config.js')
 
-vi.mock('../../src/features/stickyMessage', () => {
-  const initStickyMessage = vi.fn()
+vi.mock('../../src/Bot.js', () => {
+  const Bot = vi.fn()
+  Bot.prototype.InitAndStart = vi.fn()
 
-  return { initStickyMessage }
+  return { Bot }
 })
 
 describe('Bot', () => {
@@ -16,6 +17,7 @@ describe('Bot', () => {
   beforeEach(() => {
     client = new Bot()
   })
+
   afterEach(() => {
     vi.clearAllMocks()
   })
