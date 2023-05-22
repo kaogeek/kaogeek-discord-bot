@@ -53,21 +53,19 @@ describe('smoke tester client', () => {
       content: `Smoke testing: ${new Date()}`,
     })
 
-    // Wait for bot
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    // Test by spamming emoji
+    const spamMessage = await channel.send({ content: '🫠' })
 
+    // Wait for bot to delete the spam message
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    // Normal message should not be deleted
     await expect(
       channel.messages.fetch(normalMessage.id),
     ).resolves.not.toThrowError()
 
-    // Test by spamming emoji
-    const message = await channel.send({ content: '🫠' })
-
-    // Wait for bot to delete the message
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    // Message should be deleted
-    await expect(channel.messages.fetch(message.id)).rejects.toThrowError(
+    // Spam message should be deleted
+    await expect(channel.messages.fetch(spamMessage.id)).rejects.toThrowError(
       'Unknown Message',
     )
   }, 10000)
