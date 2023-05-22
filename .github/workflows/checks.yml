@@ -67,8 +67,6 @@ jobs:
       - name: 'Report Coverage'
         if: github.event_name == 'pull_request'
         uses: davelosert/vitest-coverage-report-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   docker-smoke:
     name: Run Docker Smoke Test
