@@ -26,7 +26,7 @@ export function unlockChannel(channelId: string): void {
  * Check the channel status is lock
  *
  * @param {string} channelId - the id of channel that want to check
- * @returns cooldown status (default) if available flag is true return channel available status
+ * @returns true if the channel is locked, false otherwise
  *
  */
 export function isChannelLock(channelId: string): boolean {
