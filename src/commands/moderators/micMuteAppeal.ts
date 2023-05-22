@@ -75,5 +75,6 @@ function isMutedForSeverePunishment(
   interaction: ChatInputCommandInteraction<CacheType>,
 ): boolean {
   //TODO: will implement checking once the standard is agreed among a community.
+  interaction
   return true
 }
