@@ -1,7 +1,7 @@
 import { Message } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import stickyMessageEventHandler from '../../../src/events/stickyMessage.js'
 import * as channelLock from '../../../src/features/stickyMessage/channelLock.js'
@@ -20,122 +20,94 @@ vi.mock('../../../src/config.js', async () => {
 })
 
 describe('stickyMessageEventHandler', () => {
+  const channelId = 'test-channel'
+  let message: Message
+  let stickyMessageEntity: StickyMessage
+
+  beforeEach(() => {
+    message = { channelId } as unknown as Message
+    stickyMessageEntity = {} as unknown as StickyMessage
+  })
+
   afterEach(() => {
     vi.clearAllMocks()
   })
 
-  it('should push sticky message to bottom when it needs to be updated', async () => {
-    const channelId = 'test-channel'
-    const message = { channelId } as unknown as Message
-    const stickyMessageEntity = {} as unknown as StickyMessage
-
-    const getCacheSpy = vi
-      .spyOn(cache, 'getCache')
-      .mockReturnValue(stickyMessageEntity)
-    const isNeedToUpdateMessageSpy = vi
-      .spyOn(stickyMessage, 'isNeedToUpdateMessage')
-      .mockReturnValue(true)
-    const isChannelLockSpy = vi
-      .spyOn(channelLock, 'isChannelLock')
-      .mockReturnValue(false)
-    const pushMessageToBottomSpy = vi.spyOn(
-      stickyMessage,
-      'pushMessageToBottom',
-    )
+  it('should use STICKY_CACHE_PREFIX with channelId as cache key', async () => {
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
+    vi.spyOn(stickyMessage, 'isNeedToUpdateMessage').mockReturnValue(true)
+    vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(false)
+    vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
     await stickyMessageEventHandler.execute(
       {} as unknown as BotContext,
       message,
     )
 
-    expect(getCacheSpy).toHaveBeenCalledWith(
+    expect(cache.getCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_CACHE_PREFIX}-${channelId}`,
     )
-    expect(isNeedToUpdateMessageSpy).toHaveBeenCalledWith(channelId)
-    expect(isChannelLockSpy).toHaveBeenCalledWith(channelId)
-    expect(pushMessageToBottomSpy).toHaveBeenCalledWith(
+  })
+
+  it('should push sticky message to bottom when it needs to be updated', async () => {
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
+    vi.spyOn(stickyMessage, 'isNeedToUpdateMessage').mockReturnValue(true)
+    vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(false)
+    vi.spyOn(stickyMessage, 'pushMessageToBottom')
+
+    await stickyMessageEventHandler.execute(
+      {} as unknown as BotContext,
+      message,
+    )
+
+    expect(stickyMessage.pushMessageToBottom).toHaveBeenCalledWith(
       message,
       stickyMessageEntity,
     )
   })
 
-  it("should increase counter when doesn't need to update", async () => {
-    const channelId = 'test-channel'
-    const message = { channelId } as unknown as Message
-    const stickyMessageEntity = {} as unknown as StickyMessage
-
-    const getCacheSpy = vi
-      .spyOn(cache, 'getCache')
-      .mockReturnValue(stickyMessageEntity)
-    const isNeedToUpdateMessageSpy = vi
-      .spyOn(stickyMessage, 'isNeedToUpdateMessage')
-      .mockReturnValue(false)
-    const incCounterSpy = vi.spyOn(messageCounter, 'incCounter')
+  it('should do nothing if channel is locked', async () => {
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
+    vi.spyOn(stickyMessage, 'isNeedToUpdateMessage').mockReturnValue(true)
+    vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(true)
+    vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
     await stickyMessageEventHandler.execute(
       {} as unknown as BotContext,
       message,
     )
 
-    expect(getCacheSpy).toHaveBeenCalledWith(
-      `${stickyMessage.STICKY_CACHE_PREFIX}-${channelId}`,
+    expect(channelLock.isChannelLock).toHaveBeenCalledWith(channelId)
+    expect(stickyMessage.pushMessageToBottom).not.toHaveBeenCalled()
+  })
+
+  it("should increase counter when doesn't need to update", async () => {
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
+    vi.spyOn(stickyMessage, 'isNeedToUpdateMessage').mockReturnValue(false)
+    vi.spyOn(messageCounter, 'incCounter')
+
+    await stickyMessageEventHandler.execute(
+      {} as unknown as BotContext,
+      message,
     )
-    expect(isNeedToUpdateMessageSpy).toHaveBeenCalledWith(channelId)
-    expect(incCounterSpy).toHaveBeenCalledWith(channelId)
+
+    expect(messageCounter.incCounter).toHaveBeenCalledWith(channelId)
+    expect(channelLock.isChannelLock).not.toHaveBeenCalled()
+    expect(stickyMessage.pushMessageToBottom).not.toHaveBeenCalled()
   })
 
   it('should do nothing if not found sticky message in channel', async () => {
-    const channelId = 'test-channel'
-    const message = { channelId } as unknown as Message
-
-    const getCacheSpy = vi.spyOn(cache, 'getCache').mockReturnValue(null)
-    const isNeedToUpdateMessageSpy = vi.spyOn(
-      stickyMessage,
-      'isNeedToUpdateMessage',
-    )
-    const incCounterSpy = vi.spyOn(messageCounter, 'incCounter')
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
+    vi.spyOn(stickyMessage, 'isNeedToUpdateMessage')
+    vi.spyOn(messageCounter, 'incCounter')
 
     await stickyMessageEventHandler.execute(
       {} as unknown as BotContext,
       message,
     )
 
-    expect(getCacheSpy).toHaveBeenCalledWith(
-      `${stickyMessage.STICKY_CACHE_PREFIX}-${channelId}`,
-    )
-    expect(isNeedToUpdateMessageSpy).not.toHaveBeenCalled()
-    expect(incCounterSpy).not.toHaveBeenCalled()
-  })
-
-  it('should do nothing if channel is already updated', async () => {
-    const channelId = 'test-channel'
-    const message = { channelId } as unknown as Message
-    const stickyMessageEntity = {} as unknown as StickyMessage
-
-    const getCacheSpy = vi
-      .spyOn(cache, 'getCache')
-      .mockReturnValue(stickyMessageEntity)
-    const isNeedToUpdateMessageSpy = vi
-      .spyOn(stickyMessage, 'isNeedToUpdateMessage')
-      .mockReturnValue(true)
-    const isChannelLockSpy = vi
-      .spyOn(channelLock, 'isChannelLock')
-      .mockReturnValue(true)
-    const pushMessageToBottomSpy = vi.spyOn(
-      stickyMessage,
-      'pushMessageToBottom',
-    )
-
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
-
-    expect(getCacheSpy).toHaveBeenCalledWith(
-      `${stickyMessage.STICKY_CACHE_PREFIX}-${channelId}`,
-    )
-    expect(isNeedToUpdateMessageSpy).toHaveBeenCalledWith(channelId)
-    expect(isChannelLockSpy).toHaveBeenCalledWith(channelId)
-    expect(pushMessageToBottomSpy).not.toHaveBeenCalled()
+    expect(messageCounter.incCounter).not.toHaveBeenCalled()
+    expect(channelLock.isChannelLock).not.toHaveBeenCalled()
+    expect(stickyMessage.pushMessageToBottom).not.toHaveBeenCalled()
   })
 })

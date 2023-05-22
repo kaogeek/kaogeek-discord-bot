@@ -64,17 +64,13 @@ describe('stickao-create', () => {
 
   it('should reply error if message option is empty', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
-    const getStringSpy = vi
-      .spyOn(interaction.options, 'getString')
-      .mockReturnValue('')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
-    const sendMessageSpy = vi.spyOn(channel, 'send')
+    vi.spyOn(interaction.options, 'getString').mockReturnValue('')
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
-    expect(getStringSpy).toHaveBeenCalledWith('message')
-    expect(editReplySpy).toHaveBeenCalled()
-    expect(sendMessageSpy).not.toHaveBeenCalled()
+    expect(interaction.options.getString).toHaveBeenCalledWith('message')
+    expect(interaction.editReply).toHaveBeenCalled()
+    expect(channel.send).not.toHaveBeenCalled()
   })
 
   it('should reply error if channel type is not text channel', async () => {
@@ -84,39 +80,26 @@ describe('stickao-create', () => {
     } as unknown as TextChannel
 
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
-    const getStringSpy = vi
-      .spyOn(interaction.options, 'getString')
-      .mockReturnValue('')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
-    const sendMessageSpy = vi.spyOn(channel, 'send')
+    vi.spyOn(interaction.options, 'getString').mockReturnValue(message)
+    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
-    expect(getStringSpy).toHaveBeenCalledWith('message')
-    expect(editReplySpy).toHaveBeenCalled()
-    expect(sendMessageSpy).not.toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
+    expect(channel.send).not.toHaveBeenCalled()
+    expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
 
   it('should send message if input is valid', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
-    const getStringSpy = vi
-      .spyOn(interaction.options, 'getString')
-      .mockReturnValue(message)
-
-    const getChannelSpy = vi
-      .spyOn(client.channels.cache, 'get')
-      .mockReturnValue(channel)
-
-    const sendMessageSpy = vi
-      .spyOn(channel, 'send')
-      .mockResolvedValue(sentMessage)
+    vi.spyOn(interaction.options, 'getString').mockReturnValue(message)
+    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
-    expect(getStringSpy).toHaveBeenCalledWith('message')
-    expect(getChannelSpy).toHaveBeenCalledWith(channelId)
-    expect(sendMessageSpy).toHaveBeenCalledWith({ content: message })
+    expect(channel.send).toHaveBeenCalledWith({ content: message })
   })
 
   it('should save message to database and cache after sent message', async () => {
@@ -125,7 +108,7 @@ describe('stickao-create', () => {
     vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
-    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
+    vi.spyOn(cache, 'saveCache')
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
@@ -143,7 +126,7 @@ describe('stickao-create', () => {
         channelId: interaction.channelId,
       },
     })
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${STICKY_CACHE_PREFIX}-${channelId}`,
       stickyMessageEntity,
     )
@@ -156,11 +139,10 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
-    expect(editReplySpy).toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
   })
 
   it('should reply user that has error when error occur', async () => {
@@ -172,11 +154,11 @@ describe('stickao-create', () => {
       .fn()
       .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'saveCache')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
+    vi.spyOn(interaction, 'editReply')
 
     await stickyMessage[0].execute({ client } as BotContext, interaction)
 
-    expect(editReplySpy).toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
   })
 })
 
@@ -212,23 +194,21 @@ describe('stickao-remove', () => {
 
   it('should use STICKY_CACHE_PREFIX with channelId as cache key', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
-    const getCacheSpy = vi
-      .spyOn(cache, 'getCache')
-      .mockReturnValue(stickyMessageEntity)
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
-    const removeCacheSpy = vi.spyOn(cache, 'removeCache')
+    vi.spyOn(cache, 'removeCache')
 
     await stickyMessage[1].execute({ client } as BotContext, interaction)
 
-    expect(getCacheSpy).toHaveBeenCalledWith(
+    expect(cache.getCache).toHaveBeenCalledWith(
       `${STICKY_CACHE_PREFIX}-${channelId}`,
     )
-    expect(removeCacheSpy).toHaveBeenCalledWith(
+    expect(cache.removeCache).toHaveBeenCalledWith(
       `${STICKY_CACHE_PREFIX}-${channelId}`,
     )
   })
 
-  it('should find then delete message and remove cache succefully', async () => {
+  it('should find then delete message and remove cache successfully', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
@@ -241,46 +221,47 @@ describe('stickao-remove', () => {
         channelId: interaction.channelId,
       },
     })
+    expect(cache.removeCache).toHaveBeenCalled()
   })
 
-  it('should reply user that delete sticky message succefully', async () => {
+  it('should reply to the user that the sticky message was deleted successfully', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
+    vi.spyOn(interaction, 'editReply')
 
     await stickyMessage[1].execute({ client } as BotContext, interaction)
 
-    expect(editReplySpy).toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
   })
 
-  it('should reply user that not found message in this channel', async () => {
+  it('should reply to the user that no sticky message was found in the channel', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.delete = vi.fn()
-    const removeCahceSpy = vi.spyOn(cache, 'removeCache')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
+    vi.spyOn(cache, 'removeCache')
+    vi.spyOn(interaction, 'editReply')
 
     await stickyMessage[1].execute({ client } as BotContext, interaction)
 
-    expect(editReplySpy).toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
-    expect(removeCahceSpy).not.toHaveBeenCalled()
+    expect(cache.removeCache).not.toHaveBeenCalled()
   })
 
-  it('should reply user that error while delete sticky message', async () => {
+  it('should reply to the user that an error occurred while deleting the sticky message', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi
       .fn()
       .mockRejectedValue(new Error('error occur'))
-    const removeCahceSpy = vi.spyOn(cache, 'removeCache')
-    const editReplySpy = vi.spyOn(interaction, 'editReply')
+    vi.spyOn(cache, 'removeCache')
+    vi.spyOn(interaction, 'editReply')
 
     await stickyMessage[1].execute({ client } as BotContext, interaction)
 
-    expect(editReplySpy).toHaveBeenCalled()
-    expect(removeCahceSpy).not.toHaveBeenCalled()
+    expect(interaction.editReply).toHaveBeenCalled()
+    expect(cache.removeCache).not.toHaveBeenCalled()
   })
 })

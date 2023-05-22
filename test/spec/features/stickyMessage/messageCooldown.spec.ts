@@ -34,11 +34,11 @@ describe('startCooldown', () => {
   it('should start the cooldown for the specified channel', async () => {
     const channelId = '123456789'
 
-    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
+    vi.spyOn(cache, 'saveCache')
 
     startCooldown(channelId)
 
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       true,
     )
@@ -47,7 +47,7 @@ describe('startCooldown', () => {
   it('should unlock channel when timeout', async () => {
     const channelId = '123456789'
 
-    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
+    vi.spyOn(cache, 'saveCache')
 
     // Mock the setTimeout function to immediately trigger the callback
     vi.spyOn(global, 'setTimeout').mockImplementation((callback) => {
@@ -57,11 +57,11 @@ describe('startCooldown', () => {
 
     await startCooldown(channelId)
 
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       true,
     )
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${channelId}`,
       false,
     )
@@ -79,11 +79,11 @@ describe('resetCooldown', () => {
     } as unknown as Message
     const stickyMessageEntity = {} as unknown as StickyMessage
 
-    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
+    vi.spyOn(cache, 'saveCache')
 
     await resetCooldown(message, stickyMessageEntity)
 
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       true,
     )
@@ -95,11 +95,8 @@ describe('resetCooldown', () => {
     } as unknown as Message
     const stickyMessageEntity = {} as unknown as StickyMessage
 
-    const saveCacheSpy = vi.spyOn(cache, 'saveCache')
-    const pushMessageToBottomSpy = vi.spyOn(
-      stickyMessage,
-      'pushMessageToBottom',
-    )
+    vi.spyOn(cache, 'saveCache')
+    vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
     // Mock the setTimeout function to immediately trigger the callback
     vi.spyOn(global, 'setTimeout').mockImplementation((callback) => {
@@ -109,15 +106,15 @@ describe('resetCooldown', () => {
 
     await resetCooldown(message, stickyMessageEntity)
 
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       true,
     )
-    expect(saveCacheSpy).toHaveBeenCalledWith(
+    expect(cache.saveCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_COOLDOWN_PREFIX}-${message.channelId}`,
       false,
     )
-    expect(pushMessageToBottomSpy).toHaveBeenCalledWith(
+    expect(stickyMessage.pushMessageToBottom).toHaveBeenCalledWith(
       message,
       stickyMessageEntity,
     )
