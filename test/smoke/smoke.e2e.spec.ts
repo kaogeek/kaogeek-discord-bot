@@ -24,13 +24,13 @@ afterEach(async () => {
 describe('bot client', () => {
   it('should successfully connect to a discord server', async () => {
     await expect(bot.initAndStart()).resolves.not.toThrowError()
-  })
+  }, 20_000)
 })
 
 describe('smoke tester client', () => {
   it('should successfully connect to a discord server', async () => {
     await expect(smokeTesterBot.initAndStart()).resolves.not.toThrowError()
-  }, 10000)
+  }, 20_000)
 
   // Slash commands cannot be tested by another bots
   // So we test only message listeners e.g. preventEmojiSpam
@@ -68,5 +68,5 @@ describe('smoke tester client', () => {
     await expect(channel.messages.fetch(spamMessage.id)).rejects.toThrowError(
       'Unknown Message',
     )
-  }, 10000)
+  }, 20_000)
 })
