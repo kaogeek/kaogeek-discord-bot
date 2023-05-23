@@ -43,7 +43,7 @@ describe('smoke tester client', () => {
     )
 
     if (!(channel instanceof TextChannel)) {
-      throw new Error(
+      throw new TypeError(
         `Channel ${Environment.MOD_CHANNEL_ID} is not a text channel`,
       )
     }
