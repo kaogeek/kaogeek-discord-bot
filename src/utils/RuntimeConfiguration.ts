@@ -1,9 +1,8 @@
+import { Environment } from '@/config.ts'
 import { copyFileSync, existsSync, readFileSync } from 'fs'
 import * as toml from 'toml'
 
-import { Environment } from '../config.js'
-
-import { RuntimeConfigurationSchema } from './RuntimeConfigurationSchema.js'
+import { RuntimeConfigurationSchema } from './RuntimeConfigurationSchema.ts'
 
 export class RuntimeConfiguration {
   private _data?: RuntimeConfigurationSchema

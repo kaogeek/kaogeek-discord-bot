@@ -1,9 +1,8 @@
+import { RuntimeConfiguration } from '@/utils/RuntimeConfiguration.ts'
 import { randomUUID } from 'node:crypto'
 import { unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { afterEach, expect, test } from 'vitest'
-
-import { RuntimeConfiguration } from '../../src/utils/RuntimeConfiguration.js'
 
 test('should correctly load the example config file', async () => {
   const runtimeConfiguration = new RuntimeConfiguration(

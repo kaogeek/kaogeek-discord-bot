@@ -1,11 +1,11 @@
-import { AnyEventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { AnyEventHandlerConfig } from '@/types/EventHandlerConfig.ts'
 
-import guildMemberAdd from './guildMemberAdd.js'
-import guildMemberRemove from './guildMemberRemove.js'
-import guildMemberUpdate from './guildMemberUpdate.js'
-import interactionCreate from './interactionCreate.js'
-import preventEmojiSpam from './preventEmojiSpam.js'
-import ready from './ready.js'
+import guildMemberAdd from './guildMemberAdd.ts'
+import guildMemberRemove from './guildMemberRemove.ts'
+import guildMemberUpdate from './guildMemberUpdate.ts'
+import interactionCreate from './interactionCreate.ts'
+import preventEmojiSpam from './preventEmojiSpam.ts'
+import ready from './ready.ts'
 
 export default [
   guildMemberAdd,

@@ -1,12 +1,12 @@
 import { Client, Collection, IntentsBitField } from 'discord.js'
 
-import commands from './commands/index.js'
-import { Environment } from './config.js'
-import events from './events/index.js'
-import { BotContext } from './types/BotContext.js'
-import { CommandHandlerConfig } from './types/CommandHandlerConfig.js'
-import { EventHandlerConfig } from './types/EventHandlerConfig.js'
-import { RuntimeConfiguration } from './utils/RuntimeConfiguration.js'
+import commands from './commands/index.ts'
+import { Environment } from './config.ts'
+import events from './events/index.ts'
+import { BotContext } from './types/BotContext.ts'
+import { CommandHandlerConfig } from './types/CommandHandlerConfig.ts'
+import { EventHandlerConfig } from './types/EventHandlerConfig.ts'
+import { RuntimeConfiguration } from './utils/RuntimeConfiguration.ts'
 
 export class Bot {
   public readonly client = new Client({

@@ -1,6 +1,6 @@
 import { Events } from 'discord.js'
 
-import { defineEventHandler } from '../types/defineEventHandler.js'
+import { defineEventHandler } from '@/types/defineEventHandler.ts'
 
 export default defineEventHandler({
   eventName: Events.GuildMemberRemove,

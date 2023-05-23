@@ -2,7 +2,11 @@
   "extends": "@tsconfig/node18",
   "compilerOptions": {
     "noEmit": true,
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": ["../src/*"]
+    }
   },
   "include": [".", "../src"]
 }

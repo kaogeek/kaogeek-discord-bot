@@ -5,7 +5,11 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

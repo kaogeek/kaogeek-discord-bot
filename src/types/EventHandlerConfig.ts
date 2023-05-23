@@ -1,6 +1,6 @@
 import { ClientEvents } from 'discord.js'
 
-import { EventHandlerExecutor } from './EventHandlerExecutor.js'
+import { EventHandlerExecutor } from './EventHandlerExecutor.ts'
 
 export interface EventHandlerConfig<
   K extends keyof ClientEvents = keyof ClientEvents,

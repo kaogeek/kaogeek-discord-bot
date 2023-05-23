@@ -1,6 +1,6 @@
 import { PermissionsBitField } from 'discord.js'
 
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { defineCommandHandler } from '@/types/defineCommandHandler.ts'
 
 export default defineCommandHandler({
   data: {

@@ -45,6 +45,15 @@ devDependencies:
   '@vitest/coverage-c8':
     specifier: 0.31.1
     version: 0.31.1(vitest@0.31.1)
+  cross-env:
+    specifier: 7.0.3
+    version: 7.0.3
+  esbuild:
+    specifier: 0.17.19
+    version: 0.17.19
+  esbuild-plugin-external-package:
+    specifier: 1.0.0
+    version: 1.0.0
   eslint:
     specifier: 8.41.0
     version: 8.41.0
@@ -1206,6 +1215,14 @@ packages:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
     dev: true
 
+  /cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: true
+
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
@@ -1391,6 +1408,10 @@ packages:
       is-callable: 1.2.7
       is-date-object: 1.0.5
       is-symbol: 1.0.4
+    dev: true
+
+  /esbuild-plugin-external-package@1.0.0:
+    resolution: {integrity: sha512-NCSPXG/I3FxRMP+s06f9IMG+72fC3Bi/UEzM8/5alIh565FtPhBKj3xLiOckEwhg0ZR5t3nTSE2CxqBOJYHLSQ==}
     dev: true
 
   /esbuild@0.17.19:

@@ -1,6 +1,6 @@
 import { Awaitable, ClientEvents } from 'discord.js'
 
-import { BotContext } from './BotContext.js'
+import { BotContext } from './BotContext.ts'
 
 export type EventHandlerExecutor<K extends keyof ClientEvents> = (
   ...args: [botContext: BotContext, ...args: ClientEvents[K]]
