@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { Bot } from './Bot.js'
+import { Bot } from './Bot'
 
-vi.mock('./config.js')
+vi.mock('@/config')
 
 describe('Bot', () => {
   let client: Bot

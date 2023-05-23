@@ -1,6 +1,6 @@
 import { ApplicationCommandData } from 'discord.js'
 
-import { CommandHandlerExecutor } from './CommandHandlerExecutor.js'
+import { CommandHandlerExecutor } from './CommandHandlerExecutor'
 
 export interface CommandHandlerConfig {
   data: ApplicationCommandData

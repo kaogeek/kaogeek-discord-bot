@@ -8,13 +8,13 @@
   "scripts": {
     "dev": "tsx src/client.ts",
     "dev:watch": "tsx watch src/client.ts",
-    "build": "rimraf dist && tsc --build",
-    "start": "NODE_ENV=production node dist/client.js",
+    "build": "tsc && rimraf dist && node build.js",
+    "start": "cross-env NODE_ENV=production node dist/client.js",
     "lint": "prettier --check \"**/*.{md,yml,json}\" && eslint . --max-warnings=0",
     "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit && tsc -p test/tsconfig.json",
+    "typecheck": "tsc && tsc -p test/tsconfig.json",
     "generate:prisma": "prisma generate",
     "migrate": "prisma db push"
   },
@@ -35,6 +35,9 @@
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
     "@vitest/coverage-c8": "0.31.1",
+    "cross-env": "7.0.3",
+    "esbuild": "0.17.19",
+    "esbuild-plugin-external-package": "1.0.0",
     "eslint": "8.41.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
@@ -44,6 +47,7 @@
     "rimraf": "5.0.1",
     "tsx": "3.12.7",
     "typescript": "5.0.4",
+    "vite-tsconfig-paths": "4.2.0",
     "vitest": "0.31.1"
   },
   "engines": {
