@@ -3,8 +3,6 @@ const emojiRegex =
 
 export default (msg: string): boolean => {
   const emoji = msg.match(emojiRegex)
-  //the issue of #99(https://github.com/creatorsgarten/kaogeek-discord-bot/pull/99) only happend with only number message,
-  //so detect number in message and return false if there is.
   if (emoji !== null) {
     const unicoded = emoji.map((emo) => {
       return emo.codePointAt(0)
