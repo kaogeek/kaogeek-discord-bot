@@ -62,8 +62,9 @@ model UserModerationLog {
 }
 
 model UserProfile {
-  id          String @id
+  id          String  @id
   tag         String
   displayName String
-  strikes     Int    @default(0)
+  strikes     Int     @default(0)
+  severeMuted Boolean @default(false)
 }

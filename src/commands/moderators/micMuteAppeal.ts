@@ -2,6 +2,7 @@ import { CacheType, ChatInputCommandInteraction, GuildMember } from 'discord.js'
 
 import { Environment } from '../../config.js'
 import { addUserModerationLogEntry } from '../../features/profileInspector/index.js'
+import { prisma } from '../../prisma.js'
 import { UserModerationLogEntryType } from '../../types/UserModerationLogType.js'
 import { defineCommandHandler } from '../../types/defineCommandHandler.js'
 
@@ -43,7 +44,7 @@ export default defineCommandHandler({
       //unmuting might be depended on reason why user is server muted.
       else {
         try {
-          if (isMutedForSeverePunishment(interaction)) {
+          if (!(await isMutedForSeverePunishment(interaction))) {
             //this if condition may vary to fit the reason why the user was banned.
             await interaction.member.voice.setMute(false)
             await interaction.editReply(`Unmute ${interaction.member.user}`)
@@ -54,6 +55,9 @@ export default defineCommandHandler({
               `Unmute ${interaction.member.user.tag} by auto mute appeal`,
             )
           } else {
+            interaction.editReply(
+              `You were severe muted. Please, appeal a moderator directly for severe mute pardon.`,
+            )
             //this scope is for future development when user server mute is for severe punishment like spamming or racial slur.
           }
         } catch (err) {
@@ -71,10 +75,17 @@ export default defineCommandHandler({
   },
 })
 
-function isMutedForSeverePunishment(
+async function isMutedForSeverePunishment(
   interaction: ChatInputCommandInteraction<CacheType>,
-): boolean {
-  //TODO: will implement checking once the standard is agreed among a community.
-  interaction
-  return true
+): Promise<boolean> {
+  const profile = await prisma.userProfile.findFirst({
+    where: { id: interaction.user.id },
+  }) //retreive the latest mute record of user
+  if (profile === null) {
+    //null mean no profile have been registered into DB, so user have not been punishedwith severe mute.
+    return false
+  } else {
+    console.log(profile)
+    return profile.severeMuted
+  }
 }

@@ -15,6 +15,7 @@ export class Bot {
       IntentsBitField.Flags.GuildMembers,
       IntentsBitField.Flags.GuildMessages,
       IntentsBitField.Flags.MessageContent,
+      IntentsBitField.Flags.GuildVoiceStates,
     ],
   })
   private readonly runtimeConfiguration = new RuntimeConfiguration()
