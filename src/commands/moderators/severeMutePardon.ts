@@ -36,7 +36,6 @@ export default [
 
       const userId = message.author.id
       const member = interaction.guild.members.cache.get(userId)
-      console.log(member)
       if (!member) return
 
       await severeMutePardon(interaction, member)

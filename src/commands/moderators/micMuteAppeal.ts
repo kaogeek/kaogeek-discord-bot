@@ -85,7 +85,6 @@ async function isMutedForSeverePunishment(
     //null mean no profile have been registered into DB, so user have not been punishedwith severe mute.
     return false
   } else {
-    console.log(profile)
     return profile.severeMuted
   }
 }
