@@ -1,6 +1,7 @@
 const emojiRegex =
   /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu
 
+
 export default (msg: string): boolean => {
   const emoji = msg.match(emojiRegex)
   if (emoji !== null) {
@@ -18,4 +19,5 @@ export default (msg: string): boolean => {
 
 function isNumber(input: number): boolean {
   return input >= 0x30 && input <= 0x39 //0x30 to 0x39 is range of number unicode from 0 to 9.
+
 }
