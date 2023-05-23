@@ -88,4 +88,4 @@ jobs:
       - name: Perform database migrations
         run: cd smoke && docker compose run --rm bot npx prisma db push && test -f .data/bot.db
       - name: Run smoke test
-        run: cd smoke && docker compose run --rm bot dist/client.js --smoke
+        run: cd smoke && docker compose run --rm bot dist/index.js --smoke

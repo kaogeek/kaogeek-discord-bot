@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Bot } from './Bot'
 import { prisma } from './prisma'
 

@@ -14,9 +14,6 @@ RUN npx pnpm -r i --frozen-lockfile
 COPY src ./src
 COPY tsconfig.json ./
 
-# copy build script
-COPY build.js ./
-
 # prisma
 COPY ./prisma ./prisma
 RUN npx prisma generate
@@ -55,4 +52,4 @@ COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
 COPY --chown=node:node --from=deps-prod /app/prisma ./prisma
 COPY --chown=node:node --from=builder /app/dist ./dist
 
-CMD ["dist/client.js"]
+CMD ["dist/index.js"]
