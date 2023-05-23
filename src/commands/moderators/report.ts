@@ -65,18 +65,16 @@ export default defineCommandHandler({
       })
 
       // Tell the user that the report was sent
-      if (submitted) {
-        await submitted.reply({
-          embeds: [
-            {
-              title: 'Thanks!',
-              description: 'Report sent to moderators',
-              color: 0x00_ff_00,
-            },
-          ],
-          ephemeral: true,
-        })
-      }
+      await submitted.reply({
+        embeds: [
+          {
+            title: 'Thanks!',
+            description: 'Report sent to moderators',
+            color: 0x00_ff_00,
+          },
+        ],
+        ephemeral: true,
+      })
     } catch (error) {
       if (!submitted) return
 
