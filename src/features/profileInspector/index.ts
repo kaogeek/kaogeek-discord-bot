@@ -9,12 +9,11 @@ import {
 import { InteractionButtonComponentData } from 'discord.js'
 import { MessageComponentInteraction } from 'discord.js'
 
+import { prisma } from '@/prisma'
+import { BotContext } from '@/types/BotContext'
+import { ActionSet } from '@/utils/ActionSet'
+import { prompt } from '@/utils/prompt'
 import { UserModerationLog, UserProfile } from '@prisma/client'
-
-import { prisma } from '../../prisma.js'
-import { BotContext } from '../../types/BotContext.js'
-import { ActionSet } from '../../utils/ActionSet.js'
-import { prompt } from '../../utils/prompt.js'
 
 export interface InspectProfileOptions {
   interaction: CommandInteraction

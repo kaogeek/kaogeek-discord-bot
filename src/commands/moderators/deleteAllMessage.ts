@@ -9,8 +9,8 @@ import {
   TextChannel,
 } from 'discord.js'
 
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
-import { isInArray } from '../../utils/typeGuards.js'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { isInArray } from '@/utils/typeGuards'
 
 export default defineCommandHandler({
   data: {
