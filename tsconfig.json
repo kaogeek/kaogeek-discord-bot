@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node18",
   "compilerOptions": {
     "sourceMap": true,
+    "noEmit": true,
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
