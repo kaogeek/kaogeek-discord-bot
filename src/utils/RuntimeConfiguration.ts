@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readFileSync } from 'fs'
+import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import * as toml from 'toml'
 
 import { Environment } from '../config.js'
@@ -36,7 +36,7 @@ export class RuntimeConfiguration {
         )
       }
 
-      return readFileSync(path, 'utf-8')
+      return readFileSync(path, 'utf8')
     }
 
     const response = await fetch(url)
