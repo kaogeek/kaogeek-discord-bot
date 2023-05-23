@@ -56,9 +56,9 @@ export default defineCommandHandler({
 
     const reason = submitted.fields.getTextInputValue('reasonInput')
 
-    try {
-      if (!submitted) return
+    if (!submitted) return
 
+    try {
       // Save the report
       await prisma.messageReport.create({
         data: { messageId, reporterId, reporteeId, reason },
@@ -76,8 +76,6 @@ export default defineCommandHandler({
         ephemeral: true,
       })
     } catch (error) {
-      if (!submitted) return
-
       if (isUniqueConstraintViolation(error)) {
         await submitted.reply({
           embeds: [
