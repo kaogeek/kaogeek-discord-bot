@@ -7,7 +7,7 @@ export default (msg: string): boolean => {
   //so detect number in message and return false if there is.
   if (emoji !== null) {
     const unicoded = emoji.map((emo) => {
-      return emo.codePointAt(0)?.toString(16)
+      return emo.codePointAt(0)
     })
     for (const i of unicoded) {
       if (i !== undefined && isNumber(i)) {
@@ -18,18 +18,6 @@ export default (msg: string): boolean => {
   return emoji !== null && emoji.join('').trim() === msg.replace(/\s/g, '')
 }
 
-function isNumber(input: string): boolean {
-  const numberUnicode = [
-    '30',
-    '31',
-    '32',
-    '33',
-    '34',
-    '35',
-    '36',
-    '37',
-    '38',
-    '39',
-  ]
-  return numberUnicode.includes(input)
+function isNumber(input: number): boolean {
+  return input >= 0x30 && input <= 0x39 //0x30 to 0x39 is range of number unicode from 0 to 9.
 }
