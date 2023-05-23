@@ -16,8 +16,8 @@ export default defineEventHandler({
         if (runtimeConfiguration.data.preventEmojiSpam.enabled) {
           await message.delete()
         }
-      } catch (err) {
-        console.error(err)
+      } catch (error) {
+        console.error(error)
       }
     }
   },

@@ -37,7 +37,7 @@ export default defineCommandHandler({
             {
               title: 'Error',
               description: 'You have already reported this message',
-              color: 0xff0000,
+              color: 0xff_00_00,
             },
           ],
         })
@@ -85,7 +85,7 @@ export default defineCommandHandler({
         {
           title: 'Thanks!',
           description: 'Report sent to moderators',
-          color: 0x00ff00,
+          color: 0x00_ff_00,
         },
       ],
     })

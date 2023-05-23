@@ -56,8 +56,9 @@ export default defineCommandHandler({
       // Await button interaction for confirmation
       const buttonInteraction =
         await interaction.channel?.awaitMessageComponent({
-          filter: (i) => i.customId === 'yes' || i.customId === 'no',
-          time: 10000, // Adjust timeout as needed
+          filter: (index) =>
+            index.customId === 'yes' || index.customId === 'no',
+          time: 10_000, // Adjust timeout as needed
         })
       if (buttonInteraction?.customId === 'no') {
         // Reply about the cancel action
@@ -67,7 +68,7 @@ export default defineCommandHandler({
         })
         return
       }
-    } catch (err) {
+    } catch {
       await interaction.editReply({
         content: 'Confirmation not received within 10 seconds, cancelling',
         components: [],
@@ -82,7 +83,7 @@ export default defineCommandHandler({
     })
 
     // Delete message in all channel
-    let numDeleted = 0
+    let numberDeleted = 0
     const { client } = botContext
 
     const selectedChannel: GuildTextBasedChannelTypes[] = [
@@ -98,13 +99,13 @@ export default defineCommandHandler({
         //supportedTextChannel only contains TextChannel,we can cast channel to TextChannel without any issues.
         const messages = await (channel as TextChannel).messages.fetch()
         let userMessages = messages.filter(
-          (msg) => msg.author.id === message?.author.id,
+          (message_) => message_.author.id === message?.author.id,
         )
         //Filter messages within 2 weeks and delete it all
         const duration =
           Date.now() - (14 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000) // reduce by 1 hour
         userMessages = userMessages.filter(
-          (msg) => msg.createdTimestamp > duration,
+          (message_) => message_.createdTimestamp > duration,
         )
 
         if (userMessages.size > 0) {
@@ -115,7 +116,7 @@ export default defineCommandHandler({
                 interaction.targetId
               } in channel ${(channel as TextChannel).name} (${channelId}).`,
             )
-            numDeleted += userMessages.size
+            numberDeleted += userMessages.size
           } catch (error) {
             console.error('Error deleting messages:', error)
             if (error instanceof DiscordAPIError) {
@@ -134,9 +135,9 @@ export default defineCommandHandler({
       }
     }
     // Tell the user that the messages were successfully pruned
-    console.info(`Successfully pruned ${numDeleted} messages.`)
+    console.info(`Successfully pruned ${numberDeleted} messages.`)
     await interaction.editReply({
-      content: `Successfully prune messages. Number of messages deleted: ${numDeleted}`,
+      content: `Successfully prune messages. Number of messages deleted: ${numberDeleted}`,
       components: [],
     })
   },

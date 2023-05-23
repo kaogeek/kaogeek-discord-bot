@@ -46,14 +46,14 @@ async function inspectProfileMain(
 
   const description =
     logs.length > 0
-      ? logs.map(formatLog).join('\n')
+      ? logs.map((element) => formatLog(element)).join('\n')
       : '(No moderation logs found)'
 
   const embeds: APIEmbed[] = [
     {
       title: `${userProfile.tag} (${userProfile.displayName})`,
       description,
-      color: 0xff7700,
+      color: 0xff_77_00,
       fields: [
         { name: 'ID', value: userProfile.id, inline: true },
         { name: 'Strikes', value: `${userProfile.strikes}`, inline: true },
@@ -89,7 +89,7 @@ async function inspectProfileMain(
     embeds,
     components: [{ type: ComponentType.ActionRow, components: buttons }],
   })
-  const result = await actions.awaitInChannel(interaction.channel, 60000)
+  const result = await actions.awaitInChannel(interaction.channel, 60_000)
   await interaction.editReply({ components: [] })
 
   if (!result) return
