@@ -12,7 +12,7 @@ export default (message: string): boolean => {
         value !== undefined &&
         isNumber(value) &&
         index + 1 <= unicoded.length &&
-        unicoded[index + 1] !== 0xfe0f
+        unicoded[index + 1] !== 0xfe_0f
       ) {
         return false
       }
