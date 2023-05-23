@@ -1,6 +1,6 @@
 import { Client, IntentsBitField } from 'discord.js'
 
-import { Environment } from './smoke-config.js'
+import { Environment } from './SmokeConfig.js'
 
 export class SmokeTesterBot {
   public readonly client = new Client({

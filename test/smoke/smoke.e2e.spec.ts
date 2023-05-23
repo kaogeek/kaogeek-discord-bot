@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { Bot } from '../../src/Bot.js'
 
-import { Environment } from './smoke-config.js'
-import { SmokeTesterBot } from './smoke-tester-bot.js'
+import { Environment } from './SmokeConfig.js'
+import { SmokeTesterBot } from './SmokeTesterBot.js'
 
 let bot: Bot
 let smokeTesterBot: SmokeTesterBot
