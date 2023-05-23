@@ -5,8 +5,7 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
-    "moduleResolution": "nodenext",
-    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"]
     }

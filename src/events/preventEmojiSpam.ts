@@ -1,7 +1,7 @@
 import { Events } from 'discord.js'
 
-import { defineEventHandler } from '@/types/defineEventHandler.ts'
-import isOnlyEmoji from '@/utils/isOnlyEmoji.ts'
+import { defineEventHandler } from '@/types/defineEventHandler'
+import isOnlyEmoji from '@/utils/isOnlyEmoji'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,

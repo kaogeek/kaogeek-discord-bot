@@ -1,8 +1,8 @@
 import { Client, Collection } from 'discord.js'
 
-import { RuntimeConfiguration } from '@/utils/RuntimeConfiguration.ts'
+import { RuntimeConfiguration } from '@/utils/RuntimeConfiguration'
 
-import { CommandHandlerConfig } from './CommandHandlerConfig.ts'
+import { CommandHandlerConfig } from './CommandHandlerConfig'
 
 /**
  * A shared context object that is passed to all command handlers.

@@ -1,7 +1,7 @@
-import { Bot } from '@/Bot.ts'
+import { Bot } from '@/Bot'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/src/config.ts')
+vi.mock('@/src/config')
 
 describe('Bot', () => {
   let client: Bot

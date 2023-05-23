@@ -1,13 +1,13 @@
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.ts'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 
-import ping from './info/ping.ts'
-import activeThreads from './moderators/activeThreads.ts'
-import deleteAllMessage from './moderators/deleteAllMessage.ts'
-import inspectProfile from './moderators/inspectProfile.ts'
-import report from './moderators/report.ts'
-import user from './moderators/user.ts'
-import inspectConfig from './runtimeConfig/inspectConfig.ts'
-import reloadConfig from './runtimeConfig/reloadConfig.ts'
+import ping from './info/ping'
+import activeThreads from './moderators/activeThreads'
+import deleteAllMessage from './moderators/deleteAllMessage'
+import inspectProfile from './moderators/inspectProfile'
+import report from './moderators/report'
+import user from './moderators/user'
+import inspectConfig from './runtimeConfig/inspectConfig'
+import reloadConfig from './runtimeConfig/reloadConfig'
 
 export default [
   activeThreads,

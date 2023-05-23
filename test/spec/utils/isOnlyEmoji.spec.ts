@@ -1,4 +1,4 @@
-import isOnlyEmoji from '@/utils/isOnlyEmoji.ts'
+import isOnlyEmoji from '@/utils/isOnlyEmoji'
 import { describe, expect, it } from 'vitest'
 
 describe('isOnlyEmoji', () => {

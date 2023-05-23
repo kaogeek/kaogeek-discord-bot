@@ -9,10 +9,10 @@ import {
 import { InteractionButtonComponentData } from 'discord.js'
 import { MessageComponentInteraction } from 'discord.js'
 
-import { prisma } from '@/prisma.ts'
-import { BotContext } from '@/types/BotContext.ts'
-import { ActionSet } from '@/utils/ActionSet.ts'
-import { prompt } from '@/utils/prompt.ts'
+import { prisma } from '@/prisma'
+import { BotContext } from '@/types/BotContext'
+import { ActionSet } from '@/utils/ActionSet'
+import { prompt } from '@/utils/prompt'
 import { UserModerationLog, UserProfile } from '@prisma/client'
 
 export interface InspectProfileOptions {

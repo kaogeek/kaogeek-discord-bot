@@ -10,8 +10,8 @@ import {
   SelectMenuComponentOptionData,
 } from 'discord.js'
 
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.ts'
-import { ActionSet } from '@/utils/ActionSet.ts'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { ActionSet } from '@/utils/ActionSet'
 
 export default {
   data: {

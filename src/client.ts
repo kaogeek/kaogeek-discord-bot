@@ -1,5 +1,5 @@
-import { Bot } from './Bot.ts'
-import { prisma } from './prisma.ts'
+import { Bot } from './Bot'
+import { prisma } from './prisma'
 
 if (process.argv.includes('--smoke')) {
   // Performs a basic smoke test

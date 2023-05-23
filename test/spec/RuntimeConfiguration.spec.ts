@@ -1,4 +1,4 @@
-import { RuntimeConfiguration } from '@/utils/RuntimeConfiguration.ts'
+import { RuntimeConfiguration } from '@/utils/RuntimeConfiguration'
 import { randomUUID } from 'node:crypto'
 import { unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'

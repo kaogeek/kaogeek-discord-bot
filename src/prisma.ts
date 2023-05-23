@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 
-import { Environment } from './config.ts'
+import { Environment } from './config'
 
 export const prisma = new PrismaClient({
   ...(Environment.PRISMA_LOG

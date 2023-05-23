@@ -1,4 +1,4 @@
-import { CommandHandlerConfig } from './CommandHandlerConfig.ts'
+import { CommandHandlerConfig } from './CommandHandlerConfig'
 
 export function defineCommandHandler(config: CommandHandlerConfig) {
   return config

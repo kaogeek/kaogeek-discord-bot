@@ -1,5 +1,5 @@
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.ts'
-import { EventHandlerConfig } from '@/types/EventHandlerConfig.ts'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { EventHandlerConfig } from '@/types/EventHandlerConfig'
 import { z } from 'zod'
 
 const EventHandlerSchema = z.object({

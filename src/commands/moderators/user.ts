@@ -1,6 +1,6 @@
 import { ApplicationCommandType } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler.ts'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default defineCommandHandler({
   data: {

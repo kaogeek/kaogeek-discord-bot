@@ -1,8 +1,8 @@
 import { ApplicationCommandType, TextChannel } from 'discord.js'
 
-import { Environment } from '@/config.ts'
-import { isUniqueConstraintViolation, prisma } from '@/prisma.ts'
-import { defineCommandHandler } from '@/types/defineCommandHandler.ts'
+import { Environment } from '@/config'
+import { isUniqueConstraintViolation, prisma } from '@/prisma'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default defineCommandHandler({
   data: {

@@ -1,7 +1,7 @@
 import { Events } from 'discord.js'
 
-import { Environment } from '@/config.ts'
-import { defineEventHandler } from '@/types/defineEventHandler.ts'
+import { Environment } from '@/config'
+import { defineEventHandler } from '@/types/defineEventHandler'
 
 export default defineEventHandler({
   eventName: Events.ClientReady,
