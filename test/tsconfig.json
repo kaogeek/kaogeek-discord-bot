@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node18",
   "compilerOptions": {
     "noEmit": true,
+    "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["../src/*"]
