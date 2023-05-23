@@ -1,5 +1,6 @@
-import { Bot } from '@/Bot'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { Bot } from './Bot'
 
 vi.mock('@/config')
 

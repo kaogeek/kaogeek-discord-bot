@@ -1,5 +1,6 @@
-import isOnlyEmoji from '@/utils/isOnlyEmoji'
 import { describe, expect, it } from 'vitest'
+
+import isOnlyEmoji from './isOnlyEmoji.js'
 
 describe('isOnlyEmoji', () => {
   it.each([{ msg: '🫠' }, { msg: '🅰️' }, { msg: '🅾' }, { msg: '<:test:000>' }])(
