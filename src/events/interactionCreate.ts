@@ -12,7 +12,7 @@ export default defineEventHandler({
       const command = commands.get(commandName)
       if (!command) return
       try {
-        if (!command.disableAutoReply) {
+        if (!command.disableAutoDeferReply) {
           await interaction.deferReply({ ephemeral: command.ephemeral })
         }
       } catch (error) {
