@@ -17,6 +17,7 @@ export default defineCommandHandler({
     name: 'Report to moderator',
     type: ApplicationCommandType.Message,
   },
+  disableAutoDeferReply: true,
   execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
     const message = await interaction.channel?.messages.fetch(
