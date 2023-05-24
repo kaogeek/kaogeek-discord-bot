@@ -1,4 +1,12 @@
-import { ApplicationCommandType, TextChannel } from 'discord.js'
+import {
+  ActionRowBuilder,
+  ApplicationCommandType,
+  ModalActionRowComponentBuilder,
+  ModalBuilder,
+  TextChannel,
+  TextInputBuilder,
+  TextInputStyle,
+} from 'discord.js'
 
 import { Environment } from '@/config'
 import { isUniqueConstraintViolation, prisma } from '@/prisma'
@@ -9,7 +17,7 @@ export default defineCommandHandler({
     name: 'Report to moderator',
     type: ApplicationCommandType.Message,
   },
-  ephemeral: true,
+  disableAutoDeferReply: true,
   execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
     const message = await interaction.channel?.messages.fetch(
@@ -22,17 +30,55 @@ export default defineCommandHandler({
     const reporterId = interaction.user.id
     const reporteeId = member.id
 
-    // TODO: Maybe allow a reason to be specified? e.g. by using a modal
-    const reason = 'Reported via context menu'
+    const reasonModal = new ModalBuilder()
+      .setCustomId('reasonModal')
+      .setTitle('Report to moderator')
 
-    // Save the report
+    const reasonInput = new TextInputBuilder()
+      .setCustomId('reasonInput')
+      .setLabel('Reason')
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true)
+      .setMaxLength(100)
+
+    reasonModal.addComponents(
+      new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+        reasonInput,
+      ),
+    )
+
+    // Show the modal
+    await interaction.showModal(reasonModal)
+
+    const submitted = await interaction.awaitModalSubmit({
+      filter: (interaction_) => interaction_.user.id === interaction.user.id,
+      time: 0,
+    })
+
+    const reason = submitted.fields.getTextInputValue('reasonInput')
+
+    if (!submitted) return
+
     try {
+      // Save the report
       await prisma.messageReport.create({
         data: { messageId, reporterId, reporteeId, reason },
       })
+
+      // Tell the user that the report was sent
+      await submitted.reply({
+        embeds: [
+          {
+            title: 'Thanks!',
+            description: 'Report sent to moderators',
+            color: 0x00_ff_00,
+          },
+        ],
+        ephemeral: true,
+      })
     } catch (error) {
       if (isUniqueConstraintViolation(error)) {
-        await interaction.editReply({
+        await submitted.reply({
           embeds: [
             {
               title: 'Error',
@@ -40,6 +86,7 @@ export default defineCommandHandler({
               color: 0xff_00_00,
             },
           ],
+          ephemeral: true,
         })
         return
       }
@@ -71,21 +118,29 @@ export default defineCommandHandler({
     const { client } = botContext
     const channel = client.channels.cache.get(Environment.MOD_CHANNEL_ID)
     if (!(channel instanceof TextChannel)) return
-    await channel.send(
-      [
-        `Reported message: https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount} times)`,
-        `Message author: ${member.user} (reported ${reporteeReportCount} times)`,
-        `Reported by: ${interaction.user} (sent ${reporterReportCount} reports)`,
-      ].join('\n'),
-    )
-
-    // Tell the user that the report was sent
-    await interaction.editReply({
+    await channel.send({
       embeds: [
         {
-          title: 'Thanks!',
-          description: 'Report sent to moderators',
-          color: 0x00_ff_00,
+          fields: [
+            {
+              name: 'Reported message',
+              value: `https://discord.com/channels/${interaction.guild.id}/${interaction.channelId}/${interaction.targetId} (reported ${messageReportCount} times)`,
+            },
+            {
+              name: 'Message author',
+              value: `${member.user} (reported ${reporteeReportCount} times)`,
+              inline: true,
+            },
+            {
+              name: 'Reported by',
+              value: `${interaction.user} (sent ${reporterReportCount} reports)`,
+              inline: true,
+            },
+            {
+              name: 'Reason',
+              value: reason,
+            },
+          ],
         },
       ],
     })
