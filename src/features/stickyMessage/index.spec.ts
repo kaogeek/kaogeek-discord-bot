@@ -3,19 +3,20 @@ import { Collection, Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import * as channelLock from '../../../../src/features/stickyMessage/channelLock.js'
+import { prisma } from '../../prisma.js'
+import * as cache from '../../utils/cache.js'
+
+import * as channelLock from './channelLock.js'
 import {
   STICKY_CACHE_PREFIX,
   initStickyMessage,
   isNeedToUpdateMessage,
   pushMessageToBottom,
-} from '../../../../src/features/stickyMessage/index.js'
-import * as messageCooldown from '../../../../src/features/stickyMessage/messageCooldown.js'
-import * as messageCounter from '../../../../src/features/stickyMessage/messageCounter.js'
-import { prisma } from '../../../../src/prisma.js'
-import * as cache from '../../../../src/utils/cache.js'
+} from './index.js'
+import * as messageCooldown from './messageCooldown.js'
+import * as messageCounter from './messageCounter.js'
 
-vi.mock('../../../../src/config.js', async () => {
+vi.mock('../../config.js', async () => {
   const Environment = {
     MESSAGE_COOLDOWN_SEC: 15,
     MESSAGE_MAX: 5,

@@ -1,12 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import {
-  getCounter,
-  incCounter,
-  resetCounter,
-} from '../../../../src/features/stickyMessage/messageCounter.js'
+import { getCounter, incCounter, resetCounter } from './messageCounter.js'
 
-vi.mock('../../../../src/config.js', async () => {
+vi.mock('../../config.js', async () => {
   const Environment = {
     MESSAGE_COOLDOWN_SEC: 15,
     MESSAGE_MAX: 5,

@@ -1,13 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import {
-  isChannelLock,
-  lockChannel,
-  unlockChannel,
-} from '../../../../src/features/stickyMessage/channelLock.js'
-import { STICKY_LOCK_PREFIX } from '../../../../src/features/stickyMessage/index.js'
+import { isChannelLock, lockChannel, unlockChannel } from './channelLock.js'
+import { STICKY_LOCK_PREFIX } from './index.js'
 
-vi.mock('../../../../src/config.js', async () => {
+vi.mock('../../config.js', async () => {
   const Environment = {
     MESSAGE_COOLDOWN_SEC: 15,
     MESSAGE_MAX: 5,
@@ -16,7 +12,7 @@ vi.mock('../../../../src/config.js', async () => {
   return { Environment }
 })
 
-vi.mock('../../../../src/utils/cache.js', async () => {
+vi.mock('../../utils/cache.js', async () => {
   const getCache = vi.fn()
   const saveCache = vi.fn()
 
@@ -30,7 +26,7 @@ describe('lockChannel', () => {
 
   it('should call save cache to update channel status to locked with prefix, STICKY_CACHE_PREFIX', async () => {
     const channelId = 'test-channel'
-    const { saveCache } = await import('../../../../src/utils/cache.js')
+    const { saveCache } = await import('../../utils/cache.js')
 
     lockChannel(channelId)
 
@@ -48,7 +44,7 @@ describe('unlockChannel', () => {
 
   it('should call save cache to update channel status to unlocked with prefix, STICKY_CACHE_PREFIX', async () => {
     const channelId = 'test-channel'
-    const { saveCache } = await import('../../../../src/utils/cache.js')
+    const { saveCache } = await import('../../utils/cache.js')
 
     unlockChannel(channelId)
 
@@ -66,7 +62,7 @@ describe('isChannelLock', () => {
 
   it('should call get cache to get channel status with prefix, STICKY_CACHE_PREFIX', async () => {
     const channelId = 'test-channel'
-    const { getCache } = await import('../../../../src/utils/cache.js')
+    const { getCache } = await import('../../utils/cache.js')
 
     isChannelLock(channelId)
 

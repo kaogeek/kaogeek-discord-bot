@@ -3,14 +3,12 @@ import { Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import * as stickyMessage from '../../../../src/features/stickyMessage/index.js'
-import {
-  resetCooldown,
-  startCooldown,
-} from '../../../../src/features/stickyMessage/messageCooldown.js'
-import * as cache from '../../../../src/utils/cache.js'
+import * as cache from '../../utils/cache.js'
 
-vi.mock('../../../../src/config.js', async () => {
+import * as stickyMessage from './index.js'
+import { resetCooldown, startCooldown } from './messageCooldown.js'
+
+vi.mock('../../config.js', async () => {
   const Environment = {
     MESSAGE_COOLDOWN_SEC: 15,
     MESSAGE_MAX: 5,
@@ -19,7 +17,7 @@ vi.mock('../../../../src/config.js', async () => {
   return { Environment }
 })
 
-vi.mock('../../../../src/features/stickyMessage/index', async () => {
+vi.mock('./index', async () => {
   const pushMessageToBottom = vi.fn()
   const STICKY_COOLDOWN_PREFIX = 'MOCK_COOLDOWN_PREFIX'
 
