@@ -68,6 +68,7 @@ jobs:
     concurrency: smoke-test
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.head.repo.fork }}
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
