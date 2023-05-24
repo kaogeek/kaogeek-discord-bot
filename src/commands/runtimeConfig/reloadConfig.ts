@@ -1,6 +1,6 @@
-import { PermissionsBitField } from 'discord.js'
+import { PermissionsBitField, codeBlock } from 'discord.js'
 
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default defineCommandHandler({
   data: {
@@ -12,12 +12,9 @@ export default defineCommandHandler({
   execute: async ({ runtimeConfiguration }, interaction) => {
     const data = await runtimeConfiguration.reload()
     await interaction.editReply({
-      content: [
-        'Configuration has been reloaded.',
-        '```json',
-        JSON.stringify(data, null, 2),
-        '```',
-      ].join('\n'),
+      content:
+        'Configuration has been reloaded.\n' +
+        codeBlock('json', JSON.stringify(data, null, 2)),
     })
   },
 })

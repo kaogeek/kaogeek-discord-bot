@@ -1,4 +1,4 @@
-import { AnyEventHandlerConfig } from '../types/EventHandlerConfig.js'
+import { AnyEventHandlerConfig } from '@/types/EventHandlerConfig'
 
 import guildMemberAdd from './guildMemberAdd.js'
 import guildMemberRemove from './guildMemberRemove.js'

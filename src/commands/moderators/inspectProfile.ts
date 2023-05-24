@@ -4,8 +4,8 @@ import {
   PermissionsBitField,
 } from 'discord.js'
 
-import { inspectProfile } from '../../features/profileInspector/index.js'
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { inspectProfile } from '@/features/profileInspector/index'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default [
   defineCommandHandler({
