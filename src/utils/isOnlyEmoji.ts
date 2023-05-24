@@ -30,5 +30,9 @@ function isEmojiNumber(input: number, nextInput: number): boolean {
   // which is used to convert normal number to it emoji alternative.
   // The following unicode 0x20E3 denotes to Combining Enclosing Keycap
   // which is used to convert number to keycap emoji.
-  return input >= 0x30 && input <= 0x39 && (nextInput === 0xFE0F || nextInput === 0x20E3)
+  return (
+    input >= 0x30 &&
+    input <= 0x39 &&
+    (nextInput === 0xfe_0f || nextInput === 0x20_e3)
+  )
 }
