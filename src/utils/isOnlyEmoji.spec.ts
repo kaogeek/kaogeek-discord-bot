@@ -17,7 +17,7 @@ describe('isOnlyEmoji', () => {
     { msg: '👩🏾‍❤‍💋‍👩🏼' },
     //case of variation selector (0xFE0F)
     { msg: '0️⃣' },
-    { msg: `  1️⃣ ` }, 
+    { msg: `  1️⃣ ` },
     { msg: '#️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟' },
   ])('should match emoji ($msg)', async ({ msg }) => {
     expect(isOnlyEmoji(msg)).toBeTruthy()

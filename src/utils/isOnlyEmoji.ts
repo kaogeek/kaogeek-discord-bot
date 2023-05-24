@@ -1,24 +1,24 @@
 const emojiRegex =
   /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu
 export default (message: string): boolean => {
-  const emojiMatches = message.match(emojiRegex)
-  if (emojiMatches === null) {
-    return false
-  }
-  const unicoded = emojiMatches
-    .map((emo) => emo.codePointAt(0))
-    .filter((codePoint): codePoint is number => codePoint !== undefined)
-  for (let index = 0; index < unicoded.length; index++) {
-    if (isEmojiNumber(unicoded[index], unicoded[index + 1])) {
-      // Skip the next unicode as we already checked it in isEmojiNumber function.
-      index++
-    } else if (unicoded[index] >= 0x30 && unicoded[index] <= 0x39) {
-      // If the current unicode is a number but not an emoji number, return false.
-      return false
+  const emoji = message.match(emojiRegex)
+  if (emoji !== null) {
+    const unicoded = emoji
+      .map((emo) => emo.codePointAt(0))
+      .filter((codePoint): codePoint is number => codePoint !== undefined)
+    for (let index = 0; index < unicoded.length; index++) {
+      if (isEmojiNumber(unicoded[index], unicoded[index + 1])) {
+        // Skip the next unicode as we already checked it in isEmojiNumber function.
+        index++
+      } else if (unicoded[index] >= 0x30 && unicoded[index] <= 0x39) {
+        // If the current unicode is a number but not an emoji number, return false.
+        return false
+      }
     }
   }
-
-  return emojiMatches.join('').trim() === message.replaceAll(/\s/g, '')
+  return (
+    emoji !== null && emoji.join('').trim() === message.replaceAll(/\s/g, '')
+  )
 }
 
 function isEmojiNumber(input: number, nextInput: number): boolean {
