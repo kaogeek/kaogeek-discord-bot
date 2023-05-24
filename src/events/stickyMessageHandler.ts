@@ -31,7 +31,7 @@ export default defineEventHandler({
       return
     }
 
-    // if message is already updated -> do nothing
+    // if message is updating -> do nothing
     if (isChannelLock(message.channelId)) {
       return
     }
