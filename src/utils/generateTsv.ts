@@ -4,9 +4,11 @@
  * @returns a TSV string
  */
 export function generateTsv(rows: unknown[][]) {
-  return rows.map((row) => row.map(sanitizeTsvCell).join('\t')).join('\n')
+  return rows
+    .map((row) => row.map((cell) => sanitizeTsvCell(cell)).join('\t'))
+    .join('\n')
 }
 
 function sanitizeTsvCell(cell: unknown) {
-  return String(cell).replace(/\s+/g, ' ')
+  return String(cell).replaceAll(/\s+/g, ' ')
 }

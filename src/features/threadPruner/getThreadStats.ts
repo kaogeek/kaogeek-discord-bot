@@ -6,7 +6,7 @@ export interface PruningCriteria {
 }
 
 export function getThreadStats(threads: APIThreadChannel[]) {
-  threads = Array.from(threads).sort(
+  threads = [...threads].sort(
     (a, b) => +(b.last_message_id ?? 0) - +(a.last_message_id ?? 0),
   )
 
@@ -20,7 +20,7 @@ export function getThreadStats(threads: APIThreadChannel[]) {
       .filter((thread) => {
         const timestamp = thread.last_message_id
           ? SnowflakeUtil.timestampFrom(thread.last_message_id)
-          : Infinity
+          : Number.POSITIVE_INFINITY
         return Date.now() - timestamp > 3600e3 * h
       })
       .map((t) => t.id)
