@@ -1,15 +1,14 @@
 import { Message } from 'discord.js'
 
+import * as channelLock from '@/features/stickyMessage/channelLock'
+import * as stickyMessage from '@/features/stickyMessage/index'
+import * as messageCounter from '@/features/stickyMessage/messageCounter'
+import { BotContext } from '@/types/BotContext'
+import * as cache from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import * as channelLock from '../features/stickyMessage/channelLock.js'
-import * as stickyMessage from '../features/stickyMessage/index.js'
-import * as messageCounter from '../features/stickyMessage/messageCounter.js'
-import { BotContext } from '../types/BotContext.js'
-import * as cache from '../utils/cache.js'
-
-import stickyMessageEventHandler from './stickyMessageHandler.js'
+import stickyMessageEventHandler from './stickyMessageHandler'
 
 vi.mock('@/config')
 

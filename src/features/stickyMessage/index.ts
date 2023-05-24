@@ -1,14 +1,13 @@
 import { Message } from 'discord.js'
 
+import { Environment } from '@/config'
+import { prisma } from '@/prisma'
+import { saveCache } from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 
-import { Environment } from '../../config.js'
-import { prisma } from '../../prisma.js'
-import { saveCache } from '../../utils/cache.js'
-
-import { lockChannel, unlockChannel } from './channelLock.js'
-import { isCooldown, resetCooldown } from './messageCooldown.js'
-import { getCounter, resetCounter } from './messageCounter.js'
+import { lockChannel, unlockChannel } from './channelLock'
+import { isCooldown, resetCooldown } from './messageCooldown'
+import { getCounter, resetCounter } from './messageCounter'
 
 export const STICKY_LOCK_PREFIX = 'sticky-lock'
 export const STICKY_COOLDOWN_PREFIX = 'sticky-cooldown'

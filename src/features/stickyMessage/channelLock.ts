@@ -1,6 +1,6 @@
-import { getCache, saveCache } from '../../utils/cache.js'
+import { getCache, saveCache } from '../../utils/cache'
 
-import { STICKY_LOCK_PREFIX } from './index.js'
+import { STICKY_LOCK_PREFIX } from './index'
 
 /**
  * Set the channel status to locked

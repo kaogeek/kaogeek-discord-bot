@@ -1,13 +1,12 @@
 import { Message } from 'discord.js'
 
+import * as cache from '@/utils/cache.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import * as cache from '../../utils/cache.js'
-
-import * as stickyMessage from './index.js'
-import { resetCooldown } from './messageCooldown.js'
-import * as messageCounter from './messageCounter.js'
+import * as stickyMessage from './index'
+import { resetCooldown } from './messageCooldown'
+import * as messageCounter from './messageCounter'
 
 vi.mock('@/config')
 

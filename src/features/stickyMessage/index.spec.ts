@@ -1,20 +1,19 @@
 import { Collection, Message } from 'discord.js'
 
+import { prisma } from '@/prisma'
+import * as cache from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { prisma } from '../../prisma.js'
-import * as cache from '../../utils/cache.js'
-
-import * as channelLock from './channelLock.js'
+import * as channelLock from './channelLock'
 import {
   STICKY_CACHE_PREFIX,
   initStickyMessage,
   isNeedToUpdateMessage,
   pushMessageToBottom,
-} from './index.js'
-import * as messageCooldown from './messageCooldown.js'
-import * as messageCounter from './messageCounter.js'
+} from './index'
+import * as messageCooldown from './messageCooldown'
+import * as messageCounter from './messageCounter'
 
 vi.mock('@/config')
 

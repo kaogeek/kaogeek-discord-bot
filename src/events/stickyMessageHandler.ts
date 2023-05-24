@@ -1,16 +1,15 @@
 import { Events } from 'discord.js'
 
-import { StickyMessage } from '@prisma/client'
-
-import { isChannelLock } from '../features/stickyMessage/channelLock.js'
+import { isChannelLock } from '@/features/stickyMessage/channelLock'
 import {
   STICKY_CACHE_PREFIX,
   isNeedToUpdateMessage,
   pushMessageToBottom,
-} from '../features/stickyMessage/index.js'
-import { incCounter } from '../features/stickyMessage/messageCounter.js'
-import { defineEventHandler } from '../types/defineEventHandler.js'
-import { getCache } from '../utils/cache.js'
+} from '@/features/stickyMessage/index'
+import { incCounter } from '@/features/stickyMessage/messageCounter'
+import { defineEventHandler } from '@/types/defineEventHandler'
+import { getCache } from '@/utils/cache'
+import { StickyMessage } from '@prisma/client'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,

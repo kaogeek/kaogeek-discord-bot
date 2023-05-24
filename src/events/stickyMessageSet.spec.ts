@@ -6,15 +6,14 @@ import {
   TextChannel,
 } from 'discord.js'
 
+import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
+import { prisma } from '@/prisma'
+import { BotContext } from '@/types/BotContext'
+import * as cache from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index.js'
-import { prisma } from '../prisma.js'
-import { BotContext } from '../types/BotContext.js'
-import * as cache from '../utils/cache.js'
-
-import stickyMessage from './stickyMessageSet.js'
+import stickyMessage from './stickyMessageSet'
 
 vi.mock('@/config')
 

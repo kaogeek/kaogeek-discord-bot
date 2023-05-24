@@ -1,12 +1,11 @@
 import { Message } from 'discord.js'
 
+import { Environment } from '@/config'
+import { getCache, saveCache } from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 
-import { Environment } from '../../config.js'
-import { getCache, saveCache } from '../../utils/cache.js'
-
-import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index.js'
-import { getCounter } from './messageCounter.js'
+import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index'
+import { getCounter } from './messageCounter'
 
 const channelCooldown: Map<string, NodeJS.Timeout> = new Map()
 

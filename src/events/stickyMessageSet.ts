@@ -5,11 +5,11 @@ import {
   TextChannel,
 } from 'discord.js'
 
-import { prisma } from '@/prisma.js'
+import { prisma } from '@/prisma'
 
-import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index.js'
-import { defineEventHandler } from '../types/defineEventHandler.js'
-import { saveCache } from '../utils/cache.js'
+import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index'
+import { defineEventHandler } from '../types/defineEventHandler'
+import { saveCache } from '../utils/cache'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { getCounter, incCounter, resetCounter } from './messageCounter.js'
+import { getCounter, incCounter, resetCounter } from './messageCounter'
 
 vi.mock('@/config')
 
