@@ -39,6 +39,7 @@ export default defineCommandHandler({
       .setLabel('Reason')
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true)
+      .setMaxLength(100)
 
     reasonModal.addComponents(
       new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
