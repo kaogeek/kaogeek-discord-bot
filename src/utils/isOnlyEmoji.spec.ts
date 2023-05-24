@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 // import isOnlyEmojiV1 from './isOnlyEmoji'
 import isOnlyEmoji from './isOnlyEmoji'
 
-describe('isOnlyEmojiV2', () => {
+describe('isOnlyEmoji', () => {
   it.each([
     { msg: '🫠' },
     { msg: '🅰️' },
@@ -13,12 +13,11 @@ describe('isOnlyEmojiV2', () => {
     { msg: '<:ShareX_0RB3:1108771953776537701>' },
     { msg: '<:Test:1108771953776537701>' },
     { msg: '🅾🫠' },
-    { msg: '1️⃣' },
     { msg: '🏻 🏼' },
     { msg: '👩🏾‍❤‍💋‍👩🏼' },
+    //case of variation selector (0xFE0F)
     { msg: '0️⃣' },
-    { msg: `️` },
-    // { msg: `❤︎` },
+    { msg: `  1️⃣ ` }, 
     { msg: '#️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟' },
   ])('should match emoji ($msg)', async ({ msg }) => {
     expect(isOnlyEmoji(msg)).toBeTruthy()
@@ -30,7 +29,7 @@ describe('isOnlyEmojiV2', () => {
     { msg: 'a' },
     { msg: '<html>' },
     { msg: '1 2 3' },
-    { msg: '0' },
+    { msg: '1️⃣0' },
     { msg: '-1' },
     { msg: '0x 000' },
     { msg: '<:ShareX_0000 :>' },
