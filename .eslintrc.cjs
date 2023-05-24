@@ -28,6 +28,12 @@ const config = {
       },
     ],
     'unicorn/no-null': 'off',
+    'unicorn/prevent-abbreviations': [
+      'error',
+      {
+        ignore: ['\\.e2e\\.'],
+      },
+    ],
   },
   ignorePatterns: ['dist'],
 }

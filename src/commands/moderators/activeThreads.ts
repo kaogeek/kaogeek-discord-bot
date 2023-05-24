@@ -1,17 +1,24 @@
 import {
   APIThreadChannel,
   ApplicationCommandType,
-  Client,
+  AttachmentBuilder,
   ComponentType,
   MessageActionRowComponentData,
+  MessageComponentInteraction,
   PermissionsBitField,
-  RESTGetAPIGuildThreadsResult,
-  Routes,
   SelectMenuComponentOptionData,
+  SnowflakeUtil,
 } from 'discord.js'
 
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
-import { ActionSet } from '@/utils/ActionSet'
+import {
+  getActiveThreads,
+  getThreadStats,
+} from '@/features/threadPruner/index.js'
+import { BotContext } from '@/types/BotContext.js'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.js'
+import { ActionSet } from '@/utils/ActionSet.js'
+import { generateTsv } from '@/utils/generateTsv.js'
+import { toLocalDate } from '@/utils/toLocalDate.js'
 
 export default {
   data: {
@@ -24,41 +31,26 @@ export default {
   execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isChatInputCommand()) return
     const { client } = botContext
-    const data = await getActiveThreads(client, interaction.guild)
-
-    // Sort threads by last message (more recent first)
-    const threads = [...(data.threads as APIThreadChannel[])].sort(
-      (a, b) => +(b.last_message_id ?? 0) - +(a.last_message_id ?? 0),
-    )
-
+    const threads = await getActiveThreads(client, interaction.guild)
     const actionSet = new ActionSet()
+    const stats = getThreadStats(threads)
     const options: SelectMenuComponentOptionData[] = [
       {
-        label: 'Generate report (unimplemented)',
+        label: 'Generate report',
         value: actionSet.register(
           'generate-report',
-          async (selectInteraction) => {
-            // TODO: Implement
-            await selectInteraction.reply({
-              content: 'Unimplemented!',
-              ephemeral: true,
-            })
-          },
+          async (selectInteraction) =>
+            generateReport(botContext, selectInteraction, threads),
         ),
       },
-      {
-        label: 'Prune old threads (unimplemented)',
+      ...stats.pruningCriteria.map((item) => ({
+        label: `${item.name} (${item.threadIds.length})`,
         value: actionSet.register(
           'prune-old-threads',
-          async (selectInteraction) => {
-            // TODO: Implement
-            await selectInteraction.reply({
-              content: 'Unimplemented!',
-              ephemeral: true,
-            })
-          },
+          async (selectInteraction) =>
+            pruneThreads(botContext, selectInteraction, item.threadIds),
         ),
-      },
+      })),
     ]
     const components: MessageActionRowComponentData[] = [
       {
@@ -97,8 +89,75 @@ export default {
   },
 } satisfies CommandHandlerConfig
 
-async function getActiveThreads(client: Client, guild: { id: string }) {
-  return (await client.rest.get(
-    Routes.guildActiveThreads(guild.id),
-  )) as RESTGetAPIGuildThreadsResult
+async function generateReport(
+  botContext: BotContext,
+  interaction: MessageComponentInteraction,
+  threads: APIThreadChannel[],
+) {
+  const tsv = generateTsv([
+    [
+      'ID',
+      'Name',
+      'Channel ID',
+      'Channel Name',
+      'Last Message',
+      'Message Count',
+    ],
+    ...threads.map((thread) => {
+      const channel = thread.parent_id
+        ? botContext.client.channels.cache.get(thread.parent_id)
+        : undefined
+      return [
+        thread.id,
+        thread.name,
+        thread.parent_id ?? '-',
+        (channel && 'name' in channel && channel.name) ?? '-',
+        thread.last_message_id
+          ? toLocalDate(SnowflakeUtil.timestampFrom(thread.last_message_id))
+          : '-',
+        thread.message_count,
+      ]
+    }),
+  ])
+  await interaction.reply({
+    content: 'Here is the report.',
+    files: [new AttachmentBuilder(Buffer.from(tsv), { name: 'threads.tsv' })],
+    ephemeral: true,
+  })
+}
+
+async function pruneThreads(
+  botContext: BotContext,
+  selectInteraction: MessageComponentInteraction,
+  threadIds: string[],
+) {
+  await selectInteraction.reply({
+    content: `Archiving ${threadIds.length} threads...`,
+    ephemeral: true,
+  })
+
+  try {
+    let lastUpdate = 0
+    let count = 0
+    for (const threadId of threadIds) {
+      const thread = botContext.client.channels.cache.get(threadId)
+      if (!thread || !('setArchived' in thread)) continue
+      await thread.setArchived(true)
+      count++
+      if (Date.now() - lastUpdate > 5e3) {
+        await selectInteraction.editReply({
+          content: `Archived ${count}/${threadIds.length} threads...`,
+        })
+        lastUpdate = Date.now()
+      }
+    }
+
+    await selectInteraction.editReply({
+      content: `Finished archiving ${threadIds.length} threads.`,
+    })
+  } catch (error) {
+    await selectInteraction.editReply({
+      content: `Error archiving threads: ${error}`,
+    })
+  }
 }
