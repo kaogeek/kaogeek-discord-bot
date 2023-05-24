@@ -6,9 +6,9 @@ import guildMemberUpdate from './guildMemberUpdate.js'
 import interactionCreate from './interactionCreate.js'
 import preventEmojiSpam from './preventEmojiSpam.js'
 import ready from './ready.js'
-import stickyMessageCreate from './stickyMessageCreate.js'
 import stickyMessageHandler from './stickyMessageHandler.js'
 import stickyMessageRemove from './stickyMessageRemove.js'
+import stickyMessageCreate from './stickyMessageSet.js'
 
 export default [
   guildMemberAdd,

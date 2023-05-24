@@ -10,7 +10,7 @@ export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
   execute: async (botContext, message) => {
-    if (!message.content.startsWith('?stickao-create')) {
+    if (!message.content.startsWith('?stickao-set')) {
       return
     }
 
@@ -26,7 +26,7 @@ export default defineEventHandler({
     }
 
     //get content from modal
-    const messageContent = message.content.split('?stickao-create ').pop()
+    const messageContent = message.content.split('?stickao-set ').pop()
 
     if (!messageContent) {
       client.user?.send({

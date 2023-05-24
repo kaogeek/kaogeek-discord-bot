@@ -3,7 +3,7 @@ import { ChannelType, Client, Message, TextChannel } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import stickyMessage from '../../../src/events/stickyMessageCreate.js'
+import stickyMessage from '../../../src/events/stickyMessageSet.js'
 import { STICKY_CACHE_PREFIX } from '../../../src/features/stickyMessage/index.js'
 import { prisma } from '../../../src/prisma.js'
 import { BotContext } from '../../../src/types/BotContext.js'
@@ -18,7 +18,7 @@ vi.mock('../../../src/config.js', async () => {
 describe('stickao-create', () => {
   const channelId = 'test-channel'
   const messageContent = 'MOCK_MESSAGE'
-  const messageWithCommand = `?stickao-create ${messageContent}`
+  const messageWithCommand = `?stickao-set ${messageContent}`
   let client: Client
   let message: Message
   let channel: TextChannel
