@@ -1,5 +1,5 @@
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { configDefaults, defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
@@ -7,6 +7,6 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json-summary', 'json'],
     },
-    exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
+    include: ['test/**/*.e2e.spec.ts'],
   },
 })
