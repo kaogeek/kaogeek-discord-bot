@@ -346,6 +346,7 @@ describe('stickao-remove', () => {
 
   it('should reply to the user that no sticky message was found in the channel', async () => {
     vi.spyOn(interaction, 'isChatInputCommand').mockReturnValue(true)
+    // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
