@@ -13,12 +13,12 @@ import {
 import {
   getActiveThreads,
   getThreadStats,
-} from '../../features/threadPruner/index.js'
-import { BotContext } from '../../types/BotContext.js'
-import { CommandHandlerConfig } from '../../types/CommandHandlerConfig.js'
-import { ActionSet } from '../../utils/ActionSet.js'
-import { generateTsv } from '../../utils/generateTsv.js'
-import { toLocalDate } from '../../utils/toLocalDate.js'
+} from '@/features/threadPruner/index.js'
+import { BotContext } from '@/types/BotContext.js'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.js'
+import { ActionSet } from '@/utils/ActionSet.js'
+import { generateTsv } from '@/utils/generateTsv.js'
+import { toLocalDate } from '@/utils/toLocalDate.js'
 
 export default {
   data: {

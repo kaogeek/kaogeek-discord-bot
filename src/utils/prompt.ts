@@ -4,7 +4,7 @@ import {
   TextInputStyle,
 } from 'discord.js'
 
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 /**
  * Prompt for a single text input in Discord.
@@ -39,13 +39,13 @@ export async function prompt(
 
   const submitted = await interaction
     .awaitModalSubmit({
-      time: 5 * 60000,
-      filter: (i) => i.customId === promptId,
+      time: 5 * 60_000,
+      filter: (index) => index.customId === promptId,
     })
     .catch(() => null)
 
   if (!submitted) {
-    return undefined
+    return
   }
 
   return {

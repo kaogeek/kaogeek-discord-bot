@@ -1,12 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import Bot from '../../src/client'
+import { Bot } from './Bot'
 
-vi.mock('../../src/config.js', () => {
-  const Environment = { BOT_TOKEN: 'MOCK_TOKEN' }
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 describe('Bot', () => {
   let client: Bot
@@ -18,8 +14,7 @@ describe('Bot', () => {
     vi.clearAllMocks()
   })
 
-  it('should defined', async () => {
-    client.init = vi.fn()
+  it('should be defined', async () => {
     expect(client).toBeDefined()
   })
 })

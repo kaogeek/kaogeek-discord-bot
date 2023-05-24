@@ -4,8 +4,8 @@ import {
   PermissionsBitField,
 } from 'discord.js'
 
-import { inspectProfile } from '../../features/profileInspector/index.js'
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { inspectProfile } from '@/features/profileInspector/index'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default [
   defineCommandHandler({
@@ -54,7 +54,7 @@ export default [
   }),
   defineCommandHandler({
     data: {
-      name: 'inspect',
+      name: 'inspect-user',
       description: 'Inspect a user profile',
       defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
       type: ApplicationCommandType.ChatInput,

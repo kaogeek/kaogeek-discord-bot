@@ -52,4 +52,4 @@ COPY --chown=node:node --from=deps-prod /app/node_modules ./node_modules
 COPY --chown=node:node --from=deps-prod /app/prisma ./prisma
 COPY --chown=node:node --from=builder /app/dist ./dist
 
-CMD ["dist/client.js"]
+CMD ["dist/index.js"]
