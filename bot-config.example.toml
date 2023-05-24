@@ -1,6 +1,12 @@
 # To see the latest configuration values used in production, see this file:
 # https://github.com/creatorsgarten/kaogeek-discord-bot/blob/config/bot-config.toml
 
+[nominations]
+  enabledRoles = [
+    # Contributor
+    { roleId = "1108437362473697370", nominationsChannelId = "1108439224413343784" },
+  ]
+
 [preventEmojiSpam]
   # If true, the bot will delete messages that only contains emojis.
   enabled = false
