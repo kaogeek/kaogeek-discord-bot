@@ -47,6 +47,29 @@ model MessageReport {
   @@index([reporteeId])
 }
 
+model Nomination {
+  id              String   @id @default(uuid())
+  userId          String
+  roleId          String
+  nominatedUserId String
+  reason          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([nominatedUserId])
+}
+
+model NominationMessage {
+  id              String   @id @default(uuid())
+  nominatedUserId String
+  roleId          String
+  messageId       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([nominatedUserId, roleId])
+}
+
 model UserModerationLog {
   id       String @id @default(uuid())
   userId   String
