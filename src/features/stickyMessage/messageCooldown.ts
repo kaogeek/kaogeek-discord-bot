@@ -8,11 +8,7 @@ import { getCache, saveCache } from '../../utils/cache.js'
 import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index.js'
 import { getCounter } from './messageCounter.js'
 
-interface IChannelCooldownContainer {
-  [channelId: string]: NodeJS.Timeout
-}
-
-const channelCooldown: IChannelCooldownContainer = {}
+const channelCooldown: Map<string, NodeJS.Timeout> = new Map()
 
 /**
  * Set the channel status to cooldown
@@ -60,7 +56,7 @@ export async function resetCooldown(
   // mark channel is cooldown
   cooldown(message.channelId)
 
-  const timeout = channelCooldown[message.channelId]
+  const timeout = channelCooldown.get(message.channelId)
 
   // is has saved timeout -> clear it
   if (timeout) {
@@ -75,5 +71,5 @@ export async function resetCooldown(
     }
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
-  channelCooldown[message.channelId] = timeoutId
+  channelCooldown.set(message.channelId, timeoutId)
 }
