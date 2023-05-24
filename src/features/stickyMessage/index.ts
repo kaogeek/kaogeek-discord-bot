@@ -1,9 +1,10 @@
 import { Message } from 'discord.js'
 
+import { StickyMessage } from '@prisma/client'
+
 import { Environment } from '@/config'
 import { prisma } from '@/prisma'
 import { saveCache } from '@/utils/cache'
-import { StickyMessage } from '@prisma/client'
 
 import { lockChannel, unlockChannel } from './channelLock'
 import { isCooldown, resetCooldown } from './messageCooldown'

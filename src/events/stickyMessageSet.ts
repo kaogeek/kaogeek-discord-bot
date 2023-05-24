@@ -5,8 +5,9 @@ import {
   TextChannel,
 } from 'discord.js'
 
-import { prisma } from '@/prisma'
 import { StickyMessage } from '@prisma/client'
+
+import { prisma } from '@/prisma'
 
 import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index'
 import { defineEventHandler } from '../types/defineEventHandler'

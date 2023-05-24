@@ -1,9 +1,10 @@
 import { Collection, Message } from 'discord.js'
 
-import { prisma } from '@/prisma'
-import * as cache from '@/utils/cache'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { prisma } from '@/prisma'
+import * as cache from '@/utils/cache'
 
 import * as channelLock from './channelLock'
 import {

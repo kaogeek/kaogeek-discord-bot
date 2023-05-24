@@ -1,8 +1,9 @@
 import { Message } from 'discord.js'
 
-import * as cache from '@/utils/cache.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import * as cache from '@/utils/cache.js'
 
 import * as stickyMessage from './index'
 import { resetCooldown } from './messageCooldown'

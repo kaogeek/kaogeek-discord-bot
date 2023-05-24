@@ -1,5 +1,7 @@
 import { Events } from 'discord.js'
 
+import { StickyMessage } from '@prisma/client'
+
 import { isChannelLock } from '@/features/stickyMessage/channelLock'
 import {
   STICKY_CACHE_PREFIX,
@@ -9,7 +11,6 @@ import {
 import { incCounter } from '@/features/stickyMessage/messageCounter'
 import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache } from '@/utils/cache'
-import { StickyMessage } from '@prisma/client'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,
