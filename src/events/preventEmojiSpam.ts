@@ -1,7 +1,7 @@
 import { Events } from 'discord.js'
 
-import { defineEventHandler } from '../types/defineEventHandler.js'
-import isOnlyEmoji from '../utils/isOnlyEmoji.js'
+import { defineEventHandler } from '@/types/defineEventHandler'
+import isOnlyEmoji from '@/utils/isOnlyEmoji'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,
@@ -16,8 +16,8 @@ export default defineEventHandler({
         if (runtimeConfiguration.data.preventEmojiSpam.enabled) {
           await message.delete()
         }
-      } catch (err) {
-        console.error(err)
+      } catch (error) {
+        console.error(error)
       }
     }
   },
