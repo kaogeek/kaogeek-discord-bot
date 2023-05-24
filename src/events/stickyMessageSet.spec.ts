@@ -10,11 +10,7 @@ import * as cache from '../utils/cache.js'
 
 import stickyMessage from './stickyMessageSet.js'
 
-vi.mock('../config.js', async () => {
-  const Environment = {}
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 describe('stickao-create', () => {
   const channelId = 'test-channel'

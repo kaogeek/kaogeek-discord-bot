@@ -3,14 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { isChannelLock, lockChannel, unlockChannel } from './channelLock.js'
 import { STICKY_LOCK_PREFIX } from './index.js'
 
-vi.mock('../../config.js', async () => {
-  const Environment = {
-    MESSAGE_COOLDOWN_SEC: 15,
-    MESSAGE_MAX: 5,
-  }
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 vi.mock('../../utils/cache.js', async () => {
   const getCache = vi.fn()

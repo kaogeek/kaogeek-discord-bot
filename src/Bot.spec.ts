@@ -4,13 +4,6 @@ import { Bot } from './Bot'
 
 vi.mock('@/config')
 
-vi.mock('../../src/Bot.js', () => {
-  const Bot = vi.fn()
-  Bot.prototype.InitAndStart = vi.fn()
-
-  return { Bot }
-})
-
 describe('Bot', () => {
   let client: Bot
 

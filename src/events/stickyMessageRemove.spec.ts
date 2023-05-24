@@ -10,14 +10,7 @@ import * as cache from '../utils/cache.js'
 
 import stickyMessage from './stickyMessageRemove.js'
 
-vi.mock('../config.js', async () => {
-  const Environment = {
-    MESSAGE_COOLDOWN_SEC: 15,
-    MESSAGE_MAX: 5,
-  }
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 describe('stickao-remove', () => {
   const channelId = 'test-channel'

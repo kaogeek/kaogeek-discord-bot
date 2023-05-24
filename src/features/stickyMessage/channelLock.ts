@@ -6,6 +6,7 @@ import { STICKY_LOCK_PREFIX } from './index.js'
  * Set the channel status to locked
  *
  * @param {string} channelId - the id of channel that want to lock
+ * @returns {void} set the channel set status to locked
  *
  */
 export function lockChannel(channelId: string): void {
@@ -16,6 +17,7 @@ export function lockChannel(channelId: string): void {
  * Set the channel status to unlocked
  *
  * @param {string} channelId - the id of channel that want to unlock
+ * @returns {void} set the channel set status to unlocked
  *
  */
 export function unlockChannel(channelId: string): void {
@@ -26,7 +28,7 @@ export function unlockChannel(channelId: string): void {
  * Check the channel status is lock
  *
  * @param {string} channelId - the id of channel that want to check
- * @returns true if the channel is locked, false otherwise
+ * @returns {boolean} true if the channel is locked, false otherwise
  *
  */
 export function isChannelLock(channelId: string): boolean {

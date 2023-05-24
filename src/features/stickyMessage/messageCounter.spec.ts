@@ -2,14 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { getCounter, incCounter, resetCounter } from './messageCounter.js'
 
-vi.mock('../../config.js', async () => {
-  const Environment = {
-    MESSAGE_COOLDOWN_SEC: 15,
-    MESSAGE_MAX: 5,
-  }
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 describe('incCounter', () => {
   afterEach(() => {

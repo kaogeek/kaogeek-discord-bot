@@ -9,14 +9,7 @@ import * as stickyMessage from './index.js'
 import { resetCooldown } from './messageCooldown.js'
 import * as messageCounter from './messageCounter.js'
 
-vi.mock('../../config.js', async () => {
-  const Environment = {
-    MESSAGE_COOLDOWN_SEC: 15,
-    MESSAGE_MAX: 5,
-  }
-
-  return { Environment }
-})
+vi.mock('@/config')
 
 vi.mock('./index', async () => {
   const pushMessageToBottom = vi.fn()
