@@ -15,10 +15,12 @@ describe('isOnlyEmoji', () => {
     { msg: '🅾🫠' },
     { msg: '🏻 🏼' },
     { msg: '👩🏾‍❤‍💋‍👩🏼' },
+    { msg: '👩🏾‍❤‍💋‍👩🏼\n🅾\n<:test:000>' },
     //case of variation selector (0xFE0F)
     { msg: '0️⃣' },
     { msg: `  1️⃣ ` },
     { msg: '#️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟' },
+    { msg: '1⃣' },
   ])('should match emoji ($msg)', async ({ msg }) => {
     expect(isOnlyEmoji(msg)).toBeTruthy()
   })
@@ -38,6 +40,7 @@ describe('isOnlyEmoji', () => {
     { msg: 'hello 🫠🫠🫠' },
     { msg: `hi <:ShareX_00000:>` },
     { msg: `#20` },
+    { msg: `0000\n00 2131⃣33` },
   ])('should not match emoji ($msg)', async ({ msg }) => {
     expect(isOnlyEmoji(msg)).toBeFalsy()
   })

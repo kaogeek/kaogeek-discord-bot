@@ -7,7 +7,7 @@ export default (message: string): boolean => {
     const unicoded = emoji
       .map((emo) => emo.codePointAt(0))
       .filter((codePoint): codePoint is number => codePoint !== undefined)
-    
+    // console.log(unicoded)
     // Check if have any number -> not an emoji
     for (let index = 0; index < unicoded.length; index++) {
       if (isEmojiNumber(unicoded[index], unicoded[index + 1])) {
@@ -28,5 +28,7 @@ function isEmojiNumber(input: number, nextInput: number): boolean {
   // Unicode 0x30 to 0x39 is range of number from 0 to 9.
   // The following unicode 0xFE0F denotes to Variation Selector-16
   // which is used to convert normal number to it emoji alternative.
-  return input >= 0x30 && input <= 0x39 && nextInput === 0xfe_0f
+  // The following unicode 0x20E3 denotes to Combining Enclosing Keycap
+  // which is used to convert number to keycap emoji.
+  return input >= 0x30 && input <= 0x39 && (nextInput === 0xFE0F || nextInput === 0x20E3)
 }
