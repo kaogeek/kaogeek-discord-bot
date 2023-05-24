@@ -6,7 +6,9 @@ import guildMemberUpdate from './guildMemberUpdate.js'
 import interactionCreate from './interactionCreate.js'
 import preventEmojiSpam from './preventEmojiSpam.js'
 import ready from './ready.js'
-import stickyMessage from './stickyMessage.js'
+import stickyMessageCreate from './stickyMessageCreate.js'
+import stickyMessageHandler from './stickyMessageHandler.js'
+import stickyMessageRemove from './stickyMessageRemove.js'
 
 export default [
   guildMemberAdd,
@@ -14,6 +16,8 @@ export default [
   guildMemberUpdate,
   interactionCreate,
   preventEmojiSpam,
-  stickyMessage,
+  stickyMessageHandler,
+  stickyMessageCreate,
+  stickyMessageRemove,
   ready,
 ] satisfies AnyEventHandlerConfig[]
