@@ -25,6 +25,7 @@ export default defineEventHandler({
       message.author.send({
         content: 'Sticky text can only be created in a text channel.',
       })
+      await message.delete()
       return
     }
 
@@ -33,8 +34,9 @@ export default defineEventHandler({
     if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
       message.author.send({
         content:
-          'You must have the "Manage Messages" permission to use this command.',
+          'You must have the `Manage Messages` permission to use this command.',
       })
+      await message.delete()
       return
     }
 
@@ -45,6 +47,7 @@ export default defineEventHandler({
       message.author.send({
         content: 'Please provide a valid message content for Stickao Message.',
       })
+      await message.delete()
       return
     }
 
