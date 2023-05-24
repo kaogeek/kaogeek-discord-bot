@@ -7,7 +7,7 @@ import { prisma } from '../../prisma.js'
 import { saveCache } from '../../utils/cache.js'
 
 import { lockChannel, unlockChannel } from './channelLock.js'
-import { isCooldown, resetCooldown, startCooldown } from './messageCooldown.js'
+import { isCooldown, resetCooldown } from './messageCooldown.js'
 import { getCounter, resetCounter } from './messageCounter.js'
 
 export const STICKY_LOCK_PREFIX = 'sticky-lock'
@@ -23,7 +23,6 @@ export async function initStickyMessage() {
   for (const message of messages) {
     saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, message)
     resetCounter(message.channelId)
-    startCooldown(message.channelId)
   }
 }
 

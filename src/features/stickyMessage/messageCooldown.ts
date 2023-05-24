@@ -6,6 +6,7 @@ import { Environment } from '../../config.js'
 import { getCache, saveCache } from '../../utils/cache.js'
 
 import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index.js'
+import { getCounter } from './messageCounter.js'
 
 interface IChannelCooldownContainer {
   [channelId: string]: NodeJS.Timeout
@@ -45,28 +46,6 @@ export function isCooldown(channelId: string): boolean {
 }
 
 /**
- * Start the cooldown for the specified channel.
- *
- * @param {string} channelId - The ID of the channel to start the cooldown.
- * @returns {Promise<void>} A Promise that resolves once the cooldown is set.
- */
-export async function startCooldown(channelId: string): Promise<void> {
-  cooldown(channelId)
-
-  const timeout = channelCooldown[channelId]
-
-  if (timeout) {
-    clearTimeout(timeout)
-  }
-
-  const timeoutId = setTimeout(() => {
-    available(channelId)
-  }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
-
-  channelCooldown[channelId] = timeoutId
-}
-
-/**
  * Set the cooldown of the channel.
  *
  * @param {Message} message - The message object associated with the channel.
@@ -91,7 +70,9 @@ export async function resetCooldown(
   const timeoutId = setTimeout(() => {
     // mark channel is available
     available(message.channelId)
-    pushMessageToBottom(message, stickyMessage)
+    if (getCounter(message.channelId) > 1) {
+      pushMessageToBottom(message, stickyMessage)
+    }
   }, Environment.MESSAGE_COOLDOWN_SEC * 1000)
 
   channelCooldown[message.channelId] = timeoutId

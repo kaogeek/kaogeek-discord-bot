@@ -39,7 +39,6 @@ describe('initStickyMessage', () => {
 
   it('should query all messages from database', async () => {
     vi.spyOn(messageCounter, 'resetCounter')
-    vi.spyOn(messageCooldown, 'startCooldown')
     prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
 
     await initStickyMessage()
@@ -47,19 +46,8 @@ describe('initStickyMessage', () => {
     expect(prisma.stickyMessage.findMany).toHaveBeenCalled()
   })
 
-  it("should query start cooldown of stickyMessage's channel", async () => {
-    vi.spyOn(messageCounter, 'resetCounter')
-    vi.spyOn(messageCooldown, 'startCooldown')
-    prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
-
-    await initStickyMessage()
-
-    expect(messageCooldown.startCooldown).toHaveBeenCalledWith(channelId)
-  })
-
   it("should reset counter of stickyMessage's channel", async () => {
     vi.spyOn(messageCounter, 'resetCounter')
-    vi.spyOn(messageCooldown, 'startCooldown')
     prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
 
     await initStickyMessage()
