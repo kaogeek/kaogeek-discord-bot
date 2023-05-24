@@ -21,7 +21,6 @@ describe('isOnlyEmojiV2', () => {
     // { msg: `❤︎` },
     { msg: '#️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟' },
   ])('should match emoji ($msg)', async ({ msg }) => {
-    // expect(isOnlyEmojiV1(msg)).toBeTruthy()
     expect(isOnlyEmoji(msg)).toBeTruthy()
   })
 
@@ -41,7 +40,6 @@ describe('isOnlyEmojiV2', () => {
     { msg: `hi <:ShareX_00000:>` },
     { msg: `#20` },
   ])('should not match emoji ($msg)', async ({ msg }) => {
-    // expect(isOnlyEmojiV1(msg)).toBeFalsy()
     expect(isOnlyEmoji(msg)).toBeFalsy()
   })
 })
