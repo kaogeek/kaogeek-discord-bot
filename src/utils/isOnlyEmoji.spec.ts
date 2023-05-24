@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 // import isOnlyEmojiV1 from './isOnlyEmoji'
-import isOnlyEmojiV2 from './isOnlyEmojiV2'
+import isOnlyEmoji from './isOnlyEmoji'
 
 describe('isOnlyEmojiV2', () => {
   it.each([
@@ -18,10 +18,11 @@ describe('isOnlyEmojiV2', () => {
     { msg: '👩🏾‍❤‍💋‍👩🏼' },
     { msg: '0️⃣' },
     { msg: `️` },
+    // { msg: `❤︎` },
     { msg: '#️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟' },
   ])('should match emoji ($msg)', async ({ msg }) => {
     // expect(isOnlyEmojiV1(msg)).toBeTruthy()
-    expect(isOnlyEmojiV2(msg)).toBeTruthy()
+    expect(isOnlyEmoji(msg)).toBeTruthy()
   })
 
   it.each([
@@ -41,6 +42,6 @@ describe('isOnlyEmojiV2', () => {
     { msg: `#20` },
   ])('should not match emoji ($msg)', async ({ msg }) => {
     // expect(isOnlyEmojiV1(msg)).toBeFalsy()
-    expect(isOnlyEmojiV2(msg)).toBeFalsy()
+    expect(isOnlyEmoji(msg)).toBeFalsy()
   })
 })
