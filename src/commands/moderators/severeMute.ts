@@ -82,16 +82,19 @@ async function severeMute(
       `Apply severe mute punishment to ${member.user.tag}.`,
     )
     await interaction.editReply(`${member.user} is severely muted.`)
-  } catch (err) {
+  } catch (error) {
     if (
-      err instanceof Error &&
-      err.message.includes('Target user is not connected to voice')
+      error instanceof Error &&
+      error.message.includes('Target user is not connected to voice')
     ) {
       await interaction.editReply(
         `${member.user} is not in voice channel, so muting fail.`,
       )
     }
-    if (err instanceof Error && err.message.includes('Missing Permissions')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('Missing Permissions')
+    ) {
       await interaction.editReply(
         `${member.user} is in higher role hierachy than you, so muting fail.`,
       )

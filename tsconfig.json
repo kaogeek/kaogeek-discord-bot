@@ -1,11 +1,15 @@
 {
-  "extends": "@tsconfig/node18",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
     "sourceMap": true,
+    "noEmit": true,
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

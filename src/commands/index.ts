@@ -1,4 +1,4 @@
-import { CommandHandlerConfig } from '../types/CommandHandlerConfig.js'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 
 import ping from './info/ping.js'
 import activeThreads from './moderators/activeThreads.js'

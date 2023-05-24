@@ -94,16 +94,19 @@ async function severeMutePardon(
     await interaction.editReply(
       `${member.user} is pardon for severe mute punishment.`,
     )
-  } catch (err) {
+  } catch (error) {
     if (
-      err instanceof Error &&
-      err.message.includes('Target user is not connected to voice')
+      error instanceof Error &&
+      error.message.includes('Target user is not connected to voice')
     ) {
       await interaction.editReply(
         `${member.user} is not in voice channel, so pardon fail.`,
       )
     }
-    if (err instanceof Error && err.message.includes('Missing Permissions')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('Missing Permissions')
+    ) {
       await interaction.editReply(
         `${member.user} is in higher role hierachy than you, so pardon fail.`,
       )

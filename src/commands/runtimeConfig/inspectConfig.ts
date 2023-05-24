@@ -1,4 +1,6 @@
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { codeBlock } from 'discord.js'
+
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default defineCommandHandler({
   data: {
@@ -8,12 +10,9 @@ export default defineCommandHandler({
   ephemeral: true,
   execute: async ({ runtimeConfiguration }, interaction) => {
     await interaction.editReply({
-      content: [
-        'Current configuration:',
-        '```json',
-        JSON.stringify(runtimeConfiguration.data, null, 2),
-        '```',
-      ].join('\n'),
+      content:
+        'Current configuration:\n' +
+        codeBlock('json', JSON.stringify(runtimeConfiguration.data, null, 2)),
     })
   },
 })
