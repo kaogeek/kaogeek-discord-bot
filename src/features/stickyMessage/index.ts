@@ -13,6 +13,7 @@ import { getCounter, resetCounter } from './messageCounter.js'
 export const STICKY_LOCK_PREFIX = 'sticky-lock'
 export const STICKY_COOLDOWN_PREFIX = 'sticky-cooldown'
 export const STICKY_CACHE_PREFIX = 'sticky-cache'
+export const STICKY_MODAL_TIMEOUT = 60000
 
 /**
  *  Init sticky message memory cache
@@ -28,6 +29,7 @@ export async function initStickyMessage() {
 
 /**
  * Pushes the sticky message to the bottom of the channel.
+ *
  * @param {Message} message - The message object representing the triggering message.
  * @param {StickyMessage} stickyMessage - The sticky message to be pushed to the bottom of the channel.
  * @returns {Promise<void>} A promise that resolves when the sticky message is successfully pushed to the bottom.
