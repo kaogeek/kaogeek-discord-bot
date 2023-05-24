@@ -1,2 +1,9 @@
+[nominations]
+  enabledRoles = [
+    # Contributor
+    { roleId = "1108437362473697370", nominationsChannelId = "1108439224413343784" },
+  ]
+
 [preventEmojiSpam]
 enabled = false # Disabled for now due to #99 (bot erroneously deleting messages with only numbers). Do not re-enable until issue #108 is fixed.
+
