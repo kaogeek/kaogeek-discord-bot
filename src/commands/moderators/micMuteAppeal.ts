@@ -46,10 +46,9 @@ export default defineCommandHandler({
         try {
           if (await isMutedForSeverePunishment(interaction)) {
             interaction.editReply(
-              `You were severe muted. Please, appeal a moderator directly for severe mute pardon.`,
+              `You were severe muted. Please, appeal to a moderator directly for severe mute pardon.`,
             )
           } else {
-            //this if condition may vary to fit the reason why the user was banned.
             await interaction.member.voice.setMute(false)
             await interaction.editReply(`Unmute ${interaction.member.user}`)
             await addUserModerationLogEntry(

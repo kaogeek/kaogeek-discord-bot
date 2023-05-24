@@ -44,7 +44,7 @@ export default [
   defineCommandHandler({
     data: {
       name: 'severe-mute-pardon',
-      description: `Pardon severe mute punishment, this command should not be used unless for wrong punishment.`,
+      description: `Pardon severe mute punishment, this command should not be used unless in case of wrong punishment.`,
       type: ApplicationCommandType.ChatInput,
       defaultMemberPermissions: PermissionsBitField.Flags.MuteMembers,
       options: [

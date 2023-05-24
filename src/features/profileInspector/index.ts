@@ -58,6 +58,11 @@ async function inspectProfileMain(
       fields: [
         { name: 'ID', value: userProfile.id, inline: true },
         { name: 'Strikes', value: `${userProfile.strikes}`, inline: true },
+        {
+          name: 'Severe Muted',
+          value: `${userProfile.severeMuted}`,
+          inline: true,
+        },
       ],
     },
   ]
