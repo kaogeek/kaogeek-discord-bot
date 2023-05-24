@@ -3,7 +3,7 @@ import { Message } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import stickyMessageEventHandler from '../../../src/events/stickyMessage.js'
+import stickyMessageEventHandler from '../../../src/events/stickyMessageHandler.js'
 import * as channelLock from '../../../src/features/stickyMessage/channelLock.js'
 import * as stickyMessage from '../../../src/features/stickyMessage/index.js'
 import * as messageCounter from '../../../src/features/stickyMessage/messageCounter.js'
