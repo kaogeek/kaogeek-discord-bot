@@ -1,4 +1,9 @@
-import { ChannelType, Events, TextChannel } from 'discord.js'
+import {
+  ChannelType,
+  Events,
+  PermissionsBitField,
+  TextChannel,
+} from 'discord.js'
 
 import { prisma } from '@/prisma.js'
 
@@ -9,39 +14,47 @@ import { saveCache } from '../utils/cache.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (botContext, message) => {
+  execute: async (_botContext, message) => {
     if (!message.content.startsWith('?stickao-set')) {
       return
     }
 
-    const { client } = botContext
-
-    // check is the text channel
-    const channel = client.channels.cache.get(message.channelId)
+    // Check if it is a text channel
+    const channel = message.channel
     if (channel?.type !== ChannelType.GuildText) {
       message.author.send({
-        content: 'Sticky text can create only in text channel.',
+        content: 'Sticky text can only be created in a text channel.',
       })
       return
     }
 
-    //get content from modal
-    const messageContent = message.content.split('?stickao-set ').pop()
+    // Check if the user has the 'MANAGE_MESSAGES' permission
+    const authorPermissions = channel.permissionsFor(message.author)
+    if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
+      message.author.send({
+        content:
+          'You must have the "Manage Messages" permission to use this command.',
+      })
+      return
+    }
+
+    // Get content from the message
+    const messageContent = message.content.replace('?stickao-set', '').trim()
 
     if (!messageContent) {
       message.author.send({
-        content: 'Please provide the valid message content for Stickao Message',
+        content: 'Please provide a valid message content for Stickao Message.',
       })
       return
     }
 
     try {
-      // send message
-      const sentMessage = await (channel as unknown as TextChannel).send({
+      // Send message
+      const sentMessage = await (channel as TextChannel).send({
         content: messageContent,
       })
 
-      // save message
+      // Save message
       const stickyMessage = await prisma.stickyMessage.upsert({
         create: {
           messageId: sentMessage.id,
@@ -59,7 +72,7 @@ export default defineEventHandler({
 
       saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, stickyMessage)
 
-      // successfully create sticky message
+      // Successfully create sticky message
       console.info(`Sticky message saved: ${messageContent}`)
       message.author.send({
         content: 'Successfully created sticky message.',

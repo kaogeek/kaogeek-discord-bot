@@ -1,4 +1,4 @@
-import { Events } from 'discord.js'
+import { Events, PermissionsBitField, TextChannel } from 'discord.js'
 
 import { prisma } from '@/prisma.js'
 import { getCache, removeCache } from '@/utils/cache.js'
@@ -12,6 +12,18 @@ export default defineEventHandler({
   once: false,
   execute: async (_botContext, message) => {
     if (!message.content.startsWith('?stickao-remove')) {
+      return
+    }
+
+    // Check if the user has the 'MANAGE_MESSAGES' permission
+    const authorPermissions = (message.channel as TextChannel).permissionsFor(
+      message.author,
+    )
+    if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
+      message.author.send({
+        content:
+          'You must have the "Manage Messages" permission to use this command.',
+      })
       return
     }
 
