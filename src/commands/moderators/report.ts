@@ -50,7 +50,7 @@ export default defineCommandHandler({
     await interaction.showModal(reasonModal)
 
     const submitted = await interaction.awaitModalSubmit({
-      filter: (interaction) => interaction.user.id === interaction.user.id,
+      filter: (interaction_) => interaction_.user.id === interaction.user.id,
       time: 0,
     })
 
