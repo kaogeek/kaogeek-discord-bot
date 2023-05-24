@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-// import isOnlyEmojiV1 from './isOnlyEmoji'
 import isOnlyEmoji from './isOnlyEmoji'
 
 describe('isOnlyEmoji', () => {
