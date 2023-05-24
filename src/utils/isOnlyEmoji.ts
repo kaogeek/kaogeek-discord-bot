@@ -3,8 +3,8 @@ const emojiRegex =
 
 /**
  * Check is only emoji message
- * @param {string} msg - the input message
- * @returns true if message has only emoji other return false
+ * @param {string} message - the input message
+ * @returns {boolean} true if message has only emoji other return false
  */
 export default (message: string): boolean => {
   const emoji = message.match(emojiRegex)
