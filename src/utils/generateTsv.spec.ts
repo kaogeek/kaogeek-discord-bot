@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { generateTsv } from '../../../src/utils/generateTsv'
+import { generateTsv } from './generateTsv'
 
 test('generates tsv data', async () => {
   const data = [
