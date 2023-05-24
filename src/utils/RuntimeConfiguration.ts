@@ -1,6 +1,7 @@
-import { Environment } from '@/config'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import * as toml from 'toml'
+
+import { Environment } from '@/config'
 
 import { RuntimeConfigurationSchema } from './RuntimeConfigurationSchema'
 

@@ -12,9 +12,9 @@ const config = {
   plugins: ['@trivago/prettier-plugin-sort-imports'],
   importOrder: [
     'dotenv/config',
-    '^discord.js',
-    '^@discordjs',
+    '^@?discord[.]?js',
     '<THIRD_PARTY_MODULES>',
+    '^@/',
     '^[.][.]',
     '^[.]',
   ],
