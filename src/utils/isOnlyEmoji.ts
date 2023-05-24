@@ -3,9 +3,12 @@ const emojiRegex =
 export default (message: string): boolean => {
   const emoji = message.match(emojiRegex)
   if (emoji !== null) {
+    // Convert each emoji to its Unicode code and filter out undefined
     const unicoded = emoji
       .map((emo) => emo.codePointAt(0))
       .filter((codePoint): codePoint is number => codePoint !== undefined)
+    
+    // Check if have any number -> not an emoji
     for (let index = 0; index < unicoded.length; index++) {
       if (isEmojiNumber(unicoded[index], unicoded[index + 1])) {
         // Skip the next unicode as we already checked it in isEmojiNumber function.
