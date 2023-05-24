@@ -7,7 +7,6 @@ export default (message: string): boolean => {
     const unicoded = emoji
       .map((emo) => emo.codePointAt(0))
       .filter((codePoint): codePoint is number => codePoint !== undefined)
-    // console.log(unicoded)
     // Check if have any number -> not an emoji
     for (let index = 0; index < unicoded.length; index++) {
       if (isEmojiNumber(unicoded[index], unicoded[index + 1])) {
