@@ -12,10 +12,7 @@ import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import stickyMessage from '../../../../src/commands/moderators/stickyMessage.js'
-import {
-  STICKY_CACHE_PREFIX,
-  STICKY_MODAL_TIMEOUT,
-} from '../../../../src/features/stickyMessage/index.js'
+import { STICKY_CACHE_PREFIX } from '../../../../src/features/stickyMessage/index.js'
 import { prisma } from '../../../../src/prisma.js'
 import { BotContext } from '../../../../src/types/BotContext.js'
 import * as cache from '../../../../src/utils/cache.js'

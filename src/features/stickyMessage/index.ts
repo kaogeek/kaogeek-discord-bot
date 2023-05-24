@@ -13,7 +13,7 @@ import { getCounter, resetCounter } from './messageCounter.js'
 export const STICKY_LOCK_PREFIX = 'sticky-lock'
 export const STICKY_COOLDOWN_PREFIX = 'sticky-cooldown'
 export const STICKY_CACHE_PREFIX = 'sticky-cache'
-export const STICKY_MODAL_TIMEOUT = 60000
+export const STICKY_MODAL_TIMEOUT = 60_000
 
 /**
  *  Init sticky message memory cache
@@ -70,8 +70,10 @@ export async function pushMessageToBottom(
     )
     //!! if error occur cooldown may not reset
     resetCooldown(newMessage, stickyMessageEntity)
-  } catch (err) {
-    console.error(`error while update sticky message ${(err as Error).message}`)
+  } catch (error) {
+    console.error(
+      `error while update sticky message ${(error as Error).message}`,
+    )
   } finally {
     resetCounter(message.channelId)
     unlockChannel(message.channelId)

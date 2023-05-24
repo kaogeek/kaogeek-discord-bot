@@ -25,7 +25,7 @@ export default (message: string): boolean => {
 
 /**
  * Check is only emoji message
- * @param msg - the input message
+ * @param {string} msg - the input message
  * @returns true if message has only emoji other return false
  */
 function isNumber(input: number): boolean {

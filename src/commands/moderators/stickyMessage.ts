@@ -1,5 +1,4 @@
 import {
-  ApplicationCommandOptionType,
   ApplicationCommandType,
   ChannelType,
   ComponentType,
@@ -9,7 +8,7 @@ import {
 } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 import {
   STICKY_CACHE_PREFIX,
@@ -63,13 +62,13 @@ export default [
             },
           ],
         })
-      } catch (err) {
-        console.error(`modal error: ${(err as Error).message}`)
+      } catch (error) {
+        console.error(`modal error: ${(error as Error).message}`)
       }
 
       // set timeout and handle reply to user when timeout
       const replyInteraction = await interaction.awaitModalSubmit({
-        filter: (i) => i.user.id === interaction.user.id,
+        filter: (index) => index.user.id === interaction.user.id,
         time: STICKY_MODAL_TIMEOUT,
       })
 
@@ -119,9 +118,9 @@ export default [
         replyInteraction.editReply({
           content: 'Successfully created sticky message.',
         })
-      } catch (err) {
+      } catch (error) {
         console.error(
-          `Error creating sticky message: ${(err as Error).message}`,
+          `Error creating sticky message: ${(error as Error).message}`,
         )
         interaction.reply({
           content: 'An error occurred while creating the sticky message.',
@@ -163,9 +162,9 @@ export default [
             content: 'Not found message in this channel',
           })
         }
-      } catch (err) {
+      } catch (error) {
         console.error(
-          `Error removing sticky message: ${(err as Error).message}`,
+          `Error removing sticky message: ${(error as Error).message}`,
         )
         interaction.reply({
           content: 'An error occurred while removing the sticky message.',
