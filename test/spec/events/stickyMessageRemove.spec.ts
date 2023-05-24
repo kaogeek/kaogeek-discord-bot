@@ -21,6 +21,7 @@ vi.mock('../../../src/config.js', async () => {
 describe('stickao-remove', () => {
   const channelId = 'test-channel'
   const messageContent = 'MOCK_MESSAGE'
+  const messageWithCommand = `?stickao-remove ${messageContent}`
   let client: Client
   let message: Message
   let stickyMessageEntity: StickyMessage
@@ -40,6 +41,7 @@ describe('stickao-remove', () => {
     message = {
       channelId,
       delete: vi.fn(),
+      content: messageWithCommand,
     } as unknown as Message
 
     stickyMessageEntity = {
@@ -49,6 +51,19 @@ describe('stickao-remove', () => {
 
   afterEach(() => {
     vi.clearAllMocks()
+  })
+
+  it("should do noting if input message's prefix is not '?stickao-remove'", async () => {
+    message.content = messageContent
+
+    prisma.stickyMessage.delete = vi.fn()
+    vi.spyOn(cache, 'removeCache')
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(client.user?.send).not.toHaveBeenCalled()
+    expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
+    expect(cache.removeCache).not.toHaveBeenCalled()
   })
 
   it('should use STICKY_CACHE_PREFIX with channelId as cache key', async () => {
@@ -126,18 +141,20 @@ describe('stickao-remove', () => {
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).toHaveBeenCalled()
-    expect(message.delete()).toHaveBeenCalled()
+    expect(message.delete).toHaveBeenCalled()
   })
 
   it('should delete command if got error while delete message', async () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
-    prisma.stickyMessage.delete = vi.fn()
+    prisma.stickyMessage.delete = vi
+      .fn()
+      .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'removeCache')
 
     await stickyMessage.execute({ client } as BotContext, message)
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
-    expect(message.delete()).toHaveBeenCalled()
+    expect(message.delete).toHaveBeenCalled()
   })
 })

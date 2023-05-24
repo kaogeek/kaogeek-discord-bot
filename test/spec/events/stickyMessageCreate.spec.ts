@@ -18,6 +18,7 @@ vi.mock('../../../src/config.js', async () => {
 describe('stickao-create', () => {
   const channelId = 'test-channel'
   const messageContent = 'MOCK_MESSAGE'
+  const messageWithCommand = `?stickao-create ${messageContent}`
   let client: Client
   let message: Message
   let channel: TextChannel
@@ -38,7 +39,7 @@ describe('stickao-create', () => {
 
     message = {
       channelId,
-      content: messageContent,
+      content: messageWithCommand,
       delete: vi.fn(),
     } as unknown as Message
 
@@ -54,6 +55,20 @@ describe('stickao-create', () => {
 
   afterEach(() => {
     vi.clearAllMocks()
+  })
+
+  it("should do noting if input message's prefix is not '?stickao-create'", async () => {
+    message.content = messageContent
+
+    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    prisma.stickyMessage.upsert = vi.fn()
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(client.channels.cache.get).not.toHaveBeenCalled()
+    expect(client.user?.send).not.toHaveBeenCalled()
+    expect(channel.send).not.toHaveBeenCalled()
+    expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
 
   it('should reply error if channel type is not text channel', async () => {
@@ -79,7 +94,7 @@ describe('stickao-create', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(channel.send).toHaveBeenCalledWith({ content: message })
+    expect(channel.send).toHaveBeenCalledWith({ content: messageContent })
   })
 
   it('should save message to database and cache after sent message', async () => {
@@ -94,11 +109,11 @@ describe('stickao-create', () => {
       create: {
         messageId: sentMessage.id,
         channelId: channelId,
-        message: message,
+        message: messageContent,
       },
       update: {
         messageId: sentMessage.id,
-        message: message,
+        message: messageContent,
       },
       where: {
         channelId: channelId,
@@ -148,7 +163,7 @@ describe('stickao-create', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).toHaveBeenCalled()
-    expect(message.delete()).toHaveBeenCalled()
+    expect(message.delete).toHaveBeenCalled()
   })
 
   it('should delete command if got error while save message to database', async () => {
@@ -163,7 +178,7 @@ describe('stickao-create', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
-    expect(message.delete()).toHaveBeenCalled()
+    expect(message.delete).toHaveBeenCalled()
   })
 
   it('should delete command if got error while send message to channel', async () => {
@@ -174,6 +189,6 @@ describe('stickao-create', () => {
 
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
-    expect(message.delete()).toHaveBeenCalled()
+    expect(message.delete).toHaveBeenCalled()
   })
 })

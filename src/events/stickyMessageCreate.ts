@@ -26,7 +26,7 @@ export default defineEventHandler({
     }
 
     //get content from modal
-    const messageContent = message.content.split('?stickao-create').pop()
+    const messageContent = message.content.split('?stickao-create ').pop()
 
     if (!messageContent) {
       client.user?.send({
@@ -35,13 +35,13 @@ export default defineEventHandler({
       return
     }
 
-    // send message
-    const sentMessage = await (channel as unknown as TextChannel).send({
-      content: messageContent,
-    })
-
-    // save message
     try {
+      // send message
+      const sentMessage = await (channel as unknown as TextChannel).send({
+        content: messageContent,
+      })
+
+      // save message
       const stickyMessage = await prisma.stickyMessage.upsert({
         create: {
           messageId: sentMessage.id,
