@@ -18,13 +18,32 @@ describe('stickyMessageEventHandler', () => {
   let stickyMessageEntity: StickyMessage
 
   beforeEach(() => {
-    message = { channelId } as Message
+    message = { channelId, content: 'MOCK_MESSAGE' } as Message
     stickyMessageEntity = {} as unknown as StickyMessage
   })
 
   afterEach(() => {
     vi.clearAllMocks()
   })
+
+  it.each([{ cmd: '?stickao-set' }, { cmd: '?stickao-remove' }])(
+    'should do nothing if message content is stickao command',
+    async ({ cmd }) => {
+      message.content = `${cmd} ${message.content}`
+      vi.spyOn(messageCounter, 'incCounter')
+      vi.spyOn(channelLock, 'isChannelLock')
+      vi.spyOn(stickyMessage, 'pushMessageToBottom')
+
+      await stickyMessageEventHandler.execute(
+        {} as unknown as BotContext,
+        message,
+      )
+
+      expect(messageCounter.incCounter).not.toHaveBeenCalled()
+      expect(channelLock.isChannelLock).not.toHaveBeenCalled()
+      expect(stickyMessage.pushMessageToBottom).not.toHaveBeenCalled()
+    },
+  )
 
   it('should use STICKY_CACHE_PREFIX with channelId as cache key', async () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
