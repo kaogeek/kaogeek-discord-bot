@@ -15,6 +15,14 @@ export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
   execute: async (_botContext, message) => {
+    // TODO: fix this to handle the command dynamically
+    if (
+      message.content.startsWith('?stickao-set') ||
+      message.content.startsWith('?stickao-remove')
+    ) {
+      return
+    }
+
     const stickyMessage = getCache(
       `${STICKY_CACHE_PREFIX}-${message.channelId}`,
     ) as StickyMessage
