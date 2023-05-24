@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js'
+import { Client, Message, PermissionsBitField, TextChannel } from 'discord.js'
 
 import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index.js'
 import { prisma } from '@/prisma.js'
@@ -18,7 +18,9 @@ describe('stickao-remove', () => {
   const messageWithCommand = `?stickao-remove ${messageContent}`
   let client: Client
   let message: Message
+  let channel: TextChannel
   let stickyMessageEntity: StickyMessage
+  let authorPermissions: Readonly<PermissionsBitField>
 
   beforeEach(() => {
     client = {
@@ -26,11 +28,17 @@ describe('stickao-remove', () => {
         cache: {
           get: vi.fn(),
         },
+        permissionFor: vi.fn(),
       },
     } as unknown as Client
 
+    channel = {
+      permissionsFor: vi.fn(),
+    } as unknown as TextChannel
+
     message = {
       channelId,
+      channel,
       delete: vi.fn(),
       content: messageWithCommand,
       author: {
@@ -40,11 +48,41 @@ describe('stickao-remove', () => {
 
     stickyMessageEntity = {
       message: messageContent,
-    } as unknown as StickyMessage
+    } as StickyMessage
+
+    authorPermissions = { has: vi.fn() } as unknown as PermissionsBitField
   })
 
   afterEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('should check that is user has MANAGE_MESSAGE permission before run command', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    prisma.stickyMessage.delete = vi.fn()
+    vi.spyOn(cache, 'removeCache')
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
+    expect(authorPermissions.has).toHaveBeenCalledWith(
+      PermissionsBitField.Flags.ManageMessages,
+    )
+  })
+
+  it('should deny access if user not has sufficiency permission', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
+    prisma.stickyMessage.delete = vi.fn()
+    vi.spyOn(cache, 'removeCache')
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
+    expect(message.author.send).toHaveBeenCalled()
+    expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
+    expect(cache.removeCache).not.toHaveBeenCalled()
   })
 
   it("should do noting if input message's prefix is not '?stickao-remove'", async () => {
@@ -61,6 +99,8 @@ describe('stickao-remove', () => {
   })
 
   it('should use STICKY_CACHE_PREFIX with channelId as cache key', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
@@ -76,6 +116,8 @@ describe('stickao-remove', () => {
   })
 
   it('should find then delete message and remove cache successfully', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
@@ -91,6 +133,8 @@ describe('stickao-remove', () => {
   })
 
   it('should reply to the user that the sticky message was deleted successfully', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
@@ -101,6 +145,8 @@ describe('stickao-remove', () => {
   })
 
   it('should reply to the user that no sticky message was found in the channel', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.delete = vi.fn()
@@ -114,6 +160,8 @@ describe('stickao-remove', () => {
   })
 
   it('should reply to the user that an error occurred while deleting the sticky message', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi
       .fn()
@@ -127,6 +175,8 @@ describe('stickao-remove', () => {
   })
 
   it('should delete command after finish task', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
@@ -139,6 +189,8 @@ describe('stickao-remove', () => {
   })
 
   it('should delete command if got error while delete message', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi
       .fn()

@@ -1,4 +1,10 @@
-import { ChannelType, Client, Message, TextChannel } from 'discord.js'
+import {
+  ChannelType,
+  Client,
+  Message,
+  PermissionsBitField,
+  TextChannel,
+} from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -21,6 +27,7 @@ describe('stickao-create', () => {
   let channel: TextChannel
   let sentMessage: Message<true>
   let stickyMessageEntity: StickyMessage
+  let authorPermissions: Readonly<PermissionsBitField>
 
   beforeEach(() => {
     client = {
@@ -31,8 +38,15 @@ describe('stickao-create', () => {
       },
     } as unknown as Client
 
+    channel = {
+      send: vi.fn(),
+      permissionsFor: vi.fn(),
+      type: ChannelType.GuildText,
+    } as unknown as TextChannel
+
     message = {
       channelId,
+      channel,
       content: messageWithCommand,
       delete: vi.fn(),
       author: {
@@ -40,14 +54,11 @@ describe('stickao-create', () => {
       },
     } as unknown as Message
 
-    channel = {
-      send: vi.fn(),
-      type: ChannelType.GuildText,
-    } as unknown as TextChannel
+    sentMessage = {} as Message<true>
 
-    sentMessage = {} as unknown as Message<true>
+    stickyMessageEntity = {} as StickyMessage
 
-    stickyMessageEntity = {} as unknown as StickyMessage
+    authorPermissions = { has: vi.fn() } as unknown as PermissionsBitField
   })
 
   afterEach(() => {
@@ -57,7 +68,6 @@ describe('stickao-create', () => {
   it("should do noting if input message's prefix is not '?stickao-create'", async () => {
     message.content = messageContent
 
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -68,13 +78,43 @@ describe('stickao-create', () => {
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
 
+  it('should check that is user has MANAGE_MESSAGE permission before run command', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.upsert = vi.fn()
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
+    expect(authorPermissions.has).toHaveBeenCalledWith(
+      PermissionsBitField.Flags.ManageMessages,
+    )
+  })
+
+  it('should deny access if user not has sufficiency permission', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
+
+    prisma.stickyMessage.upsert = vi.fn()
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
+    expect(message.author.send).toHaveBeenCalled()
+    expect(channel.send).not.toHaveBeenCalled()
+    expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
+  })
+
   it('should reply error if channel type is not text channel', async () => {
     channel = {
       send: vi.fn(),
       type: ChannelType.GuildVoice,
+      permissionsFor: vi.fn(),
     } as unknown as TextChannel
 
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -85,7 +125,8 @@ describe('stickao-create', () => {
   })
 
   it('should send message if input is valid', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn()
 
@@ -95,7 +136,8 @@ describe('stickao-create', () => {
   })
 
   it('should save message to database and cache after sent message', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
@@ -123,7 +165,8 @@ describe('stickao-create', () => {
   })
 
   it('should reply user that successfully create sticky message', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
@@ -136,7 +179,8 @@ describe('stickao-create', () => {
   })
 
   it('should reply user that has error when error occur', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi
       .fn()
@@ -151,7 +195,8 @@ describe('stickao-create', () => {
   })
 
   it('should delete command after finish task', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
@@ -164,7 +209,8 @@ describe('stickao-create', () => {
   })
 
   it('should delete command if got error while save message to database', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     prisma.stickyMessage.upsert = vi
       .fn()
@@ -179,7 +225,8 @@ describe('stickao-create', () => {
   })
 
   it('should delete command if got error while send message to channel', async () => {
-    vi.spyOn(client.channels.cache, 'get').mockReturnValue(channel)
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockRejectedValue(new Error('error occur'))
 
     await stickyMessage.execute({ client } as BotContext, message)

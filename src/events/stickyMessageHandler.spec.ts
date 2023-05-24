@@ -19,7 +19,7 @@ describe('stickyMessageEventHandler', () => {
   let stickyMessageEntity: StickyMessage
 
   beforeEach(() => {
-    message = { channelId } as unknown as Message
+    message = { channelId } as Message
     stickyMessageEntity = {} as unknown as StickyMessage
   })
 
