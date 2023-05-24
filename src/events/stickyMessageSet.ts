@@ -6,10 +6,11 @@ import {
 } from 'discord.js'
 
 import { prisma } from '@/prisma'
+import { StickyMessage } from '@prisma/client'
 
 import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index'
 import { defineEventHandler } from '../types/defineEventHandler'
-import { saveCache } from '../utils/cache'
+import { getCache, saveCache } from '../utils/cache'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,
@@ -52,11 +53,9 @@ export default defineEventHandler({
     }
 
     try {
-      const oldStickyMessage = await prisma.stickyMessage.findUnique({
-        where: {
-          channelId: message.channelId,
-        },
-      })
+      const oldStickyMessage = getCache(
+        `${STICKY_CACHE_PREFIX}-${message.channelId}`,
+      ) as StickyMessage
 
       if (oldStickyMessage) {
         const oldMessage = await message.channel.messages.fetch(

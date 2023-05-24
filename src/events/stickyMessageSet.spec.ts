@@ -79,7 +79,8 @@ describe('stickao-create', () => {
   it("should do noting if input message's prefix is not '?stickao-create'", async () => {
     message.content = messageContent
 
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -94,7 +95,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -110,7 +112,8 @@ describe('stickao-create', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
 
     prisma.stickyMessage.upsert = vi.fn()
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -129,7 +132,8 @@ describe('stickao-create', () => {
 
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -143,7 +147,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -155,7 +160,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -185,7 +191,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -200,7 +207,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi
       .fn()
       .mockRejectedValue(new Error('error occur'))
@@ -217,7 +225,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -236,15 +245,15 @@ describe('stickao-create', () => {
     vi.spyOn(message.channel.messages, 'fetch').mockResolvedValue(
       new Collection<string, Message<true>>().set(oldMessage.id, oldMessage),
     )
-    prisma.stickyMessage.findUnique = vi
-      .fn()
-      .mockResolvedValue(oldStickyMessageEntity)
+    vi.spyOn(cache, 'getCache').mockReturnValue(oldStickyMessageEntity)
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(prisma.stickyMessage.findUnique).toHaveBeenCalled()
+    expect(cache.getCache).toHaveBeenCalledWith(
+      `${STICKY_CACHE_PREFIX}-${message.channelId}`,
+    )
     expect(message.channel.messages.fetch).toHaveBeenCalledWith(oldMessage.id)
     expect(oldMessage.delete).toHaveBeenCalled()
   })
@@ -253,7 +262,8 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    prisma.stickyMessage.findUnique = vi.fn()
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi
       .fn()
       .mockRejectedValue(new Error('error occur'))
