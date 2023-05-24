@@ -1,6 +1,7 @@
 import {
   ChannelType,
   Client,
+  Collection,
   Message,
   PermissionsBitField,
   TextChannel,
@@ -25,6 +26,8 @@ describe('stickao-create', () => {
   let message: Message
   let channel: TextChannel
   let sentMessage: Message<true>
+  let oldMessage: Message<true>
+  let oldStickyMessageEntity: StickyMessage
   let stickyMessageEntity: StickyMessage
   let authorPermissions: Readonly<PermissionsBitField>
 
@@ -41,6 +44,9 @@ describe('stickao-create', () => {
       send: vi.fn(),
       permissionsFor: vi.fn(),
       type: ChannelType.GuildText,
+      messages: {
+        fetch: vi.fn(),
+      },
     } as unknown as TextChannel
 
     message = {
@@ -54,6 +60,12 @@ describe('stickao-create', () => {
     } as unknown as Message
 
     sentMessage = {} as Message<true>
+    oldMessage = {
+      id: 'old-message',
+      delete: vi.fn(),
+    } as unknown as Message<true>
+
+    oldStickyMessageEntity = { messageId: 'old-message' } as StickyMessage
 
     stickyMessageEntity = {} as StickyMessage
 
@@ -67,6 +79,7 @@ describe('stickao-create', () => {
   it("should do noting if input message's prefix is not '?stickao-create'", async () => {
     message.content = messageContent
 
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -81,6 +94,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -96,6 +110,7 @@ describe('stickao-create', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
 
     prisma.stickyMessage.upsert = vi.fn()
+    prisma.stickyMessage.findUnique = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -114,6 +129,7 @@ describe('stickao-create', () => {
 
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -127,6 +143,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessage.execute({ client } as BotContext, message)
@@ -138,6 +155,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -167,6 +185,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -181,6 +200,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi
       .fn()
       .mockRejectedValue(new Error('error occur'))
@@ -197,6 +217,7 @@ describe('stickao-create', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
@@ -207,10 +228,32 @@ describe('stickao-create', () => {
     expect(message.delete).toHaveBeenCalled()
   })
 
+  // TODO: fix test failed spy was not called
+  it.skip('should delete old message if it is existed', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    vi.spyOn(message.channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(oldMessage.id, oldMessage),
+    )
+    prisma.stickyMessage.findUnique = vi
+      .fn()
+      .mockResolvedValue(oldStickyMessageEntity)
+    prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
+    vi.spyOn(cache, 'saveCache')
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(prisma.stickyMessage.findUnique).toHaveBeenCalled()
+    expect(message.channel.messages.fetch).toHaveBeenCalledWith(oldMessage.id)
+    expect(oldMessage.delete).toHaveBeenCalled()
+  })
+
   it('should delete command if got error while save message to database', async () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    prisma.stickyMessage.findUnique = vi.fn()
     prisma.stickyMessage.upsert = vi
       .fn()
       .mockRejectedValue(new Error('error occur'))

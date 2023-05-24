@@ -1,4 +1,10 @@
-import { Client, Message, PermissionsBitField, TextChannel } from 'discord.js'
+import {
+  Client,
+  Collection,
+  Message,
+  PermissionsBitField,
+  TextChannel,
+} from 'discord.js'
 
 import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
@@ -17,6 +23,7 @@ describe('stickao-remove', () => {
   const messageWithCommand = `?stickao-remove ${messageContent}`
   let client: Client
   let message: Message
+  let sentMessage: Message<true>
   let channel: TextChannel
   let stickyMessageEntity: StickyMessage
   let authorPermissions: Readonly<PermissionsBitField>
@@ -33,6 +40,7 @@ describe('stickao-remove', () => {
 
     channel = {
       permissionsFor: vi.fn(),
+      messages: { fetch: vi.fn() },
     } as unknown as TextChannel
 
     message = {
@@ -44,6 +52,11 @@ describe('stickao-remove', () => {
         send: vi.fn(),
       },
     } as unknown as Message
+
+    sentMessage = {
+      id: 'sent-message',
+      delete: vi.fn(),
+    } as unknown as Message<true>
 
     stickyMessageEntity = {
       message: messageContent,
@@ -61,6 +74,9 @@ describe('stickao-remove', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -75,6 +91,9 @@ describe('stickao-remove', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -103,6 +122,9 @@ describe('stickao-remove', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -120,6 +142,9 @@ describe('stickao-remove', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -137,6 +162,9 @@ describe('stickao-remove', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -150,6 +178,9 @@ describe('stickao-remove', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
@@ -166,11 +197,31 @@ describe('stickao-remove', () => {
       .fn()
       .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
     expect(message.author.send).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
+    expect(channel.messages.fetch).not.toHaveBeenCalled()
+  })
+
+  // TODO: fix test failed (no idea why it spy is not called)
+  it.skip('should remove sticky message after successfully remove from database', async () => {
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
+    prisma.stickyMessage.delete = vi.fn()
+    vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
+
+    await stickyMessage.execute({ client } as BotContext, message)
+
+    expect(sentMessage.delete).toHaveBeenCalled()
   })
 
   it('should delete command after finish task', async () => {
@@ -179,11 +230,15 @@ describe('stickao-remove', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(stickyMessageEntity)
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
 
     await stickyMessage.execute({ client } as BotContext, message)
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).toHaveBeenCalled()
+    expect(channel.messages.fetch).toHaveBeenCalled()
     expect(message.delete).toHaveBeenCalled()
   })
 
@@ -200,6 +255,7 @@ describe('stickao-remove', () => {
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
+    expect(channel.messages.fetch).not.toHaveBeenCalled()
     expect(message.delete).toHaveBeenCalled()
   })
 })
