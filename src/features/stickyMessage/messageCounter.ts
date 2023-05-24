@@ -1,8 +1,4 @@
-interface IChannelCounterContainer {
-  [channelId: string]: number
-}
-
-const messageInChannelCounter: IChannelCounterContainer = {}
+const messageInChannelCounter: Map<string, number> = new Map()
 
 /**
  * Increase counter of the message that was sent in the channel
@@ -11,9 +7,8 @@ const messageInChannelCounter: IChannelCounterContainer = {}
  *
  */
 export function incCounter(channelId: string): void {
-  if (!++messageInChannelCounter[channelId]) {
-    messageInChannelCounter[channelId] = 1
-  }
+  let count = messageInChannelCounter.get(channelId) || 0
+  messageInChannelCounter.set(channelId, ++count)
 }
 
 /**
@@ -23,7 +18,7 @@ export function incCounter(channelId: string): void {
  *
  */
 export function resetCounter(channelId: string): void {
-  messageInChannelCounter[channelId] = 1
+  messageInChannelCounter.set(channelId, 1)
 }
 
 /**
@@ -33,5 +28,5 @@ export function resetCounter(channelId: string): void {
  *
  */
 export function getCounter(channelId: string): number {
-  return messageInChannelCounter[channelId]
+  return messageInChannelCounter.get(channelId) || 1
 }

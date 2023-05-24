@@ -1,8 +1,4 @@
-export interface Cache {
-  [key: string]: unknown
-}
-
-const cache: Cache = {}
+const cache: Map<string, unknown> = new Map()
 
 /**
  * Saves a value in the cache with the specified key.
@@ -11,7 +7,7 @@ const cache: Cache = {}
  * @param {unknown} value - The value to be saved in the cache.
  */
 export function saveCache(key: string, value: unknown): void {
-  cache[key] = value
+  cache.set(key, value)
 }
 
 /**
@@ -21,7 +17,7 @@ export function saveCache(key: string, value: unknown): void {
  * @returns {unknown} The value associated with the specified key, or undefined if the key does not exist in the cache.
  */
 export function getCache(key: string): unknown {
-  return cache[key]
+  return cache.get(key)
 }
 
 /**
@@ -31,5 +27,5 @@ export function getCache(key: string): unknown {
  * @returns {void} The removed value, or undefined if the key does not exist in the cache.
  */
 export function removeCache(key: string): void {
-  return (cache[key] = undefined)
+  cache.delete(key)
 }
