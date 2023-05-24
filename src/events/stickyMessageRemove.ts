@@ -14,10 +14,10 @@ export default defineEventHandler({
       return
     }
 
+    const channel = message.channel as TextChannel
+
     // Check if the user has the 'MANAGE_MESSAGES' permission
-    const authorPermissions = (message.channel as TextChannel).permissionsFor(
-      message.author,
-    )
+    const authorPermissions = channel.permissionsFor(message.author)
     if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
       message.author.send({
         content:
@@ -28,19 +28,26 @@ export default defineEventHandler({
 
     try {
       // Retrieve the sticky message with the specified order from the database
-      const stickyMessage = getCache(
+      const stickyMessageEntity = getCache(
         `${STICKY_CACHE_PREFIX}-${message.channelId}`,
       ) as StickyMessage
 
       // If the sticky message exists, remove it from the database
-      if (stickyMessage) {
+      if (stickyMessageEntity) {
         await prisma.stickyMessage.delete({
           where: {
             channelId: message.channelId,
           },
         })
         removeCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`)
-        console.info(`Sticky message removed: ${stickyMessage.message}`)
+
+        const stickyMessage = await channel.messages.fetch(
+          stickyMessageEntity.messageId,
+        )
+
+        await stickyMessage.delete()
+
+        console.info(`Sticky message removed: ${stickyMessageEntity.message}`)
         message.author.send({
           content: 'Successfully removed the sticky message.',
         })
