@@ -26,6 +26,7 @@ export default defineEventHandler({
         await command.execute(botContext, interaction)
       } catch (error) {
         console.error(`[Command: ${commandName}] Command execute error:`, error)
+        if (command.disableAutoDeferReply) return
         await interaction.deleteReply()
       }
     }
