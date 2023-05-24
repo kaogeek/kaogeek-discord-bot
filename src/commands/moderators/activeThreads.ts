@@ -10,15 +10,12 @@ import {
   SnowflakeUtil,
 } from 'discord.js'
 
-import {
-  getActiveThreads,
-  getThreadStats,
-} from '@/features/threadPruner/index.js'
-import { BotContext } from '@/types/BotContext.js'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.js'
-import { ActionSet } from '@/utils/ActionSet.js'
-import { generateTsv } from '@/utils/generateTsv.js'
-import { toLocalDate } from '@/utils/toLocalDate.js'
+import { getActiveThreads, getThreadStats } from '@/features/threadPruner/index'
+import { BotContext } from '@/types/BotContext'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { ActionSet } from '@/utils/ActionSet'
+import { generateTsv } from '@/utils/generateTsv'
+import { toLocalDate } from '@/utils/toLocalDate'
 
 export default {
   data: {

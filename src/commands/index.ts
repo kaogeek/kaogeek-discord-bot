@@ -1,16 +1,16 @@
 import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 
-import ping from './info/ping.js'
-import activeThreads from './moderators/activeThreads.js'
-import deleteAllMessage from './moderators/deleteAllMessage.js'
-import inspectProfile from './moderators/inspectProfile.js'
-import micMuteAppeal from './moderators/micMuteAppeal.js'
-import report from './moderators/report.js'
-import severeMute from './moderators/severeMute.js'
-import severeMutePardon from './moderators/severeMutePardon.js'
-import user from './moderators/user.js'
-import inspectConfig from './runtimeConfig/inspectConfig.js'
-import reloadConfig from './runtimeConfig/reloadConfig.js'
+import ping from './info/ping'
+import activeThreads from './moderators/activeThreads'
+import deleteAllMessage from './moderators/deleteAllMessage'
+import inspectProfile from './moderators/inspectProfile'
+import micMuteAppeal from './moderators/micMuteAppeal'
+import report from './moderators/report'
+import severeMute from './moderators/severeMute'
+import severeMutePardon from './moderators/severeMutePardon'
+import user from './moderators/user'
+import inspectConfig from './runtimeConfig/inspectConfig'
+import reloadConfig from './runtimeConfig/reloadConfig'
 
 export default [
   activeThreads,

@@ -1,10 +1,10 @@
 import { CacheType, ChatInputCommandInteraction, GuildMember } from 'discord.js'
 
-import { Environment } from '../../config.js'
-import { addUserModerationLogEntry } from '../../features/profileInspector/index.js'
-import { prisma } from '../../prisma.js'
-import { UserModerationLogEntryType } from '../../types/UserModerationLogType.js'
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { Environment } from '@/config'
+import { addUserModerationLogEntry } from '@/features/profileInspector'
+import { prisma } from '@/prisma'
+import { UserModerationLogEntryType } from '@/types/UserModerationLogType'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default defineCommandHandler({
   data: {

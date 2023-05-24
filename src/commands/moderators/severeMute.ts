@@ -6,10 +6,10 @@ import {
   PermissionsBitField,
 } from 'discord.js'
 
-import { addUserModerationLogEntry } from '../../features/profileInspector/index.js'
-import { prisma } from '../../prisma.js'
-import { UserModerationLogEntryType } from '../../types/UserModerationLogType.js'
-import { defineCommandHandler } from '../../types/defineCommandHandler.js'
+import { addUserModerationLogEntry } from '@/features/profileInspector'
+import { prisma } from '@/prisma'
+import { UserModerationLogEntryType } from '@/types/UserModerationLogType'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
 export default [
   defineCommandHandler({
