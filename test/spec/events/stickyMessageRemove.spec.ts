@@ -33,15 +33,15 @@ describe('stickao-remove', () => {
           get: vi.fn(),
         },
       },
-      user: {
-        send: vi.fn(),
-      },
     } as unknown as Client
 
     message = {
       channelId,
       delete: vi.fn(),
       content: messageWithCommand,
+      author: {
+        send: vi.fn(),
+      },
     } as unknown as Message
 
     stickyMessageEntity = {
@@ -61,7 +61,7 @@ describe('stickao-remove', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(client.user?.send).not.toHaveBeenCalled()
+    expect(message.author.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
@@ -103,7 +103,7 @@ describe('stickao-remove', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
   })
 
   it('should reply to the user that no sticky message was found in the channel', async () => {
@@ -114,7 +114,7 @@ describe('stickao-remove', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
@@ -128,7 +128,7 @@ describe('stickao-remove', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
 

@@ -19,7 +19,7 @@ export default defineEventHandler({
     // check is the text channel
     const channel = client.channels.cache.get(message.channelId)
     if (channel?.type !== ChannelType.GuildText) {
-      client.user?.send({
+      message.author.send({
         content: 'Sticky text can create only in text channel.',
       })
       return
@@ -29,7 +29,7 @@ export default defineEventHandler({
     const messageContent = message.content.split('?stickao-set ').pop()
 
     if (!messageContent) {
-      client.user?.send({
+      message.author.send({
         content: 'Please provide the valid message content for Stickao Message',
       })
       return
@@ -61,14 +61,14 @@ export default defineEventHandler({
 
       // successfully create sticky message
       console.info(`Sticky message saved: ${messageContent}`)
-      client.user?.send({
+      message.author.send({
         content: 'Successfully created sticky message.',
       })
     } catch (error) {
       console.error(
         `Error creating sticky message: ${(error as Error).message}`,
       )
-      client.user?.send({
+      message.author.send({
         content: 'An error occurred while creating the sticky message.',
       })
     } finally {

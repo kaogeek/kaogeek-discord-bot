@@ -10,12 +10,10 @@ import { defineEventHandler } from '../types/defineEventHandler.js'
 export default defineEventHandler({
   eventName: Events.MessageCreate,
   once: false,
-  execute: async (botContext, message) => {
+  execute: async (_botContext, message) => {
     if (!message.content.startsWith('?stickao-remove')) {
       return
     }
-
-    const { client } = botContext
 
     try {
       // Retrieve the sticky message with the specified order from the database
@@ -32,11 +30,11 @@ export default defineEventHandler({
         })
         removeCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`)
         console.info(`Sticky message removed: ${stickyMessage.message}`)
-        client.user?.send({
+        message.author.send({
           content: 'Successfully removed the sticky message.',
         })
       } else {
-        client.user?.send({
+        message.author.send({
           content: 'Not found message in this channel',
         })
       }
@@ -44,7 +42,7 @@ export default defineEventHandler({
       console.error(
         `Error removing sticky message: ${(error as Error).message}`,
       )
-      client.user?.send({
+      message.author.send({
         content: 'An error occurred while removing the sticky message.',
       })
     } finally {

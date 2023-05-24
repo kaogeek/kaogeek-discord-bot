@@ -32,15 +32,15 @@ describe('stickao-create', () => {
           get: vi.fn(),
         },
       },
-      user: {
-        send: vi.fn(),
-      },
     } as unknown as Client
 
     message = {
       channelId,
       content: messageWithCommand,
       delete: vi.fn(),
+      author: {
+        send: vi.fn(),
+      },
     } as unknown as Message
 
     channel = {
@@ -66,7 +66,7 @@ describe('stickao-create', () => {
     await stickyMessage.execute({ client } as BotContext, message)
 
     expect(client.channels.cache.get).not.toHaveBeenCalled()
-    expect(client.user?.send).not.toHaveBeenCalled()
+    expect(message.author.send).not.toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
@@ -82,7 +82,7 @@ describe('stickao-create', () => {
 
     await stickyMessage.execute({ client } as BotContext, message)
 
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
@@ -135,7 +135,7 @@ describe('stickao-create', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).toHaveBeenCalled()
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
   })
 
   it('should reply user that has error when error occur', async () => {
@@ -150,7 +150,7 @@ describe('stickao-create', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
-    expect(client.user?.send).toHaveBeenCalled()
+    expect(message.author.send).toHaveBeenCalled()
   })
 
   it('should delete command after finish task', async () => {
