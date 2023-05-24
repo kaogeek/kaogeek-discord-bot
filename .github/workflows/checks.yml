@@ -69,6 +69,8 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.head.repo.fork }}
+    env:
+      DATABASE_URL: 'file:./smoke.db'
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -79,14 +81,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Generate Prisma client
-        run: pnpm prisma generate
+        run: pnpm migrate
       - name: 'Smoke Test'
         env:
           BOT_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
           GUILD_ID: ${{ secrets.CI_GUILD_ID }}
           MOD_CHANNEL_ID: ${{ secrets.CI_MOD_CHANNEL_ID }}
           SMOKE_TESTER_BOT_TOKEN: ${{ secrets.CI_SMOKE_TESTER_BOT_TOKEN }}
-          DATABASE_URL: 'file:./smoke.db'
         run: pnpm test:smoke
 
   docker-smoke:
