@@ -29,7 +29,7 @@ describe('incCounter', () => {
     ({ n, expected }) => {
       const channelId = 'test-channel'
 
-      for (let i = 0; i < n; i++) {
+      for (let index = 0; index < n; index++) {
         incCounter(channelId)
       }
 

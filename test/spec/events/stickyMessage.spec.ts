@@ -97,6 +97,7 @@ describe('stickyMessageEventHandler', () => {
   })
 
   it('should do nothing if not found sticky message in channel', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     vi.spyOn(stickyMessage, 'isNeedToUpdateMessage')
     vi.spyOn(messageCounter, 'incCounter')
