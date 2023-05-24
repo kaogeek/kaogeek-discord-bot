@@ -52,6 +52,19 @@ export default defineEventHandler({
     }
 
     try {
+      const oldStickyMessage = await prisma.stickyMessage.findUnique({
+        where: {
+          channelId: message.channelId,
+        },
+      })
+
+      if (oldStickyMessage) {
+        const oldMessage = await message.channel.messages.fetch(
+          oldStickyMessage.messageId,
+        )
+        await oldMessage.delete()
+      }
+
       // Send message
       const sentMessage = await (channel as TextChannel).send({
         content: messageContent,
