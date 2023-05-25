@@ -1,3 +1,9 @@
+[nameChecker]
+  patterns = [
+    { regexp = "examplebadname" },
+  ]
+  reportChannelId = "1108478073998938163"
+
 [nominations]
   enabledRoles = [
     # Contributor
@@ -5,5 +11,4 @@
   ]
 
 [preventEmojiSpam]
-enabled = false # Disabled for now due to #99 (bot erroneously deleting messages with only numbers). Do not re-enable until issue #108 is fixed.
-
+  enabled = false
