@@ -3,6 +3,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import commands from './commands/index'
 import { Environment } from './config'
 import eventPlugins from './events/index'
+import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/index'
 import { BotContext } from './types/BotContext'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig'
@@ -42,7 +43,7 @@ export class Bot {
   }
 
   loadHandlers() {
-    this.loadPlugins(eventPlugins)
+    this.loadPlugins([...eventPlugins, ...featurePlugins])
     this.loadCommandHandlers(commands)
   }
 

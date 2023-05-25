@@ -1,41 +1,43 @@
-import { GuildMember } from 'discord.js'
+import { Events } from 'discord.js'
 
-import { Environment } from '@/config'
-import { RuntimeConfigurationSchema } from '@/utils/RuntimeConfigurationSchema'
+import { definePlugin } from '@/types/definePlugin'
 
-import { checkNameAgainstPatterns } from './checkNameAgainstPatterns'
+import { checkName } from './checkName'
 
-export const compiled = new Map<string, RegExp>()
-const seen = new Map<string, number>()
+export default definePlugin({
+  name: 'nameChecker',
+  setup: (pluginContext) => {
+    pluginContext.addEventHandler({
+      eventName: Events.GuildMemberAdd,
+      execute: async (botContext, member) => {
+        await checkName(
+          member,
+          botContext.runtimeConfiguration.data.nameChecker,
+        )
+      },
+    })
 
-type Config = RuntimeConfigurationSchema['nameChecker']
+    pluginContext.addEventHandler({
+      eventName: Events.GuildMemberUpdate,
+      execute: async (botContext, oldMember, newMember) => {
+        await checkName(
+          newMember,
+          botContext.runtimeConfiguration.data.nameChecker,
+        )
+      },
+    })
 
-export async function checkName(member: GuildMember, config: Config) {
-  if (member.guild.id !== Environment.GUILD_ID) return
-
-  const { reportChannelId, patterns } = config
-  if (!patterns) {
-    return
-  }
-
-  const reportChannel = member.guild.channels.cache.get(reportChannelId)
-  if (!reportChannel) {
-    console.error('Unable to check name because report channel is missing')
-    return
-  }
-  if (!reportChannel.isTextBased()) {
-    console.error(
-      'Unable to check name because report channel is not text based',
-    )
-    return
-  }
-
-  const checkResult = checkNameAgainstPatterns(member.displayName, patterns)
-  if (checkResult) {
-    const isNew = !seen.has(member.id)
-    seen.set(member.id, Date.now())
-    if (isNew) {
-      await reportChannel?.send(`Name pattern match: ${member}`)
-    }
-  }
-}
+    pluginContext.addEventHandler({
+      eventName: Events.MessageCreate,
+      execute: async (botContext, message) => {
+        if (!message.member) {
+          return
+        }
+        await checkName(
+          message.member,
+          botContext.runtimeConfiguration.data.nameChecker,
+        )
+      },
+    })
+  },
+})

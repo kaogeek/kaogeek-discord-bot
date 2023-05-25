@@ -1,6 +1,5 @@
 import { Events } from 'discord.js'
 
-import { checkName } from '@/features/nameChecker'
 import { defineEventHandler } from '@/types/defineEventHandler'
 
 export default defineEventHandler({
@@ -10,6 +9,5 @@ export default defineEventHandler({
     console.info(
       `[guildMemberAdd] "${member.user.tag}" [${member.id}] joined "${member.guild.name}" [${member.guild.id}]`,
     )
-    await checkName(member, botContext.runtimeConfiguration.data.nameChecker)
   },
 })
