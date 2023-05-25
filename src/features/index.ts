@@ -2,6 +2,7 @@ import { Plugin } from '@/types/Plugin'
 
 import memberUpdateLogger from './memberUpdateLogger'
 import nameChecker from './nameChecker'
+import nominations from './nominations'
 import ping from './ping'
 import preventEmojiSpam from './preventEmojiSpam'
 import profileInspector from './profileInspector'
@@ -12,6 +13,7 @@ import threadPruner from './threadPruner'
 export default [
   memberUpdateLogger,
   nameChecker,
+  nominations,
   ping,
   preventEmojiSpam,
   profileInspector,
