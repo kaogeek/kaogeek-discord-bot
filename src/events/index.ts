@@ -1,4 +1,4 @@
-import { AnyEventHandlerConfig } from '@/types/EventHandlerConfig'
+import { Plugin } from '@/types/Plugin'
 
 import guildMemberAdd from './guildMemberAdd'
 import guildMemberRemove from './guildMemberRemove'
@@ -22,4 +22,4 @@ export default [
   stickyMessageCreate,
   stickyMessageRemove,
   ready,
-] satisfies AnyEventHandlerConfig[]
+] satisfies Plugin[]
