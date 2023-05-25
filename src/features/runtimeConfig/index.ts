@@ -1,7 +1,7 @@
 import { definePlugin } from '@/types/definePlugin'
 
-import inspectConfig from './inspectConfig'
-import reloadConfig from './reloadConfig'
+import { inspectConfig } from './inspectConfig'
+import { reloadConfig } from './reloadConfig'
 
 export default definePlugin({
   name: 'runtimeConfig',

@@ -1,5 +1,7 @@
 import {
   APIEmbed,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
   ButtonStyle,
   CommandInteraction,
   ComponentType,
@@ -7,14 +9,99 @@ import {
   InteractionButtonComponentData,
   Message,
   MessageComponentInteraction,
+  PermissionsBitField,
 } from 'discord.js'
 
 import { UserModerationLog, UserProfile } from '@prisma/client'
 
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { definePlugin } from '@/types/definePlugin'
 import { ActionSet } from '@/utils/ActionSet'
 import { prompt } from '@/utils/prompt'
+
+export default definePlugin({
+  name: 'profileInspector',
+  setup: (pluginContext) => {
+    pluginContext.addCommand(inspectProfileUserCommand)
+    pluginContext.addCommand(inspectAuthorMessageCommand)
+    pluginContext.addCommand(inspectUserSlashCommand)
+  },
+})
+
+const inspectProfileUserCommand: CommandHandlerConfig = {
+  data: {
+    name: 'Inspect profile',
+    type: ApplicationCommandType.User,
+    defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
+    dmPermission: false,
+  },
+  ephemeral: true,
+  execute: async (botContext, interaction) => {
+    if (!interaction.guild || !interaction.isContextMenuCommand()) return
+
+    const userId = interaction.targetId
+    const member = interaction.guild.members.cache.get(userId)
+    if (!member) return
+
+    await inspectProfile(botContext, { interaction, member })
+  },
+}
+
+const inspectAuthorMessageCommand: CommandHandlerConfig = {
+  data: {
+    name: 'Inspect author',
+    type: ApplicationCommandType.Message,
+    defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
+    dmPermission: false,
+  },
+  ephemeral: true,
+  execute: async (botContext, interaction) => {
+    if (!interaction.guild || !interaction.isContextMenuCommand()) return
+
+    const messageId = interaction.targetId
+    const message = await interaction.channel?.messages.fetch(messageId)
+    if (!message) return
+
+    const userId = message.author.id
+    const member = interaction.guild.members.cache.get(userId)
+    if (!member) return
+
+    await inspectProfile(botContext, {
+      interaction,
+      member,
+      messageContext: message,
+    })
+  },
+}
+
+const inspectUserSlashCommand: CommandHandlerConfig = {
+  data: {
+    name: 'inspect-user',
+    description: 'Inspect a user profile',
+    defaultMemberPermissions: PermissionsBitField.Flags.ManageMessages,
+    type: ApplicationCommandType.ChatInput,
+    options: [
+      {
+        name: 'user',
+        description: 'The user to inspect',
+        type: ApplicationCommandOptionType.User,
+      },
+    ],
+  },
+  ephemeral: true,
+  execute: async (botContext, interaction) => {
+    if (!interaction.guild || !interaction.isChatInputCommand()) return
+
+    const userId = interaction.options.getUser('user')?.id
+    if (!userId) return
+    const member = interaction.guild.members.cache.get(userId)
+    if (!member) return
+
+    await inspectProfile(botContext, { interaction, member })
+  },
+}
 
 export interface InspectProfileOptions {
   interaction: CommandInteraction
