@@ -2,6 +2,13 @@ import { z } from 'zod'
 
 export const RuntimeConfigurationSchema = z
   .object({
+    nameChecker: z
+      .object({
+        patterns: z.array(z.object({ regexp: z.string() })).default([]),
+        reportChannelId: z.string().default(''),
+      })
+      .default({}),
+
     nominations: z
       .object({
         enabledRoles: z

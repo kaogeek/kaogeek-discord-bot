@@ -9,6 +9,7 @@ import { getCache, removeCache } from '@/utils/cache'
 import { sendDm } from '@/utils/discord'
 
 export default defineEventHandler({
+  displayName: 'stickyMessageRemove',
   eventName: Events.MessageCreate,
   once: false,
   execute: async (_botContext, message) => {
