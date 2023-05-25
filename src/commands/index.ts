@@ -1,6 +1,5 @@
 import { Plugin } from '@/types/Plugin'
 
-import ping from './info/ping'
 import activeThreads from './moderators/activeThreads'
 import deleteAllMessage from './moderators/deleteAllMessage'
 import inspectProfile from './moderators/inspectProfile'
@@ -17,7 +16,6 @@ export default [
   inspectConfig,
   ...inspectProfile,
   nominate,
-  ping,
   reloadConfig,
   report,
   user,
