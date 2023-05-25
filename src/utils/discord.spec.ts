@@ -1,9 +1,4 @@
-import {
-  DMChannel,
-  Message,
-  MessageCreateOptions,
-  MessagePayload,
-} from 'discord.js'
+import { DMChannel, Message, MessageCreateOptions } from 'discord.js'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
