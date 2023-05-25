@@ -9,9 +9,7 @@ export function defineEventHandler<K extends keyof ClientEvents>(
 ): Plugin & { execute: EventHandlerConfig<K>['execute'] } {
   return Object.assign(
     definePlugin({
-      name: `LegacyEventHandlerPlugin[${
-        config.displayName ?? config.eventName
-      }]`,
+      name: `legacyEventHandler[${config.displayName ?? config.eventName}]`,
       setup: (plugin) => {
         plugin.addEventHandler(config)
       },
