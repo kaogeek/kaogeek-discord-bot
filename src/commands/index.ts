@@ -1,6 +1,5 @@
 import { Plugin } from '@/types/Plugin'
 
-import activeThreads from './moderators/activeThreads'
 import deleteAllMessage from './moderators/deleteAllMessage'
 import inspectProfile from './moderators/inspectProfile'
 import report from './moderators/report'
@@ -11,7 +10,6 @@ import inspectConfig from './runtimeConfig/inspectConfig'
 import reloadConfig from './runtimeConfig/reloadConfig'
 
 export default [
-  activeThreads,
   deleteAllMessage,
   inspectConfig,
   ...inspectProfile,
