@@ -8,7 +8,6 @@ import {
 
 import commands from './commands/index'
 import { Environment } from './config'
-import eventPlugins from './events/index'
 import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
 import { BotContext } from './types/BotContext'
@@ -52,7 +51,7 @@ export class Bot {
     this.client.once(Events.InteractionCreate, (interaction) =>
       this.onInteractionCreate(interaction),
     )
-    this.loadPlugins([...eventPlugins, ...featurePlugins])
+    this.loadPlugins(featurePlugins)
     this.loadCommandHandlers(commands)
   }
 
