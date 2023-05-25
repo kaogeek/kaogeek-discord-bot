@@ -6,7 +6,7 @@ export function defineCommandHandler(config: CommandHandlerConfig): Plugin {
   return definePlugin({
     name: `legacyCommandHandler[${config.data.name}]`,
     setup: (pluginContext) => {
-      pluginContext.addCommandHandler(config)
+      pluginContext.addCommand(config)
     },
   })
 }

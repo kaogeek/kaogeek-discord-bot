@@ -64,7 +64,7 @@ export class Bot {
 
   private initializePlugin(plugin: Plugin) {
     plugin.setup({
-      addCommandHandler: (handler) => {
+      addCommand: (handler) => {
         this.commands.set(handler.data.name, handler)
       },
       addEventHandler: (handler) => {
