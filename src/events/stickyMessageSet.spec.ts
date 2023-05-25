@@ -2,6 +2,7 @@ import {
   ChannelType,
   Client,
   Collection,
+  DMChannel,
   Message,
   PermissionsBitField,
   TextChannel,
@@ -57,7 +58,7 @@ describe('stickao-set', () => {
       delete: vi.fn(),
       author: {
         send: vi.fn(),
-        dmChannel: true,
+        dmChannel: {} as DMChannel,
       },
     } as unknown as Message
 
@@ -86,7 +87,7 @@ describe('stickao-set', () => {
       delete: vi.fn(),
       author: {
         send: vi.fn(),
-        dmChannel: false,
+        dmChannel: null,
       },
     } as unknown as Message
 
