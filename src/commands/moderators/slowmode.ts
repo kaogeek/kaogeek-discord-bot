@@ -22,6 +22,8 @@ export default defineCommandHandler({
         description: 'Duration of slowmode in seconds',
         type: ApplicationCommandOptionType.Integer,
         required: true,
+        min_value: 0,
+        max_value: 21_600, // 6 hours (discord limit)
       },
     ],
   },
