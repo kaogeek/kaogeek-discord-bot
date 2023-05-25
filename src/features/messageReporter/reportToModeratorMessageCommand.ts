@@ -10,9 +10,9 @@ import {
 
 import { Environment } from '@/config'
 import { isUniqueConstraintViolation, prisma } from '@/prisma'
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 
-export default defineCommandHandler({
+export const reportToModeratorMessageCommand: CommandHandlerConfig = {
   data: {
     name: 'Report to moderator',
     type: ApplicationCommandType.Message,
@@ -145,4 +145,4 @@ export default defineCommandHandler({
       ],
     })
   },
-})
+}
