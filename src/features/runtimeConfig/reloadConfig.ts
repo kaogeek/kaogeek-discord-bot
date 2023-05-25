@@ -1,8 +1,8 @@
 import { PermissionsBitField, codeBlock } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 
-export default defineCommandHandler({
+export default {
   data: {
     name: 'reload-config',
     description: 'Reload configuration',
@@ -17,4 +17,4 @@ export default defineCommandHandler({
         codeBlock('json', JSON.stringify(data, null, 2)),
     })
   },
-})
+} satisfies CommandHandlerConfig
