@@ -1,6 +1,9 @@
 name: Generate Announcement
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - discussion-generator
 jobs:
   generate:
     runs-on: ubuntu-latest
