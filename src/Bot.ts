@@ -6,7 +6,6 @@ import eventPlugins from './events/index'
 import { initStickyMessage } from './features/stickyMessage/index'
 import { BotContext } from './types/BotContext'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig'
-import { EventHandlerConfig } from './types/EventHandlerConfig'
 import { Plugin } from './types/Plugin'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration'
 
