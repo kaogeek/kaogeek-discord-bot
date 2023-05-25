@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - discussion-generator
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      discussions: write
+    steps:
+      - run: |
+          # Use GitHub CLI to create a discussion with GraphQL
+          # https://docs.github.com/en/graphql/reference/mutations#creatediscussion
+          gh api graphql -f query='
+          mutation($input: CreateDiscussionInput!) {
+            createDiscussion(input: $input) {
+              discussion {
+                url
+              }
+            }
+          }' -f input='{
+            "repositoryId": "${{ github.repository_id }}",
+            "title": "…",
+            "body": "…",
+            "categoryId": "DIC_kwDOJjuSKM4CWhXV"
+          }'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
