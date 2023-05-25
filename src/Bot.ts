@@ -32,7 +32,6 @@ export class Bot {
   private createBotContext() {
     return {
       client: this.client,
-      commands: this.commands,
       runtimeConfiguration: this.runtimeConfiguration,
     } as BotContext
   }
