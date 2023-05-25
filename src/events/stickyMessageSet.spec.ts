@@ -15,7 +15,7 @@ import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
 import * as cache from '@/utils/cache'
-import * as discord from '@/utils/discord'
+import * as discord from '@/utils/sendDm'
 
 import stickyMessage from './stickyMessageSet'
 

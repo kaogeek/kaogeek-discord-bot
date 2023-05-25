@@ -11,7 +11,6 @@ export async function sendDm(
   payload: MessageCreateOptions,
 ): Promise<void> {
   if (!message.author.dmChannel) {
-    console.debug(message.author.dmChannel)
     try {
       await message.author.createDM()
     } catch (error) {

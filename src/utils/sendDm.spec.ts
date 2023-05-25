@@ -7,7 +7,7 @@ import {
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { sendDm } from './discord'
+import { sendDm } from './sendDm'
 
 vi.mock('@/config')
 

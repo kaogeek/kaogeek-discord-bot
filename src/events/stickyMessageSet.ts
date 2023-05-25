@@ -11,7 +11,7 @@ import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
 import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache, saveCache } from '@/utils/cache'
-import { sendDm } from '@/utils/discord'
+import { sendDm } from '@/utils/sendDm'
 
 export default defineEventHandler({
   displayName: 'stickyMessageSet',
