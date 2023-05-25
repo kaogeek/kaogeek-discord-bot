@@ -12,6 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/stickyMessages'
 import { prisma } from '@/prisma'
 import * as cache from '@/utils/cache'
+import * as discord from '@/utils/sendDm'
 
 import { stickyMessageRemove } from './stickyMessageRemove'
 
@@ -54,6 +55,8 @@ describe('stickao-remove', () => {
     } as StickyMessage
 
     authorPermissions = { has: vi.fn() } as unknown as PermissionsBitField
+
+    vi.spyOn(discord, 'sendDm')
   })
 
   afterEach(() => {
@@ -80,7 +83,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    expect(message.author.send).not.toHaveBeenCalled()
+    expect(discord.sendDm).not.toHaveBeenCalled()
   })
 
   it('should check that is user has MANAGE_MESSAGE permission before run command', async () => {
@@ -112,7 +115,7 @@ describe('stickao-remove', () => {
     await stickyMessageRemove(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
@@ -125,7 +128,7 @@ describe('stickao-remove', () => {
 
     await stickyMessageRemove(message)
 
-    expect(message.author.send).not.toHaveBeenCalled()
+    expect(discord.sendDm).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
@@ -182,7 +185,7 @@ describe('stickao-remove', () => {
 
     await stickyMessageRemove(message)
 
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
   })
 
   it('should reply to the user that no sticky message was found in the channel', async () => {
@@ -198,7 +201,7 @@ describe('stickao-remove', () => {
 
     await stickyMessageRemove(message)
 
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
   })
@@ -217,7 +220,7 @@ describe('stickao-remove', () => {
 
     await stickyMessageRemove(message)
 
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
     expect(channel.messages.fetch).not.toHaveBeenCalled()
   })

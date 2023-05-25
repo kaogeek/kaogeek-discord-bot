@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/stickyMessages'
 import { prisma } from '@/prisma'
 import * as cache from '@/utils/cache'
+import * as discord from '@/utils/sendDm'
 
 import { stickyMessageSet } from './stickyMessageSet'
 
@@ -72,32 +73,13 @@ describe('stickao-set', () => {
     stickyMessageEntity = {} as StickyMessage
 
     authorPermissions = { has: vi.fn() } as unknown as PermissionsBitField
+
+    vi.spyOn(discord, 'sendDm')
+    prisma.stickyMessage.upsert = vi.fn()
   })
 
   afterEach(() => {
     vi.clearAllMocks()
-  })
-
-  it('should not send private message to user if user disable dm channel', async () => {
-    message = {
-      channelId,
-      channel,
-      content: messageWithCommand,
-      delete: vi.fn(),
-      author: {
-        send: vi.fn(),
-        dmChannel: null,
-      },
-    } as unknown as Message
-
-    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
-    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
-    vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
-    prisma.stickyMessage.upsert = vi.fn()
-
-    expect(message.author.send).not.toHaveBeenCalled()
   })
 
   it("should do noting if input message's prefix is not '?stickao-set'", async () => {
@@ -105,12 +87,11 @@ describe('stickao-set', () => {
 
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
-    prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessageSet(message)
 
     expect(client.channels.cache.get).not.toHaveBeenCalled()
-    expect(message.author.send).not.toHaveBeenCalled()
+    expect(discord.sendDm).not.toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
@@ -121,7 +102,6 @@ describe('stickao-set', () => {
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
-    prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessageSet(message)
 
@@ -135,14 +115,13 @@ describe('stickao-set', () => {
     vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
     vi.spyOn(authorPermissions, 'has').mockReturnValue(false)
 
-    prisma.stickyMessage.upsert = vi.fn()
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
 
     await stickyMessageSet(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
@@ -158,11 +137,10 @@ describe('stickao-set', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
-    prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessageSet(message)
 
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
   })
@@ -173,7 +151,6 @@ describe('stickao-set', () => {
     vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
-    prisma.stickyMessage.upsert = vi.fn()
 
     await stickyMessageSet(message)
 
@@ -224,7 +201,7 @@ describe('stickao-set', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).toHaveBeenCalled()
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
   })
 
   it('should reply user that has error when error occur', async () => {
@@ -242,7 +219,7 @@ describe('stickao-set', () => {
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
-    expect(message.author.send).toHaveBeenCalled()
+    expect(discord.sendDm).toHaveBeenCalled()
   })
 
   it('should delete command after finish task', async () => {
@@ -269,8 +246,9 @@ describe('stickao-set', () => {
     vi.spyOn(message.channel.messages, 'fetch').mockResolvedValue(
       new Collection<string, Message<true>>().set(oldMessage.id, oldMessage),
     )
-    vi.spyOn(cache, 'getCache').mockReturnValue(oldStickyMessageEntity)
-    prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
+    vi.spyOn(cache, 'getCache')
+      .mockReturnValue(oldStickyMessageEntity)
+      .mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
     await stickyMessageSet(message)
