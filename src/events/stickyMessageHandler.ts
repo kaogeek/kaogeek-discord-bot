@@ -13,6 +13,7 @@ import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache } from '@/utils/cache'
 
 export default defineEventHandler({
+  displayName: 'stickyMessageHandler',
   eventName: Events.MessageCreate,
   once: false,
   execute: async (_botContext, message) => {

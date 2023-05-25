@@ -8,6 +8,7 @@ import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache, removeCache } from '@/utils/cache'
 
 export default defineEventHandler({
+  displayName: 'stickyMessageRemove',
   eventName: Events.MessageCreate,
   once: false,
   execute: async (_botContext, message) => {

@@ -2,11 +2,12 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 
 import commands from './commands/index'
 import { Environment } from './config'
-import events from './events/index'
+import eventPlugins from './events/index'
 import { initStickyMessage } from './features/stickyMessage/index'
 import { BotContext } from './types/BotContext'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig'
 import { EventHandlerConfig } from './types/EventHandlerConfig'
+import { Plugin } from './types/Plugin'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration'
 
 export class Bot {
@@ -42,24 +43,33 @@ export class Bot {
   }
 
   loadHandlers() {
-    this.loadEventHandlers(events as EventHandlerConfig[])
+    this.loadPlugins(eventPlugins)
     this.loadCommandHandlers(commands)
   }
 
-  private loadEventHandlers(handlers: EventHandlerConfig[]) {
-    console.info('[HANDLER] Setting up event handlers ...')
+  private loadPlugins(plugins: Plugin[]) {
+    console.info('[PLUGIN] Initializing plugins...')
 
-    for (const handler of handlers) {
-      if (handler.once) {
-        this.client.once(handler.eventName, (...arguments_) =>
-          handler.execute(this.createBotContext(), ...arguments_),
-        )
-      } else {
-        this.client.on(handler.eventName, (...arguments_) =>
-          handler.execute(this.createBotContext(), ...arguments_),
-        )
-      }
+    for (const plugin of plugins) {
+      this.initializePlugin(plugin)
     }
+  }
+
+  private initializePlugin(plugin: Plugin) {
+    plugin.setup({
+      addEventHandler: (handler) => {
+        if (handler.once) {
+          this.client.once(handler.eventName, (...arguments_) =>
+            handler.execute(this.createBotContext(), ...arguments_),
+          )
+        } else {
+          this.client.on(handler.eventName, (...arguments_) =>
+            handler.execute(this.createBotContext(), ...arguments_),
+          )
+        }
+      },
+    })
+    console.log(`[PLUGIN] Initialized`, plugin.name)
   }
 
   private loadCommandHandlers(handlers: CommandHandlerConfig[]) {
