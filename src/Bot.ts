@@ -47,7 +47,7 @@ export class Bot {
 
   loadHandlers() {
     this.client.once(Events.ClientReady, () => this.onReady())
-    this.client.once(Events.InteractionCreate, (interaction) =>
+    this.client.on(Events.InteractionCreate, (interaction) =>
       this.onInteractionCreate(interaction),
     )
     this.loadPlugins(featurePlugins)
