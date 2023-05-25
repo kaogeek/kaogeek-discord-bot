@@ -13,7 +13,7 @@ export default defineCommandHandler({
     name: 'slowmode',
     description: 'Set slowmode for all text channels in the server',
     defaultMemberPermissions:
-      PermissionsBitField.Flags.ManageChannels ||
+      PermissionsBitField.Flags.ManageChannels |
       PermissionsBitField.Flags.ManageMessages,
     type: ApplicationCommandType.ChatInput,
     options: [
