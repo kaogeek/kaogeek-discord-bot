@@ -11,17 +11,17 @@ jobs:
           # Use GitHub CLI to create a discussion with GraphQL
           # https://docs.github.com/en/graphql/reference/mutations#creatediscussion
           gh api graphql -f query='
-          mutation($input: CreateDiscussionInput!) {
-            createDiscussion(input: $input) {
+          mutation {
+            createDiscussion(input: {
+              repositoryId: "R_kgDOJjuSKA",
+              title: "…",
+              body: "…",
+              categoryId: "DIC_kwDOJjuSKM4CWhXV"
+            }) {
               discussion {
                 url
               }
             }
-          }' -f input='{
-            "repositoryId": "R_kgDOJjuSKA",
-            "title": "…",
-            "body": "…",
-            "categoryId": "DIC_kwDOJjuSKM4CWhXV"
           }'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
