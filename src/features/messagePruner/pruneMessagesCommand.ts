@@ -9,10 +9,10 @@ import {
   TextChannel,
 } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 import { isInArray } from '@/utils/typeGuards'
 
-export default defineCommandHandler({
+export const pruneMessagesCommand: CommandHandlerConfig = {
   data: {
     name: 'Prune messages',
     type: ApplicationCommandType.Message,
@@ -141,4 +141,4 @@ export default defineCommandHandler({
       components: [],
     })
   },
-})
+}
