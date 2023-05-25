@@ -10,6 +10,7 @@ import profileInspector from './profileInspector'
 import runtimeConfig from './runtimeConfig'
 import stickyMessage from './stickyMessage'
 import threadPruner from './threadPruner'
+import userInfo from './userInfo'
 
 export default [
   memberUpdateLogger,
@@ -22,4 +23,5 @@ export default [
   runtimeConfig,
   stickyMessage,
   threadPruner,
+  userInfo,
 ] as Plugin[]
