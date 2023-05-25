@@ -15,12 +15,12 @@ import {
   getThreadStats,
 } from '@/features/threadPruner/index.js'
 import { BotContext } from '@/types/BotContext.js'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 import { ActionSet } from '@/utils/ActionSet.js'
 import { generateTsv } from '@/utils/generateTsv.js'
 import { toLocalDate } from '@/utils/toLocalDate.js'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'active-threads',
     description: 'Get information and statistics about server threads',
@@ -87,7 +87,7 @@ export default {
     }
     await action.registeredAction.handler(action.interaction)
   },
-} satisfies CommandHandlerConfig
+})
 
 async function generateReport(
   botContext: BotContext,

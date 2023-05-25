@@ -1,4 +1,4 @@
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { Plugin } from '@/types/Plugin'
 
 import ping from './info/ping'
 import activeThreads from './moderators/activeThreads'
@@ -22,4 +22,4 @@ export default [
   report,
   user,
   slowmode,
-] satisfies CommandHandlerConfig[]
+] satisfies Plugin[]
