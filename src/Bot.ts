@@ -6,7 +6,7 @@ import {
   Interaction,
 } from 'discord.js'
 
-import commands from './commands/index'
+import commandPlugins from './commands/index'
 import { Environment } from './config'
 import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
@@ -51,8 +51,7 @@ export class Bot {
     this.client.once(Events.InteractionCreate, (interaction) =>
       this.onInteractionCreate(interaction),
     )
-    this.loadPlugins(featurePlugins)
-    this.loadCommandHandlers(commands)
+    this.loadPlugins([...commandPlugins, ...featurePlugins])
   }
 
   private loadPlugins(plugins: Plugin[]) {
@@ -65,6 +64,9 @@ export class Bot {
 
   private initializePlugin(plugin: Plugin) {
     plugin.setup({
+      addCommandHandler: (handler) => {
+        this.commands.set(handler.data.name, handler)
+      },
       addEventHandler: (handler) => {
         if (handler.once) {
           this.client.once(handler.eventName, (...arguments_) =>
@@ -78,12 +80,6 @@ export class Bot {
       },
     })
     console.log(`[PLUGIN] Initialized`, plugin.name)
-  }
-
-  private loadCommandHandlers(handlers: CommandHandlerConfig[]) {
-    for (const handler of handlers) {
-      this.commands.set(handler.data.name, handler)
-    }
   }
 
   private async onReady() {

@@ -7,9 +7,9 @@ import {
 } from 'discord.js'
 
 import { prisma } from '@/prisma'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig.js'
+import { defineCommandHandler } from '@/types/defineCommandHandler'
 
-export default {
+export default defineCommandHandler({
   data: {
     name: 'nominate',
     description: 'Nominates a user for a role',
@@ -146,7 +146,7 @@ export default {
       config.nominationsChannelId,
     )
   },
-} satisfies CommandHandlerConfig
+})
 
 async function updateNominationMessage(
   nominatedMember: GuildMember,
