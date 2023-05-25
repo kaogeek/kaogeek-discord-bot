@@ -6,7 +6,6 @@ import {
   Interaction,
 } from 'discord.js'
 
-import commandPlugins from './commands/index'
 import { Environment } from './config'
 import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
@@ -51,7 +50,7 @@ export class Bot {
     this.client.once(Events.InteractionCreate, (interaction) =>
       this.onInteractionCreate(interaction),
     )
-    this.loadPlugins([...commandPlugins, ...featurePlugins])
+    this.loadPlugins(featurePlugins)
   }
 
   private loadPlugins(plugins: Plugin[]) {
