@@ -1,6 +1,6 @@
 import { RuntimeConfigurationSchema } from '@/utils/RuntimeConfigurationSchema'
 
-import { compiled } from '.'
+import { compiled } from './checkName'
 
 type Pattern = RuntimeConfigurationSchema['nameChecker']['patterns'][number]
 

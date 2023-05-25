@@ -1,6 +1,6 @@
 import { getCache, saveCache } from '../../utils/cache'
 
-import { STICKY_LOCK_PREFIX } from './index'
+import { STICKY_LOCK_PREFIX } from './stickyMessages'
 
 /**
  * Set the channel status to locked

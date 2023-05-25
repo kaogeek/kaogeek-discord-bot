@@ -7,14 +7,14 @@ import { prisma } from '@/prisma'
 import * as cache from '@/utils/cache'
 
 import * as channelLock from './channelLock'
+import * as messageCooldown from './messageCooldown'
+import * as messageCounter from './messageCounter'
 import {
   STICKY_CACHE_PREFIX,
   initStickyMessage,
   isNeedToUpdateMessage,
   pushMessageToBottom,
-} from './index'
-import * as messageCooldown from './messageCooldown'
-import * as messageCounter from './messageCounter'
+} from './stickyMessages'
 
 vi.mock('@/config')
 
