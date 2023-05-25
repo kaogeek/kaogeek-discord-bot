@@ -4,16 +4,15 @@ import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as channelLock from '@/features/stickyMessage/channelLock'
-import * as stickyMessage from '@/features/stickyMessage/index'
 import * as messageCounter from '@/features/stickyMessage/messageCounter'
-import { BotContext } from '@/types/BotContext'
+import * as stickyMessage from '@/features/stickyMessage/stickyMessages'
 import * as cache from '@/utils/cache'
 
-import stickyMessageEventHandler from './stickyMessageHandler'
+import { stickyMessageHandler } from './stickyMessageHandler'
 
 vi.mock('@/config')
 
-describe('stickyMessageEventHandler', () => {
+describe('stickyMessageHandler', () => {
   const channelId = 'test-channel'
   let message: Message
   let stickyMessageEntity: StickyMessage
@@ -35,10 +34,7 @@ describe('stickyMessageEventHandler', () => {
       vi.spyOn(channelLock, 'isChannelLock')
       vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
-      await stickyMessageEventHandler.execute(
-        {} as unknown as BotContext,
-        message,
-      )
+      await stickyMessageHandler(message)
 
       expect(messageCounter.incCounter).not.toHaveBeenCalled()
       expect(channelLock.isChannelLock).not.toHaveBeenCalled()
@@ -52,10 +48,7 @@ describe('stickyMessageEventHandler', () => {
     vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(false)
     vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
+    await stickyMessageHandler(message)
 
     expect(cache.getCache).toHaveBeenCalledWith(
       `${stickyMessage.STICKY_CACHE_PREFIX}-${channelId}`,
@@ -68,10 +61,7 @@ describe('stickyMessageEventHandler', () => {
     vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(false)
     vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
+    await stickyMessageHandler(message)
 
     expect(stickyMessage.pushMessageToBottom).toHaveBeenCalledWith(
       message,
@@ -85,10 +75,7 @@ describe('stickyMessageEventHandler', () => {
     vi.spyOn(channelLock, 'isChannelLock').mockReturnValue(true)
     vi.spyOn(stickyMessage, 'pushMessageToBottom')
 
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
+    await stickyMessageHandler(message)
 
     expect(channelLock.isChannelLock).toHaveBeenCalledWith(channelId)
     expect(stickyMessage.pushMessageToBottom).not.toHaveBeenCalled()
@@ -99,10 +86,7 @@ describe('stickyMessageEventHandler', () => {
     vi.spyOn(stickyMessage, 'isNeedToUpdateMessage').mockReturnValue(false)
     vi.spyOn(messageCounter, 'incCounter')
 
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
+    await stickyMessageHandler(message)
 
     expect(messageCounter.incCounter).toHaveBeenCalledWith(channelId)
     expect(channelLock.isChannelLock).not.toHaveBeenCalled()
@@ -115,10 +99,7 @@ describe('stickyMessageEventHandler', () => {
     vi.spyOn(stickyMessage, 'isNeedToUpdateMessage')
     vi.spyOn(messageCounter, 'incCounter')
 
-    await stickyMessageEventHandler.execute(
-      {} as unknown as BotContext,
-      message,
-    )
+    await stickyMessageHandler(message)
 
     expect(messageCounter.incCounter).not.toHaveBeenCalled()
     expect(channelLock.isChannelLock).not.toHaveBeenCalled()

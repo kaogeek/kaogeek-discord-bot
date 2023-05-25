@@ -5,9 +5,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import * as cache from '@/utils/cache.js'
 
-import * as stickyMessage from './index'
 import { resetCooldown } from './messageCooldown'
 import * as messageCounter from './messageCounter'
+import * as stickyMessage from './stickyMessages'
 
 vi.mock('@/config')
 

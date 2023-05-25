@@ -5,8 +5,8 @@ import { StickyMessage } from '@prisma/client'
 import { Environment } from '@/config'
 import { getCache, saveCache } from '@/utils/cache'
 
-import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './index'
 import { getCounter } from './messageCounter'
+import { STICKY_COOLDOWN_PREFIX, pushMessageToBottom } from './stickyMessages'
 
 const channelCooldown: Map<string, NodeJS.Timeout> = new Map()
 

@@ -11,12 +11,11 @@ import {
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
+import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/stickyMessages'
 import { prisma } from '@/prisma'
-import { BotContext } from '@/types/BotContext'
 import * as cache from '@/utils/cache'
 
-import stickyMessage from './stickyMessageSet'
+import { stickyMessageSet } from './stickyMessageSet'
 
 vi.mock('@/config')
 
@@ -108,7 +107,7 @@ describe('stickao-set', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(client.channels.cache.get).not.toHaveBeenCalled()
     expect(message.author.send).not.toHaveBeenCalled()
@@ -124,7 +123,7 @@ describe('stickao-set', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
     expect(authorPermissions.has).toHaveBeenCalledWith(
@@ -140,7 +139,7 @@ describe('stickao-set', () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
     expect(message.author.send).toHaveBeenCalled()
@@ -161,7 +160,7 @@ describe('stickao-set', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(message.author.send).toHaveBeenCalled()
     expect(channel.send).not.toHaveBeenCalled()
@@ -176,7 +175,7 @@ describe('stickao-set', () => {
     vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
     prisma.stickyMessage.upsert = vi.fn()
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(channel.send).toHaveBeenCalledWith({ content: messageContent })
   })
@@ -190,7 +189,7 @@ describe('stickao-set', () => {
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalledWith({
       create: {
@@ -221,7 +220,7 @@ describe('stickao-set', () => {
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).toHaveBeenCalled()
@@ -239,7 +238,7 @@ describe('stickao-set', () => {
       .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
@@ -255,7 +254,7 @@ describe('stickao-set', () => {
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).toHaveBeenCalled()
@@ -274,7 +273,7 @@ describe('stickao-set', () => {
     prisma.stickyMessage.upsert = vi.fn().mockResolvedValue(stickyMessageEntity)
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(cache.getCache).toHaveBeenCalledWith(
       `${STICKY_CACHE_PREFIX}-${message.channelId}`,
@@ -294,7 +293,7 @@ describe('stickao-set', () => {
       .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'saveCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()
@@ -306,7 +305,7 @@ describe('stickao-set', () => {
     vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
     vi.spyOn(channel, 'send').mockRejectedValue(new Error('error occur'))
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageSet(message)
 
     expect(prisma.stickyMessage.upsert).not.toHaveBeenCalled()
     expect(cache.saveCache).not.toHaveBeenCalled()

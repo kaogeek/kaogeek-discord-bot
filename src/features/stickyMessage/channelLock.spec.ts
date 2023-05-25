@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { isChannelLock, lockChannel, unlockChannel } from './channelLock'
-import { STICKY_LOCK_PREFIX } from './index'
+import { STICKY_LOCK_PREFIX } from './stickyMessages'
 
 vi.mock('@/config')
 

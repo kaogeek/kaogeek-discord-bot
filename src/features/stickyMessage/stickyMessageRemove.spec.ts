@@ -1,5 +1,4 @@
 import {
-  Client,
   Collection,
   DMChannel,
   Message,
@@ -10,12 +9,11 @@ import {
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
+import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/stickyMessages'
 import { prisma } from '@/prisma'
-import { BotContext } from '@/types/BotContext'
 import * as cache from '@/utils/cache'
 
-import stickyMessage from './stickyMessageRemove'
+import { stickyMessageRemove } from './stickyMessageRemove'
 
 vi.mock('@/config')
 
@@ -23,7 +21,6 @@ describe('stickao-remove', () => {
   const channelId = 'test-channel'
   const messageContent = 'MOCK_MESSAGE'
   const messageWithCommand = `?stickao-remove ${messageContent}`
-  let client: Client
   let message: Message
   let sentMessage: Message<true>
   let channel: TextChannel
@@ -31,15 +28,6 @@ describe('stickao-remove', () => {
   let authorPermissions: Readonly<PermissionsBitField>
 
   beforeEach(() => {
-    client = {
-      channels: {
-        cache: {
-          get: vi.fn(),
-        },
-        permissionFor: vi.fn(),
-      },
-    } as unknown as Client
-
     channel = {
       permissionsFor: vi.fn(),
       messages: { fetch: vi.fn() },
@@ -104,7 +92,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
     expect(authorPermissions.has).toHaveBeenCalledWith(
@@ -121,7 +109,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(channel.permissionsFor).toHaveBeenCalledWith(message.author)
     expect(message.author.send).toHaveBeenCalled()
@@ -135,7 +123,7 @@ describe('stickao-remove', () => {
     prisma.stickyMessage.delete = vi.fn()
     vi.spyOn(cache, 'removeCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(message.author.send).not.toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
@@ -152,7 +140,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(cache.getCache).toHaveBeenCalledWith(
       `${STICKY_CACHE_PREFIX}-${channelId}`,
@@ -172,7 +160,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalledWith({
       where: {
@@ -192,7 +180,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(message.author.send).toHaveBeenCalled()
   })
@@ -208,7 +196,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(message.author.send).toHaveBeenCalled()
     expect(prisma.stickyMessage.delete).not.toHaveBeenCalled()
@@ -227,7 +215,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(message.author.send).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
@@ -245,7 +233,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(sentMessage.delete).toHaveBeenCalled()
   })
@@ -260,7 +248,7 @@ describe('stickao-remove', () => {
       new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
     )
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).toHaveBeenCalled()
@@ -277,7 +265,7 @@ describe('stickao-remove', () => {
       .mockRejectedValue(new Error('error occur'))
     vi.spyOn(cache, 'removeCache')
 
-    await stickyMessage.execute({ client } as BotContext, message)
+    await stickyMessageRemove(message)
 
     expect(prisma.stickyMessage.delete).toHaveBeenCalled()
     expect(cache.removeCache).not.toHaveBeenCalled()
