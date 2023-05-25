@@ -1,10 +1,11 @@
 import { Events, PermissionsBitField, TextChannel } from 'discord.js'
 
+import { StickyMessage } from '@prisma/client'
+
 import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
 import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache, removeCache } from '@/utils/cache'
-import { StickyMessage } from '@prisma/client'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,

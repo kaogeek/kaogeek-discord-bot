@@ -1,12 +1,13 @@
 import { Message } from 'discord.js'
 
+import { StickyMessage } from '@prisma/client'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import * as channelLock from '@/features/stickyMessage/channelLock'
 import * as stickyMessage from '@/features/stickyMessage/index'
 import * as messageCounter from '@/features/stickyMessage/messageCounter'
 import { BotContext } from '@/types/BotContext'
 import * as cache from '@/utils/cache'
-import { StickyMessage } from '@prisma/client'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import stickyMessageEventHandler from './stickyMessageHandler'
 
