@@ -1,6 +1,7 @@
 import {
   Client,
   Collection,
+  DMChannel,
   Message,
   PermissionsBitField,
   TextChannel,
@@ -51,6 +52,7 @@ describe('stickao-remove', () => {
       content: messageWithCommand,
       author: {
         send: vi.fn(),
+        dmChannel: {} as DMChannel,
       },
     } as unknown as Message
 
@@ -68,6 +70,29 @@ describe('stickao-remove', () => {
 
   afterEach(() => {
     vi.clearAllMocks()
+  })
+
+  it('should not send private message to user if user disable dm channel', async () => {
+    message = {
+      channelId,
+      channel,
+      delete: vi.fn(),
+      content: messageWithCommand,
+      author: {
+        send: vi.fn(),
+        dmChannel: null,
+      },
+    } as unknown as Message
+
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    prisma.stickyMessage.delete = vi.fn()
+    vi.spyOn(cache, 'removeCache')
+    vi.spyOn(channel.messages, 'fetch').mockResolvedValue(
+      new Collection<string, Message<true>>().set(sentMessage.id, sentMessage),
+    )
+
+    expect(message.author.send).not.toHaveBeenCalled()
   })
 
   it('should check that is user has MANAGE_MESSAGE permission before run command', async () => {
