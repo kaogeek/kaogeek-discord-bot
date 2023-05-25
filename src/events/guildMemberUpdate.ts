@@ -1,5 +1,6 @@
 import { Events } from 'discord.js'
 
+import { checkName } from '@/features/nameChecker'
 import { defineEventHandler } from '@/types/defineEventHandler'
 
 export default defineEventHandler({
@@ -21,6 +22,9 @@ export default defineEventHandler({
         )
       }
     }
+
+    await checkName(next, botContext.runtimeConfiguration.data.nameChecker)
+
     const previousRoles = new Set(previous.roles.cache.map((role) => role.id))
     const nextRoles = new Set(next.roles.cache.map((role) => role.id))
     const addedRoles = [...nextRoles].filter((role) => !previousRoles.has(role))
