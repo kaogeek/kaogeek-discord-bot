@@ -19,7 +19,7 @@ import stickyMessage from './stickyMessageSet'
 
 vi.mock('@/config')
 
-describe('stickao-create', () => {
+describe('stickao-set', () => {
   const channelId = 'test-channel'
   const messageContent = 'MOCK_MESSAGE'
   const messageWithCommand = `?stickao-set ${messageContent}`
@@ -57,6 +57,7 @@ describe('stickao-create', () => {
       delete: vi.fn(),
       author: {
         send: vi.fn(),
+        dmChannel: true,
       },
     } as unknown as Message
 
@@ -77,7 +78,29 @@ describe('stickao-create', () => {
     vi.clearAllMocks()
   })
 
-  it("should do noting if input message's prefix is not '?stickao-create'", async () => {
+  it('should not send private message to user if user disable dm channel', async () => {
+    message = {
+      channelId,
+      channel,
+      content: messageWithCommand,
+      delete: vi.fn(),
+      author: {
+        send: vi.fn(),
+        dmChannel: false,
+      },
+    } as unknown as Message
+
+    vi.spyOn(channel, 'permissionsFor').mockReturnValue(authorPermissions)
+    vi.spyOn(authorPermissions, 'has').mockReturnValue(true)
+    vi.spyOn(channel, 'send').mockResolvedValue(sentMessage)
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    vi.spyOn(cache, 'getCache').mockReturnValue(undefined)
+    prisma.stickyMessage.upsert = vi.fn()
+
+    expect(message.author.send).not.toHaveBeenCalled()
+  })
+
+  it("should do noting if input message's prefix is not '?stickao-set'", async () => {
     message.content = messageContent
 
     // eslint-disable-next-line unicorn/no-useless-undefined
