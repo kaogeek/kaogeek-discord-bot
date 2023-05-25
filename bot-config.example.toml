@@ -1,6 +1,12 @@
 # To see the latest configuration values used in production, see this file:
 # https://github.com/creatorsgarten/kaogeek-discord-bot/blob/config/bot-config.toml
 
+[nameChecker]
+  patterns = [
+    { regexp = "examplebadname" },
+  ]
+  reportChannelId = "1108478073998938163"
+
 [nominations]
   enabledRoles = [
     # Contributor

@@ -4,6 +4,7 @@ import { defineEventHandler } from '@/types/defineEventHandler'
 import isOnlyEmoji from '@/utils/isOnlyEmoji'
 
 export default defineEventHandler({
+  displayName: 'preventEmojiSpam',
   eventName: Events.MessageCreate,
   once: false,
   execute: async ({ runtimeConfiguration }, message) => {
