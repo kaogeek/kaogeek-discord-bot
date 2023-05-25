@@ -7,12 +7,11 @@ import {
 
 import { StickyMessage } from '@prisma/client'
 
+import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
+import { defineEventHandler } from '@/types/defineEventHandler'
+import { getCache, saveCache } from '@/utils/cache'
 import { sendDm } from '@/utils/discord'
-
-import { STICKY_CACHE_PREFIX } from '../features/stickyMessage/index'
-import { defineEventHandler } from '../types/defineEventHandler'
-import { getCache, saveCache } from '../utils/cache'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,
@@ -25,7 +24,7 @@ export default defineEventHandler({
     // Check if it is a text channel
     const channel = message.channel
     if (channel?.type !== ChannelType.GuildText) {
-      sendDm(message, {
+      await sendDm(message, {
         content: 'Sticky text can only be created in a text channel.',
       })
       await message.delete()
@@ -35,7 +34,7 @@ export default defineEventHandler({
     // Check if the user has the 'MANAGE_MESSAGES' permission
     const authorPermissions = channel.permissionsFor(message.author)
     if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
-      sendDm(message, {
+      await sendDm(message, {
         content:
           'You must have the `Manage Messages` permission to use this command.',
       })
@@ -47,7 +46,7 @@ export default defineEventHandler({
     const messageContent = message.content.replace('?stickao-set', '').trim()
 
     if (!messageContent) {
-      sendDm(message, {
+      await sendDm(message, {
         content: 'Please provide a valid message content for Stickao Message.',
       })
       await message.delete()
@@ -91,14 +90,14 @@ export default defineEventHandler({
 
       // Successfully create sticky message
       console.info(`Sticky message saved: ${messageContent}`)
-      sendDm(message, {
+      await sendDm(message, {
         content: 'Successfully created sticky message.',
       })
     } catch (error) {
       console.error(
         `Error creating sticky message: ${(error as Error).message}`,
       )
-      sendDm(message, {
+      await sendDm(message, {
         content: 'An error occurred while creating the sticky message.',
       })
     } finally {

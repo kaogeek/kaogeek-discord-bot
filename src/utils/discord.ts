@@ -6,7 +6,10 @@ import { Message, MessageCreateOptions } from 'discord.js'
  * @param {Message} message - The original message object.
  * @param {MessageCreateOptions} payload - The payload of the message to be sent.
  */
-export function sendDm(message: Message, payload: MessageCreateOptions): void {
+export async function sendDm(
+  message: Message,
+  payload: MessageCreateOptions,
+): Promise<void> {
   if (message.author.dmChannel) {
     message.author.send(payload)
   }

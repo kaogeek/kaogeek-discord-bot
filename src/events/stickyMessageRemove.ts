@@ -21,7 +21,7 @@ export default defineEventHandler({
     // Check if the user has the 'MANAGE_MESSAGES' permission
     const authorPermissions = channel.permissionsFor(message.author)
     if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
-      sendDm(message, {
+      await sendDm(message, {
         content:
           'You must have the "Manage Messages" permission to use this command.',
       })
@@ -50,11 +50,11 @@ export default defineEventHandler({
         await stickyMessage.delete()
 
         console.info(`Sticky message removed: ${stickyMessageEntity.message}`)
-        sendDm(message, {
+        await sendDm(message, {
           content: 'Successfully removed the sticky message.',
         })
       } else {
-        sendDm(message, {
+        await sendDm(message, {
           content: 'Not found message in this channel',
         })
       }
@@ -62,7 +62,7 @@ export default defineEventHandler({
       console.error(
         `Error removing sticky message: ${(error as Error).message}`,
       )
-      sendDm(message, {
+      await sendDm(message, {
         content: 'An error occurred while removing the sticky message.',
       })
     } finally {
