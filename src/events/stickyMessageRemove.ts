@@ -6,6 +6,7 @@ import { STICKY_CACHE_PREFIX } from '@/features/stickyMessage/index'
 import { prisma } from '@/prisma'
 import { defineEventHandler } from '@/types/defineEventHandler'
 import { getCache, removeCache } from '@/utils/cache'
+import { sendDm } from '@/utils/discord'
 
 export default defineEventHandler({
   eventName: Events.MessageCreate,
@@ -20,12 +21,10 @@ export default defineEventHandler({
     // Check if the user has the 'MANAGE_MESSAGES' permission
     const authorPermissions = channel.permissionsFor(message.author)
     if (!authorPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
-      if (message.author.dmChannel) {
-        message.author.send({
-          content:
-            'You must have the "Manage Messages" permission to use this command.',
-        })
-      }
+      sendDm(message, {
+        content:
+          'You must have the "Manage Messages" permission to use this command.',
+      })
       return
     }
 
@@ -51,27 +50,21 @@ export default defineEventHandler({
         await stickyMessage.delete()
 
         console.info(`Sticky message removed: ${stickyMessageEntity.message}`)
-        if (message.author.dmChannel) {
-          message.author.send({
-            content: 'Successfully removed the sticky message.',
-          })
-        }
+        sendDm(message, {
+          content: 'Successfully removed the sticky message.',
+        })
       } else {
-        if (message.author.dmChannel) {
-          message.author.send({
-            content: 'Not found message in this channel',
-          })
-        }
+        sendDm(message, {
+          content: 'Not found message in this channel',
+        })
       }
     } catch (error) {
       console.error(
         `Error removing sticky message: ${(error as Error).message}`,
       )
-      if (message.author.dmChannel) {
-        message.author.send({
-          content: 'An error occurred while removing the sticky message.',
-        })
-      }
+      sendDm(message, {
+        content: 'An error occurred while removing the sticky message.',
+      })
     } finally {
       await message.delete()
     }
