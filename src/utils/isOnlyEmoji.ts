@@ -1,5 +1,11 @@
 const emojiRegex =
   /(<a?(:\w+:\d+)>|\p{Emoji_Presentation}|\p{Extended_Pictographic}|\p{Emoji_Component}|:\w+:\s*)/gu
+
+/**
+ * Check is only emoji message
+ * @param {string} message - the input message
+ * @returns {boolean} true if message has only emoji other return false
+ */
 export default (message: string): boolean => {
   const emoji = message.match(emojiRegex)
   if (emoji !== null) {

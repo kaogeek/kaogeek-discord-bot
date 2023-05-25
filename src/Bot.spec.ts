@@ -10,6 +10,7 @@ describe('Bot', () => {
   beforeEach(() => {
     client = new Bot()
   })
+
   afterEach(() => {
     vi.clearAllMocks()
   })

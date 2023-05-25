@@ -3,6 +3,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js'
 import commands from './commands/index'
 import { Environment } from './config'
 import events from './events/index'
+import { initStickyMessage } from './features/stickyMessage/index'
 import { BotContext } from './types/BotContext'
 import { CommandHandlerConfig } from './types/CommandHandlerConfig'
 import { EventHandlerConfig } from './types/EventHandlerConfig'
@@ -33,6 +34,7 @@ export class Bot {
   async initAndStart() {
     console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
     this.loadHandlers()
+    await initStickyMessage()
 
     const initialRuntimeConfig = await this.runtimeConfiguration.init()
     console.info('[CONFIG] Runtime configuration loaded', initialRuntimeConfig)

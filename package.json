@@ -11,6 +11,7 @@
     "build": "rimraf dist && tsup-node src/index.ts --sourcemap --format esm",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "lint": "prettier --check \"**/*.{md,yml,json}\" && eslint . --max-warnings=0",
+    "lint:warn": "prettier --check \"**/*.{md,yml,json}\" && eslint .",
     "format": "prettier --write \"**/*.{md,yml,json}\" && eslint . --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",

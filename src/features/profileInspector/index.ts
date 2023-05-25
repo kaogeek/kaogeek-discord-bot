@@ -4,17 +4,18 @@ import {
   CommandInteraction,
   ComponentType,
   GuildMember,
+  InteractionButtonComponentData,
   Message,
+  MessageComponentInteraction,
 } from 'discord.js'
-import { InteractionButtonComponentData } from 'discord.js'
-import { MessageComponentInteraction } from 'discord.js'
+
+import { UserModerationLog, UserProfile } from '@prisma/client'
 
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
 import { UserModerationLogEntryType } from '@/types/UserModerationLogType'
 import { ActionSet } from '@/utils/ActionSet'
 import { prompt } from '@/utils/prompt'
-import { UserModerationLog, UserProfile } from '@prisma/client'
 
 export interface InspectProfileOptions {
   interaction: CommandInteraction

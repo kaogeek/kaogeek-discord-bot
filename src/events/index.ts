@@ -6,6 +6,9 @@ import guildMemberUpdate from './guildMemberUpdate'
 import interactionCreate from './interactionCreate'
 import preventEmojiSpam from './preventEmojiSpam'
 import ready from './ready'
+import stickyMessageHandler from './stickyMessageHandler'
+import stickyMessageRemove from './stickyMessageRemove'
+import stickyMessageCreate from './stickyMessageSet'
 
 export default [
   guildMemberAdd,
@@ -13,5 +16,8 @@ export default [
   guildMemberUpdate,
   interactionCreate,
   preventEmojiSpam,
+  stickyMessageHandler,
+  stickyMessageCreate,
+  stickyMessageRemove,
   ready,
 ] satisfies AnyEventHandlerConfig[]

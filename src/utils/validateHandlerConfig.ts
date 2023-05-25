@@ -1,6 +1,7 @@
+import { z } from 'zod'
+
 import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
 import { EventHandlerConfig } from '@/types/EventHandlerConfig'
-import { z } from 'zod'
 
 const EventHandlerSchema = z.object({
   eventName: z.string(),

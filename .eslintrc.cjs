@@ -18,6 +18,8 @@ const config = {
     eqeqeq: 'error',
     'no-constant-binary-expression': 'error',
     'import/no-cycle': 'warn',
+    'import/no-duplicates': 'warn',
+    'prettier/prettier': 'warn',
     'unicorn/filename-case': [
       'error',
       {
