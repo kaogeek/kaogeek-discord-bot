@@ -4,7 +4,6 @@ import guildMemberAdd from './guildMemberAdd'
 import guildMemberRemove from './guildMemberRemove'
 import guildMemberUpdate from './guildMemberUpdate'
 import interactionCreate from './interactionCreate'
-import preventEmojiSpam from './preventEmojiSpam'
 import ready from './ready'
 import stickyMessageHandler from './stickyMessageHandler'
 import stickyMessageRemove from './stickyMessageRemove'
@@ -15,7 +14,6 @@ export default [
   guildMemberRemove,
   guildMemberUpdate,
   interactionCreate,
-  preventEmojiSpam,
   stickyMessageHandler,
   stickyMessageCreate,
   stickyMessageRemove,
