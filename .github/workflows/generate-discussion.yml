@@ -20,7 +20,7 @@ jobs:
               }
             }
           }' -f input='{
-            "repositoryId": "${{ github.repository_id }}",
+            "repositoryId": "R_kgDOJjuSKA",
             "title": "…",
             "body": "…",
             "categoryId": "DIC_kwDOJjuSKM4CWhXV"
