@@ -4,8 +4,15 @@ import { CommandHandlerConfig } from './CommandHandlerConfig'
 import { EventHandlerConfig } from './EventHandlerConfig'
 
 export interface PluginContext {
-  addCommand(handler: CommandHandlerConfig): void
+  /**
+   * Add an application command to the bot.
+   */
+  addCommand(config: CommandHandlerConfig): void
+
+  /**
+   * Add an event handler to the bot.
+   */
   addEventHandler<K extends keyof ClientEvents>(
-    handler: EventHandlerConfig<K>,
+    config: EventHandlerConfig<K>,
   ): void
 }
