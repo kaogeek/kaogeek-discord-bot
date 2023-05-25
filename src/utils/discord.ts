@@ -1,4 +1,4 @@
-import { Message, MessageCreateOptions } from 'discord.js'
+import { DiscordAPIError, Message, MessageCreateOptions } from 'discord.js'
 
 /**
  * Sends a direct message (DM) to the author of a message if they have enabled DMs.
@@ -10,7 +10,19 @@ export async function sendDm(
   message: Message,
   payload: MessageCreateOptions,
 ): Promise<void> {
-  if (message.author.dmChannel) {
-    message.author.send(payload)
+  if (!message.author.dmChannel) {
+    try {
+      await message.author.createDM()
+    } catch (error) {
+      if (error instanceof DiscordAPIError && error.code === 50_007) {
+        console.warn('user not enable the private message permission')
+      } else {
+        console.error(error)
+      }
+      return
+    }
   }
+
+  await message.author.send(payload)
+  return
 }
