@@ -3,12 +3,16 @@ import { Message, PermissionsBitField, TextChannel } from 'discord.js'
 import { StickyMessage } from '@prisma/client'
 
 import { prisma } from '@/prisma'
+import { Logger } from '@/types/Logger'
 import { getCache, removeCache } from '@/utils/cache'
 import { sendDm } from '@/utils/sendDm'
 
 import { STICKY_CACHE_PREFIX } from './stickyMessages'
 
-export async function stickyMessageRemove(message: Message) {
+export async function stickyMessageRemove(
+  message: Message,
+  log: Logger = console,
+) {
   if (!message.content.startsWith('?stickao-remove')) {
     return
   }
@@ -46,7 +50,7 @@ export async function stickyMessageRemove(message: Message) {
 
       await stickyMessage.delete()
 
-      console.info(`Sticky message removed: ${stickyMessageEntity.message}`)
+      log.info(`Sticky message removed: ${stickyMessageEntity.message}`)
       await sendDm(message, {
         content: 'Successfully removed the sticky message.',
       })
@@ -56,7 +60,7 @@ export async function stickyMessageRemove(message: Message) {
       })
     }
   } catch (error) {
-    console.error(`Error removing sticky message: ${(error as Error).message}`)
+    log.error(`Error removing sticky message:`, error)
     await sendDm(message, {
       content: 'An error occurred while removing the sticky message.',
     })

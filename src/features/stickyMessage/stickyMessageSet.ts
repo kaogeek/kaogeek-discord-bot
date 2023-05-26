@@ -8,12 +8,16 @@ import {
 import { StickyMessage } from '@prisma/client'
 
 import { prisma } from '@/prisma'
+import { Logger } from '@/types/Logger'
 import { getCache, saveCache } from '@/utils/cache'
 import { sendDm } from '@/utils/sendDm'
 
 import { STICKY_CACHE_PREFIX } from './stickyMessages'
 
-export async function stickyMessageSet(message: Message) {
+export async function stickyMessageSet(
+  message: Message,
+  log: Logger = console,
+) {
   if (!message.content.startsWith('?stickao-set')) {
     return
   }
@@ -86,12 +90,12 @@ export async function stickyMessageSet(message: Message) {
     saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, stickyMessage)
 
     // Successfully create sticky message
-    console.info(`Sticky message saved: ${messageContent}`)
+    log.info(`Sticky message saved: ${messageContent}`)
     await sendDm(message, {
       content: 'Successfully created sticky message.',
     })
   } catch (error) {
-    console.error(`Error creating sticky message: ${(error as Error).message}`)
+    log.error(`Unable to create sticky message:`, error)
     await sendDm(message, {
       content: 'An error occurred while creating the sticky message.',
     })
