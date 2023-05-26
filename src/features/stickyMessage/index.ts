@@ -11,15 +11,18 @@ export default definePlugin({
   setup: (pluginContext) => {
     pluginContext.addEventHandler({
       eventName: Events.MessageCreate,
-      execute: async (_botContext, message) => stickyMessageHandler(message),
+      execute: async (botContext, message) =>
+        stickyMessageHandler(message, botContext.log),
     })
     pluginContext.addEventHandler({
       eventName: Events.MessageCreate,
-      execute: async (_botContext, message) => stickyMessageSet(message),
+      execute: async (botContext, message) =>
+        stickyMessageSet(message, botContext.log),
     })
     pluginContext.addEventHandler({
       eventName: Events.MessageCreate,
-      execute: async (_botContext, message) => stickyMessageRemove(message),
+      execute: async (botContext, message) =>
+        stickyMessageRemove(message, botContext.log),
     })
   },
 })

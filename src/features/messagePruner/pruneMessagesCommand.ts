@@ -22,6 +22,7 @@ export const pruneMessagesCommand = defineCommand({
   ephemeral: true,
   execute: async (botContext, interaction) => {
     if (!interaction.guild || !interaction.isContextMenuCommand()) return
+    const { log } = botContext
 
     // Fetch reference message by target id
     const message = await interaction.channel?.messages.fetch(
@@ -111,14 +112,14 @@ export const pruneMessagesCommand = defineCommand({
         if (userMessages.size > 0) {
           try {
             await (channel as TextChannel).bulkDelete(userMessages)
-            console.info(
+            log.info(
               `Deleted ${userMessages.size} messages from ${
                 interaction.targetId
               } in channel ${(channel as TextChannel).name} (${channelId}).`,
             )
             numberDeleted += userMessages.size
           } catch (error) {
-            console.error('Error deleting messages:', error)
+            log.error('Error deleting messages:', error)
             if (error instanceof DiscordAPIError) {
               // Reply about the error
               //for error 400 : cant occur because the time period has been set for how many days to delete
@@ -135,7 +136,7 @@ export const pruneMessagesCommand = defineCommand({
       }
     }
     // Tell the user that the messages were successfully pruned
-    console.info(`Successfully pruned ${numberDeleted} messages.`)
+    log.info(`Successfully pruned ${numberDeleted} messages.`)
     await interaction.editReply({
       content: `Successfully prune messages. Number of messages deleted: ${numberDeleted}`,
       components: [],

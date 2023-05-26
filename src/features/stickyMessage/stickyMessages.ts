@@ -4,6 +4,7 @@ import { StickyMessage } from '@prisma/client'
 
 import { Environment } from '@/config'
 import { prisma } from '@/prisma'
+import { Logger } from '@/types/Logger'
 import { saveCache } from '@/utils/cache'
 
 import { lockChannel, unlockChannel } from './channelLock'
@@ -36,6 +37,7 @@ export async function initStickyMessage() {
 export async function pushMessageToBottom(
   message: Message,
   stickyMessage: StickyMessage,
+  log: Logger = console,
 ): Promise<void> {
   // lock channel
   lockChannel(message.channelId)
@@ -72,11 +74,9 @@ export async function pushMessageToBottom(
   } catch (error) {
     // in case of msg already delete at stickyMessageSet so tell cleary to console
     if (error instanceof DiscordAPIError && error.code === 10_008) {
-      console.error(`[StickyMessage] already delete old message!`)
+      log.error(`already delete old message!`)
     } else {
-      console.error(
-        `error while update sticky message ${(error as Error).message}`,
-      )
+      log.error(`error while update sticky message`, error)
     }
   } finally {
     resetCounter(message.channelId)

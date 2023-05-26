@@ -6,6 +6,8 @@ import {
   Interaction,
 } from 'discord.js'
 
+import { randomBytes } from 'node:crypto'
+
 import { Environment } from './config'
 import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
@@ -15,6 +17,8 @@ import { Plugin } from './types/Plugin'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration'
 
 export class Bot {
+  private nextContextId = Number.parseInt(randomBytes(3).toString('hex'), 16)
+
   public readonly client = new Client({
     intents: [
       IntentsBitField.Flags.Guilds,
@@ -27,11 +31,20 @@ export class Bot {
   private readonly commands = new Collection<string, CommandConfig>()
   private readonly isProduction = process.env.NODE_ENV === 'production'
 
-  private createBotContext() {
+  private createBotContext(logPrefixes: string[]): BotContext {
+    const contextId = (this.nextContextId++ & 0xff_ff_ff)
+      .toString(16)
+      .padStart(6, '0')
+    const prefix = [`${contextId} |`, ...logPrefixes].join(' ')
     return {
       client: this.client,
       runtimeConfiguration: this.runtimeConfiguration,
-    } as BotContext
+      log: {
+        info: (message: string) => console.info(`${prefix} ${message}`),
+        error: (message: string, error?: unknown) =>
+          console.error(`${prefix} ${message}`, error),
+      },
+    }
   }
 
   async initAndStart() {
@@ -62,18 +75,20 @@ export class Bot {
   }
 
   private initializePlugin(plugin: Plugin) {
+    const logPrefix = [`[plugin=${plugin.name}]`]
     plugin.setup({
       addCommand: (handler) => {
         this.commands.set(handler.data.name, handler)
       },
       addEventHandler: (handler) => {
+        const logPrefixes = [...logPrefix, `[event=${handler.eventName}]`]
         if (handler.once) {
           this.client.once(handler.eventName, (...arguments_) =>
-            handler.execute(this.createBotContext(), ...arguments_),
+            handler.execute(this.createBotContext(logPrefixes), ...arguments_),
           )
         } else {
           this.client.on(handler.eventName, (...arguments_) =>
-            handler.execute(this.createBotContext(), ...arguments_),
+            handler.execute(this.createBotContext(logPrefixes), ...arguments_),
           )
         }
       },
@@ -115,27 +130,29 @@ export class Bot {
   private async onInteractionCreate(interaction: Interaction) {
     const { commands } = this
     if (interaction.isCommand()) {
-      const botContext = this.createBotContext()
       const commandName = interaction.commandName
       const command = commands.get(commandName)
       if (!command) return
+      const botContext = this.createBotContext([`[command="${commandName}"]`])
       try {
         if (!command.disableAutoDeferReply) {
           await interaction.deferReply({ ephemeral: command.ephemeral })
         }
       } catch (error) {
-        console.error(`[COMMAND: ${commandName}] Unable to defer reply:`, error)
+        botContext.log.error(`Unable to defer reply`, error)
         return
       }
+      const started = Date.now()
+      const user = interaction.user
+      botContext.log.info(`Invoked by ${user.tag} (${user.id})`)
       try {
-        console.info(
-          `[COMMAND: ${commandName}] Invoked by ${interaction.user.tag} (${interaction.user.id})`,
-        )
         await command.execute(botContext, interaction)
+        const time = Date.now() - started
+        botContext.log.info(`Finished in ${time}ms`)
       } catch (error) {
-        console.error(`[COMMAND: ${commandName}] Unable to execute:`, error)
-        if (command.disableAutoDeferReply) return
-        await interaction.deleteReply()
+        const time = Date.now() - started
+        botContext.log.error(`Failed in ${time}ms`, error)
+        if (!command.disableAutoDeferReply) await interaction.deleteReply()
       }
     }
   }

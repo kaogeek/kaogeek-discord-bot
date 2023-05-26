@@ -9,18 +9,19 @@ export default definePlugin({
     pluginContext.addEventHandler({
       eventName: Events.MessageCreate,
       once: false,
-      execute: async ({ runtimeConfiguration }, message) => {
+      execute: async (botContext, message) => {
+        const { runtimeConfiguration, log } = botContext
         // if has only emoji -> delete message
         if (isOnlyEmoji(message.content)) {
           try {
-            console.info(
-              `[preventEmojiSpam] Message with only emoji: ${message.id} by ${message.author}`,
+            log.info(
+              `Message with only emoji: ${message.id} by ${message.author}`,
             )
             if (runtimeConfiguration.data.preventEmojiSpam.enabled) {
               await message.delete()
             }
           } catch (error) {
-            console.error(error)
+            log.error('Unable to process message', error)
           }
         }
       },

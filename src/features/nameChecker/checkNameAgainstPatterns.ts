@@ -1,3 +1,4 @@
+import { Logger } from '@/types/Logger'
 import { RuntimeConfigurationSchema } from '@/utils/RuntimeConfigurationSchema'
 
 import { compiled } from './checkName'
@@ -7,7 +8,7 @@ type Pattern = RuntimeConfigurationSchema['nameChecker']['patterns'][number]
 export function checkNameAgainstPatterns(
   name: string,
   patterns: Pattern[],
-  logError = console.error,
+  log: Logger = console,
 ): RegExp | undefined {
   for (const pattern of patterns) {
     try {
@@ -20,7 +21,7 @@ export function checkNameAgainstPatterns(
         return regexp
       }
     } catch (error) {
-      logError(
+      log.error(
         `Unable to process pattern "${pattern}" against name "${name}"`,
         error,
       )
