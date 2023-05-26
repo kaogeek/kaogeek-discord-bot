@@ -1,4 +1,4 @@
-import { DiscordAPIError, Message } from 'discord.js'
+import { DiscordAPIError, Message, MessageFlags } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 
@@ -53,6 +53,7 @@ export async function pushMessageToBottom(
 
     const newMessage = await message.channel.send({
       content: stickyMessage.message,
+      flags: MessageFlags.SuppressNotifications,
     })
 
     // update sticky message with new when successfully send new message
