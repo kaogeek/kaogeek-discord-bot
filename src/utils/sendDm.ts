@@ -13,6 +13,8 @@ export async function sendDm(
   if (!message.author.dmChannel) {
     try {
       await message.author.createDM()
+      // if user change mind to disable DMs, this will throw error
+      await message.author.send(payload)
     } catch (error) {
       if (error instanceof DiscordAPIError && error.code === 50_007) {
         console.warn('user not enable permission to send private message')
@@ -22,7 +24,5 @@ export async function sendDm(
       return
     }
   }
-
-  await message.author.send(payload)
   return
 }
