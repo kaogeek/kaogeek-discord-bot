@@ -8,6 +8,7 @@ export const EnvironmentSchema = z.object({
   BOT_TOKEN: z.string(),
   GUILD_ID: z.string(),
   MOD_CHANNEL_ID: z.string(),
+  MIC_MUTE_APPEAL_CHANNEL_ID: z.string(),
   DATABASE_URL: z.string(),
   PRISMA_LOG: z.coerce.boolean().default(false),
   MESSAGE_COOLDOWN_SEC: z.coerce.number().default(15),

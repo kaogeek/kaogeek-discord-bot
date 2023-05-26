@@ -54,6 +54,7 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   - `MESSAGE_COOLDOWN_SEC` cooldown to push the sticky message to the bottom of channel
   - `MESSAGE_MAX` the maximum message before push sticky message to the bottom of channel
   - `MOD_CHANNEL_ID` Discord channel ID for bot to report moderation actions
+  - `MIC_MUTE_APPEAL_CHANNEL_ID` Discord channel ID for server mute appeal
   - `DATABASE_URL` Prisma database URL, you can use SQLite for development, set it to `file:./dev.db`
   </details>
 
