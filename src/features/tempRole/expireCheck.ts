@@ -4,8 +4,6 @@ import { Environment } from '@/config'
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
 
-const timePeriod = 1000
-
 export async function expireCheck(botContext: BotContext) {
   setInterval(async () => {
     // Check for expired temporary roles
@@ -46,5 +44,5 @@ export async function expireCheck(botContext: BotContext) {
         },
       },
     })
-  }, timePeriod)
+  }, Environment.TIME_PERIOD_SEC * 1000)
 }

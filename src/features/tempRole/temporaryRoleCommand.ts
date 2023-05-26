@@ -51,7 +51,9 @@ export const temporaryRoleCommand = defineCommand({
 
     // Get duration from the interaction
     const duration = interaction.options.getString('duration') as string
-    if (parse(duration) === null) {
+    const durationMs = parse(duration)
+
+    if (durationMs === null) {
       await interaction.editReply({
         content: `Invalid duration: ${duration}`,
       })
@@ -66,7 +68,7 @@ export const temporaryRoleCommand = defineCommand({
       return
     }
 
-    const expriesAt = new Date(Date.now() + parse(duration))
+    const expriesAt = new Date(Date.now() + durationMs)
 
     // Add the role to the user
     user.roles.add(role)
