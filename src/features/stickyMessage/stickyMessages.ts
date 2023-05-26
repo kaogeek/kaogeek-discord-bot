@@ -1,4 +1,4 @@
-import { Message } from 'discord.js'
+import { DiscordAPIError, Message } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 
@@ -70,9 +70,14 @@ export async function pushMessageToBottom(
     //!! if error occur cooldown may not reset
     resetCooldown(newMessage, stickyMessageEntity)
   } catch (error) {
-    console.error(
-      `error while update sticky message ${(error as Error).message}`,
-    )
+    // in case of msg already delete at stickyMessageSet so tell cleary to console
+    if (error instanceof DiscordAPIError && error.code === 10_008) {
+      console.error(`[StickyMessage] already delete old message!`)
+    } else {
+      console.error(
+        `error while update sticky message ${(error as Error).message}`,
+      )
+    }
   } finally {
     resetCounter(message.channelId)
     unlockChannel(message.channelId)
