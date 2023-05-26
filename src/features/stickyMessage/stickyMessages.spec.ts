@@ -1,4 +1,4 @@
-import { Collection, Message } from 'discord.js'
+import { Collection, Message, MessageFlags } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -224,6 +224,7 @@ describe('pushMessageToBottom', () => {
 
     expect(inputMessage.channel.send).toHaveBeenCalledWith({
       content: inputStickyMessageEntity.message,
+      flags: MessageFlags.SuppressNotifications,
     })
   })
 
