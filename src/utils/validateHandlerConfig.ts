@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { CommandConfig } from '@/types/CommandConfig'
 import { EventHandlerConfig } from '@/types/EventHandlerConfig'
 
 const EventHandlerSchema = z.object({
@@ -25,7 +25,7 @@ export const validateEventHandlerConfig = (
 // Validate config to be appropriate value
 export const validateCommandHandlerConfig = (
   config: unknown,
-): config is CommandHandlerConfig => {
+): config is CommandConfig => {
   // throw error if invalid
   CommandHandlerSchama.parse(config)
   return true

@@ -1,8 +1,8 @@
 import { REST } from 'discord.js'
 
-import { Environment } from '../../../config.js'
-import { getActiveThreads } from '../getActiveThreads.js'
-import { getThreadStats } from '../getThreadStats.js'
+import { Environment } from '../../../config'
+import { getActiveThreads } from '../getActiveThreads'
+import { getThreadStats } from '../getThreadStats'
 
 const rest = new REST().setToken(Environment.BOT_TOKEN)
 const activeThreads = await getActiveThreads(

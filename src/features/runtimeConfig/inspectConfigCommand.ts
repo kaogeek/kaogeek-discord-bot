@@ -1,8 +1,8 @@
 import { codeBlock } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { defineCommand } from '@/types/defineCommand'
 
-export default defineCommandHandler({
+export const inspectConfigCommand = defineCommand({
   data: {
     name: 'inspect-config',
     description: 'Display the current configuration',

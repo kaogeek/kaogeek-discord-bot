@@ -6,9 +6,9 @@ import {
   TextChannel,
 } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { defineCommand } from '@/types/defineCommand'
 
-export default defineCommandHandler({
+export const slowmodeCommand = defineCommand({
   data: {
     name: 'slowmode',
     description: 'Set slowmode for all text channels in the server',

@@ -7,9 +7,9 @@ import {
 } from 'discord.js'
 
 import { prisma } from '@/prisma'
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { defineCommand } from '@/types/defineCommand'
 
-export default defineCommandHandler({
+export const nominateCommand = defineCommand({
   data: {
     name: 'nominate',
     description: 'Nominates a user for a role',

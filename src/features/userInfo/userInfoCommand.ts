@@ -1,8 +1,8 @@
 import { ApplicationCommandType, time } from 'discord.js'
 
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { CommandConfig } from '@/types/CommandConfig'
 
-export default defineCommandHandler({
+export const userInfoCommand: CommandConfig = {
   data: {
     name: 'Show user info',
     type: ApplicationCommandType.User,
@@ -33,4 +33,4 @@ export default defineCommandHandler({
       ],
     })
   },
-})
+}

@@ -10,17 +10,16 @@ import {
   SnowflakeUtil,
 } from 'discord.js'
 
-import {
-  getActiveThreads,
-  getThreadStats,
-} from '@/features/threadPruner/index.js'
 import { BotContext } from '@/types/BotContext.js'
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { defineCommand } from '@/types/defineCommand'
 import { ActionSet } from '@/utils/ActionSet.js'
 import { generateTsv } from '@/utils/generateTsv.js'
 import { toLocalDate } from '@/utils/toLocalDate.js'
 
-export default defineCommandHandler({
+import { getActiveThreads } from './getActiveThreads'
+import { getThreadStats } from './getThreadStats'
+
+export const activeThreadsCommand = defineCommand({
   data: {
     name: 'active-threads',
     description: 'Get information and statistics about server threads',

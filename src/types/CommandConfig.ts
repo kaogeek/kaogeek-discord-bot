@@ -1,8 +1,8 @@
 import { ApplicationCommandData } from 'discord.js'
 
-import { CommandHandlerExecutor } from './CommandHandlerExecutor'
+import { CommandExecutor } from './CommandExecutor'
 
-export interface CommandHandlerConfig {
+export interface CommandConfig {
   /**
    * Command data to register with Discord.
    */
@@ -39,5 +39,5 @@ export interface CommandHandlerConfig {
   /**
    * The function to execute when the command is invoked.
    */
-  execute: CommandHandlerExecutor
+  execute: CommandExecutor
 }

@@ -1,6 +1,6 @@
-import { defineCommandHandler } from '@/types/defineCommandHandler'
+import { defineCommand } from '@/types/defineCommand'
 
-export default defineCommandHandler({
+export const pingCommand = defineCommand({
   data: {
     name: 'ping',
     description: 'Ping!',
