@@ -16,6 +16,7 @@ import { UserModerationLog, UserProfile } from '@prisma/client'
 
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
+import { UserModerationLogEntryType } from '@/types/UserModerationLogEntry'
 import { defineCommand } from '@/types/defineCommand'
 import { definePlugin } from '@/types/definePlugin'
 import { ActionSet } from '@/utils/ActionSet'
@@ -214,7 +215,7 @@ async function strike(
   const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
   await logActivity(
     logContext,
-    'strike',
+    UserModerationLogEntryType.Strike,
     `strike #${strikes} added by ${interaction.user.tag}: ${reason}${suffix}`,
     { strikes, message: messageContext?.url },
   )
@@ -240,7 +241,7 @@ async function resetStrike(
   const suffix = messageContext ? ` (context: ${messageContext.url})` : ''
   await logActivity(
     logContext,
-    'strike',
+    UserModerationLogEntryType.Strike,
     `strikes reset to 0 by ${interaction.user.tag}${suffix}`,
     { strikes: 0 },
   )
@@ -272,7 +273,7 @@ async function ensureUserProfile(member: GuildMember) {
 export function addUserModerationLogEntry(
   userId: string,
   actorId: string,
-  type: string,
+  type: UserModerationLogEntryType,
   message: string,
   metadata: object = {},
 ) {
@@ -294,7 +295,7 @@ interface LogContext {
 
 const logActivity = (
   { userId, actorId }: LogContext,
-  type: string,
+  type: UserModerationLogEntryType,
   message: string,
   metadataObject: object = {},
 ) => {
