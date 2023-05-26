@@ -5,6 +5,7 @@ import {
   IntentsBitField,
   Interaction,
 } from 'discord.js'
+import { ClientEvents } from 'discord.js'
 
 import { randomBytes } from 'node:crypto'
 
@@ -13,8 +14,10 @@ import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
 import { BotContext } from './types/BotContext'
 import { CommandConfig } from './types/CommandConfig'
+import { Logger } from './types/Logger'
 import { Plugin } from './types/Plugin'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration'
+import { createLogger } from './utils/createLogger'
 
 export class Bot {
   private nextContextId = Number.parseInt(randomBytes(3).toString('hex'), 16)
@@ -32,28 +35,34 @@ export class Bot {
   private readonly isProduction = process.env.NODE_ENV === 'production'
 
   private createBotContext(logPrefixes: string[]): BotContext {
-    const contextId = (this.nextContextId++ & 0xff_ff_ff)
-      .toString(16)
-      .padStart(6, '0')
-    const prefix = [`${contextId} |`, ...logPrefixes].join(' ')
     return {
       client: this.client,
       runtimeConfiguration: this.runtimeConfiguration,
-      log: {
-        info: (message: string) => console.info(`${prefix} ${message}`),
-        error: (message: string, error?: unknown) =>
-          console.error(`${prefix} ${message}`, error),
-      },
+      log: this.createNewLogger(logPrefixes),
     }
   }
 
+  private createNewLogger(
+    prefixes: string[],
+    contextId = this.getNextContextId(),
+  ) {
+    return createLogger([`${contextId} |`, ...prefixes].join(' '))
+  }
+
+  private getNextContextId() {
+    return (this.nextContextId++ & 0xff_ff_ff).toString(16).padStart(6, '0')
+  }
+
   async initAndStart() {
-    console.info(`[ENV] ${this.isProduction ? 'Production' : 'Development'}`)
+    const log = this.createNewLogger(['[Bot.initAndStart]'])
+    log.info(`Environment: ${this.isProduction ? 'Production' : 'Development'}`)
     this.loadHandlers()
     await initStickyMessage()
 
     const initialRuntimeConfig = await this.runtimeConfiguration.init()
-    console.info('[CONFIG] Runtime configuration loaded', initialRuntimeConfig)
+    log.info(
+      'Initial runtime configuration: ' + JSON.stringify(initialRuntimeConfig),
+    )
 
     await this.client.login(Environment.BOT_TOKEN)
   }
@@ -67,14 +76,15 @@ export class Bot {
   }
 
   private loadPlugins(plugins: Plugin[]) {
-    console.info('[PLUGIN] Initializing plugins...')
+    const log = this.createNewLogger(['[Bot.loadPlugins]'])
+    log.info('[PLUGIN] Initializing plugins...')
 
     for (const plugin of plugins) {
-      this.initializePlugin(plugin)
+      this.initializePlugin(plugin, log)
     }
   }
 
-  private initializePlugin(plugin: Plugin) {
+  private initializePlugin(plugin: Plugin, log: Logger) {
     const logPrefix = [`[plugin=${plugin.name}]`]
     plugin.setup({
       addCommand: (handler) => {
@@ -82,23 +92,30 @@ export class Bot {
       },
       addEventHandler: (handler) => {
         const logPrefixes = [...logPrefix, `[event=${handler.eventName}]`]
+        const listener = async (
+          ...arguments_: ClientEvents[typeof handler.eventName]
+        ) => {
+          const botContext = this.createBotContext(logPrefixes)
+          try {
+            await handler.execute(botContext, ...arguments_)
+          } catch (error) {
+            botContext.log.error('Error in event handler', error)
+          }
+        }
         if (handler.once) {
-          this.client.once(handler.eventName, (...arguments_) =>
-            handler.execute(this.createBotContext(logPrefixes), ...arguments_),
-          )
+          this.client.once(handler.eventName, listener)
         } else {
-          this.client.on(handler.eventName, (...arguments_) =>
-            handler.execute(this.createBotContext(logPrefixes), ...arguments_),
-          )
+          this.client.on(handler.eventName, listener)
         }
       },
     })
-    console.log(`[PLUGIN] Initialized`, plugin.name)
+    log.info(`Initialized ${plugin.name}`)
   }
 
   private async onReady() {
     const { client, commands } = this
-    console.log(`[READY] Now online as ${client.user?.tag}.`)
+    const log = this.createNewLogger(['[Bot.onReady]'])
+    log.info(`Now online as ${client.user?.tag}.`)
     const commands_data = [...commands.values()].map((command) => command.data)
 
     // Set guild commands
@@ -108,11 +125,9 @@ export class Bot {
         throw new Error(`Guild ${Environment.GUILD_ID} not found`)
       }
       await guild.commands.set(commands_data)
-      console.info(
-        `[READY] ${commands.size} guild commands registered on ${guild.name}`,
-      )
+      log.info(`${commands.size} guild commands registered on ${guild.name}`)
     } catch (error) {
-      console.error('[READY] Unable to set guild commands:', error)
+      console.error('Unable to set guild commands:', error)
     }
 
     // Clear global commands
@@ -120,10 +135,10 @@ export class Bot {
       const commands = await client.application?.commands.fetch()
       for (const command of commands?.values() || []) {
         await command.delete()
-        console.info(`[READY] Deleted global command ${command.name}`)
+        console.info(`Deleted global command ${command.name}`)
       }
     } catch (error) {
-      console.error('[READY] Unable to clear application commands:', error)
+      console.error('Unable to clear application commands:', error)
     }
   }
 
