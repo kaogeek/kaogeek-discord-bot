@@ -10,7 +10,7 @@ import { Environment } from './config'
 import featurePlugins from './features'
 import { initStickyMessage } from './features/stickyMessage/stickyMessages'
 import { BotContext } from './types/BotContext'
-import { CommandHandlerConfig } from './types/CommandHandlerConfig'
+import { CommandConfig } from './types/CommandConfig'
 import { Plugin } from './types/Plugin'
 import { RuntimeConfiguration } from './utils/RuntimeConfiguration'
 
@@ -24,7 +24,7 @@ export class Bot {
     ],
   })
   private readonly runtimeConfiguration = new RuntimeConfiguration()
-  private readonly commands = new Collection<string, CommandHandlerConfig>()
+  private readonly commands = new Collection<string, CommandConfig>()
   private readonly isProduction = process.env.NODE_ENV === 'production'
 
   private createBotContext() {

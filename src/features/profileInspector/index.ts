@@ -16,7 +16,7 @@ import { UserModerationLog, UserProfile } from '@prisma/client'
 
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { defineCommand } from '@/types/defineCommand'
 import { definePlugin } from '@/types/definePlugin'
 import { ActionSet } from '@/utils/ActionSet'
 import { prompt } from '@/utils/prompt'
@@ -30,7 +30,7 @@ export default definePlugin({
   },
 })
 
-const inspectProfileUserCommand: CommandHandlerConfig = {
+const inspectProfileUserCommand = defineCommand({
   data: {
     name: 'Inspect profile',
     type: ApplicationCommandType.User,
@@ -47,9 +47,9 @@ const inspectProfileUserCommand: CommandHandlerConfig = {
 
     await inspectProfile(botContext, { interaction, member })
   },
-}
+})
 
-const inspectAuthorMessageCommand: CommandHandlerConfig = {
+const inspectAuthorMessageCommand = defineCommand({
   data: {
     name: 'Inspect author',
     type: ApplicationCommandType.Message,
@@ -74,9 +74,9 @@ const inspectAuthorMessageCommand: CommandHandlerConfig = {
       messageContext: message,
     })
   },
-}
+})
 
-const inspectUserSlashCommand: CommandHandlerConfig = {
+const inspectUserSlashCommand = defineCommand({
   data: {
     name: 'inspect-user',
     description: 'Inspect a user profile',
@@ -101,7 +101,7 @@ const inspectUserSlashCommand: CommandHandlerConfig = {
 
     await inspectProfile(botContext, { interaction, member })
   },
-}
+})
 
 export interface InspectProfileOptions {
   interaction: CommandInteraction

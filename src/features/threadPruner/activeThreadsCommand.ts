@@ -11,7 +11,7 @@ import {
 } from 'discord.js'
 
 import { BotContext } from '@/types/BotContext.js'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { defineCommand } from '@/types/defineCommand'
 import { ActionSet } from '@/utils/ActionSet.js'
 import { generateTsv } from '@/utils/generateTsv.js'
 import { toLocalDate } from '@/utils/toLocalDate.js'
@@ -19,7 +19,7 @@ import { toLocalDate } from '@/utils/toLocalDate.js'
 import { getActiveThreads } from './getActiveThreads'
 import { getThreadStats } from './getThreadStats'
 
-export const activeThreadsCommand: CommandHandlerConfig = {
+export const activeThreadsCommand = defineCommand({
   data: {
     name: 'active-threads',
     description: 'Get information and statistics about server threads',
@@ -86,7 +86,7 @@ export const activeThreadsCommand: CommandHandlerConfig = {
     }
     await action.registeredAction.handler(action.interaction)
   },
-}
+})
 
 async function generateReport(
   botContext: BotContext,

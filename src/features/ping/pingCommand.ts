@@ -1,6 +1,6 @@
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { defineCommand } from '@/types/defineCommand'
 
-export const pingCommand: CommandHandlerConfig = {
+export const pingCommand = defineCommand({
   data: {
     name: 'ping',
     description: 'Ping!',
@@ -13,4 +13,4 @@ export const pingCommand: CommandHandlerConfig = {
       ],
     })
   },
-}
+})

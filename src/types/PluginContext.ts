@@ -1,13 +1,13 @@
 import { ClientEvents } from 'discord.js'
 
-import { CommandHandlerConfig } from './CommandHandlerConfig'
+import { CommandConfig } from './CommandConfig'
 import { EventHandlerConfig } from './EventHandlerConfig'
 
 export interface PluginContext {
   /**
    * Add an application command to the bot.
    */
-  addCommand(config: CommandHandlerConfig): void
+  addCommand(config: CommandConfig): void
 
   /**
    * Add an event handler to the bot.

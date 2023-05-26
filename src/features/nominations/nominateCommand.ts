@@ -7,9 +7,9 @@ import {
 } from 'discord.js'
 
 import { prisma } from '@/prisma'
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { defineCommand } from '@/types/defineCommand'
 
-export const nominateCommand: CommandHandlerConfig = {
+export const nominateCommand = defineCommand({
   data: {
     name: 'nominate',
     description: 'Nominates a user for a role',
@@ -146,7 +146,7 @@ export const nominateCommand: CommandHandlerConfig = {
       config.nominationsChannelId,
     )
   },
-}
+})
 
 async function updateNominationMessage(
   nominatedMember: GuildMember,

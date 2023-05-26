@@ -1,8 +1,8 @@
 import { ApplicationCommandType, time } from 'discord.js'
 
-import { CommandHandlerConfig } from '@/types/CommandHandlerConfig'
+import { CommandConfig } from '@/types/CommandConfig'
 
-export const userInfoCommand: CommandHandlerConfig = {
+export const userInfoCommand: CommandConfig = {
   data: {
     name: 'Show user info',
     type: ApplicationCommandType.User,

@@ -1,12 +1,12 @@
 import { definePlugin } from '@/types/definePlugin'
 
-import { inspectConfig } from './inspectConfig'
-import { reloadConfig } from './reloadConfig'
+import { inspectConfigCommand } from './inspectConfigCommand'
+import { reloadConfigCommand } from './reloadConfigCommand'
 
 export default definePlugin({
   name: 'runtimeConfig',
   setup: (pluginContext) => {
-    pluginContext.addCommand(inspectConfig)
-    pluginContext.addCommand(reloadConfig)
+    pluginContext.addCommand(inspectConfigCommand)
+    pluginContext.addCommand(reloadConfigCommand)
   },
 })

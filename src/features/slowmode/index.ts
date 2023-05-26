@@ -1,6 +1,6 @@
 import { definePlugin } from '@/types/definePlugin'
 
-import { slowmodeCommand } from './slowmode'
+import { slowmodeCommand } from './slowmodeCommand'
 
 export default definePlugin({
   name: 'slowmode',
