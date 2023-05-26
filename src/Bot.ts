@@ -61,16 +61,16 @@ export class Bot {
     const log = this.createNewLogger(['[Bot.init]'])
     log.info(`Environment: ${this.isProduction ? 'Production' : 'Development'}`)
 
-    this.client.once(Events.ClientReady, () => this.onReady())
-    this.client.on(Events.InteractionCreate, (interaction) =>
-      this.onInteractionCreate(interaction),
-    )
-    this.loadPlugins(featurePlugins)
-
     const initialRuntimeConfig = await this.runtimeConfiguration.init()
     log.info(
       'Initial runtime configuration: ' + JSON.stringify(initialRuntimeConfig),
     )
+
+    this.client.once(Events.ClientReady, () => this.onReady())
+    this.client.on(Events.InteractionCreate, (interaction) =>
+      this.onInteractionCreate(interaction),
+    )
+    await this.loadPlugins(featurePlugins)
   }
 
   private async loadPlugins(plugins: Plugin[]) {
