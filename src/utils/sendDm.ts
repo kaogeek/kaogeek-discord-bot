@@ -10,19 +10,16 @@ export async function sendDm(
   message: Message,
   payload: MessageCreateOptions,
 ): Promise<void> {
-  if (!message.author.dmChannel) {
-    try {
+  try {
+    if (!message.author.dmChannel) {
       await message.author.createDM()
-    } catch (error) {
-      if (error instanceof DiscordAPIError && error.code === 50_007) {
-        console.warn('user not enable permission to send private message')
-      } else {
-        console.error(error)
-      }
-      return
+    }
+    await message.author.send(payload)
+  } catch (error) {
+    if (error instanceof DiscordAPIError && error.code === 50_007) {
+      console.warn('user not enable permission to send private message')
+    } else {
+      console.error(error)
     }
   }
-
-  await message.author.send(payload)
-  return
 }
