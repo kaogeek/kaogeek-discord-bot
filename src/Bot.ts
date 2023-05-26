@@ -1,17 +1,16 @@
 import {
   Client,
+  ClientEvents,
   Collection,
   Events,
   IntentsBitField,
   Interaction,
 } from 'discord.js'
-import { ClientEvents } from 'discord.js'
 
 import { randomBytes } from 'node:crypto'
 
 import { Environment } from './config'
 import featurePlugins from './features'
-import { initStickyMessage } from './features/stickyMessage/stickyMessages'
 import { BotContext } from './types/BotContext'
 import { CommandConfig } from './types/CommandConfig'
 import { Logger } from './types/Logger'
@@ -54,44 +53,62 @@ export class Bot {
   }
 
   async initAndStart() {
-    const log = this.createNewLogger(['[Bot.initAndStart]'])
-    log.info(`Environment: ${this.isProduction ? 'Production' : 'Development'}`)
-    this.loadHandlers()
-    await initStickyMessage()
-
-    const initialRuntimeConfig = await this.runtimeConfiguration.init()
-    log.info(
-      'Initial runtime configuration: ' + JSON.stringify(initialRuntimeConfig),
-    )
-
+    await this.init()
     await this.client.login(Environment.BOT_TOKEN)
   }
 
-  loadHandlers() {
+  async init() {
+    const log = this.createNewLogger(['[Bot.init]'])
+    log.info(`Environment: ${this.isProduction ? 'Production' : 'Development'}`)
+
     this.client.once(Events.ClientReady, () => this.onReady())
     this.client.on(Events.InteractionCreate, (interaction) =>
       this.onInteractionCreate(interaction),
     )
     this.loadPlugins(featurePlugins)
+
+    const initialRuntimeConfig = await this.runtimeConfiguration.init()
+    log.info(
+      'Initial runtime configuration: ' + JSON.stringify(initialRuntimeConfig),
+    )
   }
 
-  private loadPlugins(plugins: Plugin[]) {
+  private async loadPlugins(plugins: Plugin[]) {
     const log = this.createNewLogger(['[Bot.loadPlugins]'])
-    log.info('[PLUGIN] Initializing plugins...')
+    log.info('[PLUGIN] Setting up plugins...')
 
+    let initializers: (() => Promise<void>)[] | undefined = []
     for (const plugin of plugins) {
-      this.initializePlugin(plugin, log)
+      const addInitializer = (init: () => Promise<void>) => {
+        if (!initializers) {
+          throw new Error(
+            `addInitializer() must be called synchronously in the plugin’s setup() (plugin: ${plugin.name})`,
+          )
+        }
+        initializers.push(init)
+      }
+      this.initPlugin(plugin, addInitializer, log)
     }
+
+    const collectedInitializers = initializers
+    initializers = undefined
+
+    log.info('[PLUGIN] Running plugin initializers...')
+    await Promise.all(collectedInitializers.map((init) => init()))
   }
 
-  private initializePlugin(plugin: Plugin, log: Logger) {
-    const logPrefix = [`[plugin=${plugin.name}]`]
+  private initPlugin(
+    plugin: Plugin,
+    addInitializer: (init: () => Promise<void>) => void,
+    log: Logger,
+  ) {
+    const logPrefix = `[plugin=${plugin.name}]`
     plugin.setup({
       addCommand: (handler) => {
         this.commands.set(handler.data.name, handler)
       },
       addEventHandler: (handler) => {
-        const logPrefixes = [...logPrefix, `[event=${handler.eventName}]`]
+        const logPrefixes = [logPrefix, `[event=${handler.eventName}]`]
         const listener = async (
           ...arguments_: ClientEvents[typeof handler.eventName]
         ) => {
@@ -107,6 +124,12 @@ export class Bot {
         } else {
           this.client.on(handler.eventName, listener)
         }
+      },
+      addInitializer: (init) => {
+        addInitializer(async () => {
+          const logPrefixes = [logPrefix, `[initializer]`]
+          return init(this.createBotContext(logPrefixes))
+        })
       },
     })
     log.info(`Initialized ${plugin.name}`)

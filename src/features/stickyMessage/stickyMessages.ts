@@ -19,12 +19,13 @@ export const STICKY_MODAL_TIMEOUT = 60_000
 /**
  *  Init sticky message memory cache
  */
-export async function initStickyMessage() {
+export async function initStickyMessage(log: Logger) {
   const messages = await prisma.stickyMessage.findMany()
   for (const message of messages) {
     saveCache(`${STICKY_CACHE_PREFIX}-${message.channelId}`, message)
     resetCounter(message.channelId)
   }
+  log.info(`Loaded ${messages.length} sticky messages`)
 }
 
 /**

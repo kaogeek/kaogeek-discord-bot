@@ -5,6 +5,7 @@ import { definePlugin } from '@/types/definePlugin'
 import { stickyMessageHandler } from './stickyMessageHandler'
 import { stickyMessageRemove } from './stickyMessageRemove'
 import { stickyMessageSet } from './stickyMessageSet'
+import { initStickyMessage } from './stickyMessages'
 
 export default definePlugin({
   name: 'stickyMessage',
@@ -24,5 +25,8 @@ export default definePlugin({
       execute: async (botContext, message) =>
         stickyMessageRemove(message, botContext.log),
     })
+    pluginContext.addInitializer((botContext) =>
+      initStickyMessage(botContext.log),
+    )
   },
 })
