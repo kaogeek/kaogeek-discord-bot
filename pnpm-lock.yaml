@@ -7,12 +7,18 @@ dependencies:
   '@prisma/client':
     specifier: 4.14.1
     version: 4.14.1(prisma@4.14.1)
+  '@types/parse-duration':
+    specifier: 0.3.0
+    version: 0.3.0
   discord.js:
     specifier: 14.11.0
     version: 14.11.0
   dotenv:
     specifier: 16.0.3
     version: 16.0.3
+  parse-duration:
+    specifier: 1.0.3
+    version: 1.0.3
   prisma:
     specifier: 4.14.1
     version: 4.14.1
@@ -746,6 +752,13 @@ packages:
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
+
+  /@types/parse-duration@0.3.0:
+    resolution: {integrity: sha512-pt0Ok6EUEmS5yJIPlWknHHefwLnl+1lkk1MSzpBSkdRW09Wb6IpUz8vX1IjtHyHpgay7zaGRHcnSKmTzQtFvIQ==}
+    deprecated: This is a stub types definition. parse-duration provides its own type definitions, so you do not need this installed.
+    dependencies:
+      parse-duration: 1.0.3
+    dev: false
 
   /@types/semver@7.5.0:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
@@ -2702,6 +2715,10 @@ packages:
     dependencies:
       callsites: 3.1.0
     dev: true
+
+  /parse-duration@1.0.3:
+    resolution: {integrity: sha512-o6NAh12na5VvR6nFejkU0gpQ8jmOY9Y9sTU2ke3L3G/d/3z8jqmbBbeyBGHU73P4JLXfc7tJARygIK3WGIkloA==}
+    dev: false
 
   /parse-json@5.2.0:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
