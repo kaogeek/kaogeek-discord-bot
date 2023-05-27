@@ -1,7 +1,8 @@
 [nameChecker]
   patterns = [
     { regexp = "examplebadname" },
-    { regexp = "admin" }
+    { regexp = "kaogeek" },
+    { regexp = "ควย" }
   ]
   reportChannelId = "1108478073998938163"
 
