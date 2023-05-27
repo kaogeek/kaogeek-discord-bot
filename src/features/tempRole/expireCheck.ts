@@ -1,11 +1,13 @@
 import { Guild, GuildMember, Role } from 'discord.js'
 
+import cron from 'node-cron'
+
 import { Environment } from '@/config'
 import { prisma } from '@/prisma'
 import { BotContext } from '@/types/BotContext'
 
 export async function expireCheck(botContext: BotContext) {
-  setInterval(async () => {
+  await cron.schedule(Environment.TIME_PERIOD_CRON, async () => {
     // Check for expired temporary roles
     const expiredTemporaryRoles = await prisma.tempRole.findMany({
       where: {
@@ -34,7 +36,14 @@ export async function expireCheck(botContext: BotContext) {
       const role = guild.roles.cache.get(expiredTemporaryRole.roleId) as Role
 
       // Remove role from member
-      member.roles.remove(role)
+      try {
+        await member.roles.remove(role)
+      } catch (error) {
+        console.error(
+          `Failed to remove role "${role.name}" from "${member.user.tag}"`,
+          (error as Error).message,
+        )
+      }
     }
     // Remove expired temporary roles from database
     await prisma.tempRole.deleteMany({
@@ -44,5 +53,5 @@ export async function expireCheck(botContext: BotContext) {
         },
       },
     })
-  }, Environment.TIME_PERIOD_SEC * 1000)
+  })
 }

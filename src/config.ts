@@ -12,7 +12,7 @@ export const EnvironmentSchema = z.object({
   PRISMA_LOG: z.coerce.boolean().default(false),
   MESSAGE_COOLDOWN_SEC: z.coerce.number().default(15),
   MESSAGE_MAX: z.coerce.number().default(5),
-  TIME_PERIOD_SEC: z.coerce.number().default(60),
+  TIME_PERIOD_CRON: z.string().default('*/1 * * * *'),
 })
 
 export const Environment = Env(EnvironmentSchema)

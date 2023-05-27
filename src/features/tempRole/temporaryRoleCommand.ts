@@ -53,7 +53,7 @@ export const temporaryRoleCommand = defineCommand({
     const duration = interaction.options.getString('duration') as string
     const durationMs = parse(duration)
 
-    if (durationMs === null) {
+    if (durationMs === null || durationMs === 0) {
       await interaction.editReply({
         content: `Invalid duration: ${duration}`,
       })
@@ -68,23 +68,30 @@ export const temporaryRoleCommand = defineCommand({
       return
     }
 
-    const expriesAt = new Date(Date.now() + durationMs)
+    const expiresAt = new Date(Date.now() + durationMs)
 
     // Add the role to the user
-    user.roles.add(role)
+    try {
+      await user.roles.add(role)
+    } catch (error) {
+      console.error(
+        `Failed to add role "${role.name}" to "${user.user.tag}"`,
+        (error as Error).message,
+      )
+    }
     await prisma.tempRole.create({
       data: {
         guildId: interaction.guild.id,
         userId: user.id,
         roleId: role.id,
-        expiresAt: expriesAt,
+        expiresAt: expiresAt,
       },
     })
 
     // Reply to the interaction
     await interaction.editReply({
       content: `User: ${user} got role: ${role} for duration: ${duration} (expires at: ${time(
-        expriesAt,
+        expiresAt,
       )})`,
     })
   },
