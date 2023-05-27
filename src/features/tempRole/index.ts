@@ -12,7 +12,7 @@ export default definePlugin({
 
     pluginContext.addEventHandler({
       eventName: Events.ClientReady,
-      once: false,
+      once: true,
       execute: async (botContext) => {
         await expireCheck(botContext)
       },
