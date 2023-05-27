@@ -35,23 +35,26 @@ export async function expireCheck(botContext: BotContext) {
       )) as GuildMember
       const role = guild.roles.cache.get(expiredTemporaryRole.roleId) as Role
 
-      // Remove role from member
       try {
+        // Remove role from member
         await member.roles.remove(role)
+
+        // Remove expired temporary roles from database
+        await prisma.tempRole.deleteMany({
+          where: {
+            expiresAt: {
+              lte: new Date(),
+            },
+          },
+        })
       } catch (error) {
         console.error(
           `Failed to remove role "${role.name}" from "${member.user.tag}"`,
           (error as Error).message,
         )
+
+        //TODO: Send message to moderator
       }
     }
-    // Remove expired temporary roles from database
-    await prisma.tempRole.deleteMany({
-      where: {
-        expiresAt: {
-          lte: new Date(),
-        },
-      },
-    })
   })
 }
