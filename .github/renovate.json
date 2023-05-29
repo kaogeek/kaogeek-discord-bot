@@ -5,7 +5,7 @@
   "automerge": true,
   "prConcurrentLimit": 2,
   "lockFileMaintenance": {
-    "enabled": false
+    "enabled": true
   },
   "packageRules": [
     {
