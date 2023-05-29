@@ -2,6 +2,7 @@
   patterns = [
     { regexp = "examplebadname" },
     { regexp = "kaogeek" },
+    { regexp = "ก้าวgeek" },
     { regexp = "ควย" }
   ]
   reportChannelId = "1108478073998938163"
