@@ -15,8 +15,8 @@ dependencies:
     specifier: 14.11.0
     version: 14.11.0
   dotenv:
-    specifier: 16.0.3
-    version: 16.0.3
+    specifier: 16.1.1
+    version: 16.1.1
   prisma:
     specifier: 4.15.0
     version: 4.15.0
@@ -1404,8 +1404,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dotenv@16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+  /dotenv@16.1.1:
+    resolution: {integrity: sha512-UGmzIqXU/4b6Vb3R1Vrfd/4vGgVlB+mO+vEixOdfRhLeppkyW2BMhuK7TL8d0el+q9c4lW9qK2wZYhNLFhXYLA==}
     engines: {node: '>=12'}
     dev: false
 
