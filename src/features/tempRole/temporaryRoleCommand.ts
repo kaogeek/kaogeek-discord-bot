@@ -73,19 +73,26 @@ export const temporaryRoleCommand = defineCommand({
 
     const expiresAt = new Date(Date.now() + durationMs)
 
+    // Add the role to the user
     try {
-      // Add the role to the user
       await user.roles.add(role)
 
       // Add the temporary role to the database
-      await prisma.tempRole.create({
-        data: {
-          guildId: interaction.guild.id,
-          userId: user.id,
-          roleId: role.id,
-          expiresAt: expiresAt,
-        },
-      })
+      try {
+        await prisma.tempRole.create({
+          data: {
+            guildId: interaction.guild.id,
+            userId: user.id,
+            roleId: role.id,
+            expiresAt: expiresAt,
+          },
+        })
+      } catch (error) {
+        console.error(
+          `Failed to add temp role to database`,
+          (error as Error).message,
+        )
+      }
 
       // Reply to the interaction
       await interaction.editReply({

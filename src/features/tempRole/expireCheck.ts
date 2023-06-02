@@ -21,6 +21,8 @@ export async function expireCheck(botContext: BotContext) {
         roleId: true,
       },
     })
+
+    const removedTemporaryRole = []
     // Remove expired temporary roles from users
     for (const expiredTemporaryRole of expiredTemporaryRoles) {
       if (expiredTemporaryRole.guildId !== Environment.GUILD_ID) return
@@ -38,23 +40,30 @@ export async function expireCheck(botContext: BotContext) {
       try {
         // Remove role from member
         await member.roles.remove(role)
-
-        // Remove expired temporary roles from database
-        await prisma.tempRole.deleteMany({
-          where: {
-            expiresAt: {
-              lte: new Date(),
-            },
-          },
-        })
+        removedTemporaryRole.push(expiredTemporaryRole.roleId)
       } catch (error) {
         console.error(
           `Failed to remove role "${role.name}" from "${member.user.tag}"`,
           (error as Error).message,
         )
-
-        //TODO: Send message to moderator
+        //TODO: Send error message to moderator
       }
+    }
+
+    try {
+      // Remove expired temporary roles from database
+      await prisma.tempRole.deleteMany({
+        where: {
+          roleId: {
+            in: removedTemporaryRole,
+          },
+        },
+      })
+    } catch (error) {
+      console.error(
+        `Failed to remove expired temporary roles from database`,
+        (error as Error).message,
+      )
     }
   })
 }
