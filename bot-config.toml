@@ -1,3 +1,6 @@
+# Edit this file to change the bot behavior.
+# ** After editing this file, don’t forget to run `/reload-config` command! **
+
 [nameChecker]
   patterns = [
     { regexp = "examplebadname" },
