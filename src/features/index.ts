@@ -11,6 +11,7 @@ import profileInspector from './profileInspector'
 import runtimeConfig from './runtimeConfig'
 import slowmode from './slowmode'
 import stickyMessage from './stickyMessage'
+import temporaryRole from './tempRole'
 import threadPruner from './threadPruner'
 import userInfo from './userInfo'
 
@@ -26,6 +27,7 @@ export default [
   runtimeConfig,
   slowmode,
   stickyMessage,
+  temporaryRole,
   threadPruner,
   userInfo,
 ] as Plugin[]

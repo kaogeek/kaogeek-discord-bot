@@ -92,10 +92,22 @@ model UserProfile {
 }
 
 // Metadata of Sticky Message
-model StickyMessage{
-  channelId String @id
+model StickyMessage {
+  channelId String   @id
   messageId String
-  message String
+  message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model TempRole {
+  id        String   @id @default(uuid())
+  guildId   String
+  userId    String
+  roleId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, roleId])
 }
