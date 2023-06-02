@@ -25,6 +25,8 @@ export const RuntimeConfigurationSchema = z
     preventEmojiSpam: z
       .object({
         enabled: z.boolean().default(true),
+        enabledChannels: z.array(z.string()).default([]),
+        disabledChannels: z.array(z.string()).default([]),
       })
       .default({}),
   })
