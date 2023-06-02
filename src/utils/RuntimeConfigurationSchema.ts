@@ -27,6 +27,7 @@ export const RuntimeConfigurationSchema = z
         enabled: z.boolean().default(true),
         enabledChannels: z.array(z.string()).default([]),
         disabledChannels: z.array(z.string()).default([]),
+        bypassRoles: z.array(z.string()).default([]),
       })
       .default({}),
   })
