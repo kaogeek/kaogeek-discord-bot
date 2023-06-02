@@ -10,33 +10,22 @@ export default definePlugin({
     pluginContext.addEventHandler({
       eventName: Events.GuildMemberAdd,
       execute: async (botContext, member) => {
-        await checkName(
-          member,
-          botContext.runtimeConfiguration.data.nameChecker,
-        )
+        await checkName(member, botContext)
       },
     })
 
     pluginContext.addEventHandler({
       eventName: Events.GuildMemberUpdate,
       execute: async (botContext, oldMember, newMember) => {
-        await checkName(
-          newMember,
-          botContext.runtimeConfiguration.data.nameChecker,
-        )
+        await checkName(newMember, botContext)
       },
     })
 
     pluginContext.addEventHandler({
       eventName: Events.MessageCreate,
       execute: async (botContext, message) => {
-        if (!message.member) {
-          return
-        }
-        await checkName(
-          message.member,
-          botContext.runtimeConfiguration.data.nameChecker,
-        )
+        if (!message.member) return
+        await checkName(message.member, botContext)
       },
     })
   },

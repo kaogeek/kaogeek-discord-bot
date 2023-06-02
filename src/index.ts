@@ -10,7 +10,7 @@ if (process.argv.includes('--smoke')) {
   console.info(`[SMOKE] OK, database connection is working!`)
 
   // Attempt to load handlers
-  new Bot().loadHandlers()
+  await new Bot().init()
   console.info(`[SMOKE] OK, loading handlers is working!`)
 } else {
   // Run the bot

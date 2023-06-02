@@ -2,6 +2,7 @@ import { Message } from 'discord.js'
 
 import { StickyMessage } from '@prisma/client'
 
+import { Logger } from '@/types/Logger'
 import { getCache } from '@/utils/cache'
 
 import { isChannelLock } from './channelLock'
@@ -12,7 +13,10 @@ import {
   pushMessageToBottom,
 } from './stickyMessages'
 
-export async function stickyMessageHandler(message: Message) {
+export async function stickyMessageHandler(
+  message: Message,
+  log: Logger = console,
+) {
   // TODO: fix this to handle the command dynamically
   if (
     message.content.startsWith('?stickao-set') ||
@@ -42,5 +46,5 @@ export async function stickyMessageHandler(message: Message) {
   }
 
   // if message need to update -> push sticky message to bottom
-  await pushMessageToBottom(message, stickyMessage)
+  await pushMessageToBottom(message, stickyMessage, log)
 }

@@ -66,6 +66,7 @@ describe('stickyMessageHandler', () => {
     expect(stickyMessage.pushMessageToBottom).toHaveBeenCalledWith(
       message,
       stickyMessageEntity,
+      expect.anything(),
     )
   })
 

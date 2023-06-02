@@ -34,7 +34,7 @@ describe('initStickyMessage', () => {
     vi.spyOn(messageCounter, 'resetCounter')
     prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
 
-    await initStickyMessage()
+    await initStickyMessage(console)
 
     expect(prisma.stickyMessage.findMany).toHaveBeenCalled()
   })
@@ -43,7 +43,7 @@ describe('initStickyMessage', () => {
     vi.spyOn(messageCounter, 'resetCounter')
     prisma.stickyMessage.findMany = vi.fn().mockResolvedValue(messages)
 
-    await initStickyMessage()
+    await initStickyMessage(console)
 
     expect(messageCounter.resetCounter).toHaveBeenCalledWith(channelId)
   })
