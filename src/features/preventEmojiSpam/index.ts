@@ -15,12 +15,14 @@ export default definePlugin({
         const { runtimeConfiguration, log } = botContext
         const config = runtimeConfiguration.data.preventEmojiSpam
         // if has only emoji -> delete message
-        if (isOnlyEmoji(message.content)) {
+        if (isOnlyEmoji(message.content) && message.member) {
           try {
             log.info(
-              `Message with only emoji: ${message.id} by ${message.author}`,
+              `Message with only emoji: ${message.id} by ${message.member}`,
             )
-            if (isEmojiPreventionEnabled(config, message.channel)) {
+            if (
+              isEmojiPreventionEnabled(config, message.channel, message.member)
+            ) {
               await message.delete()
             }
           } catch (error) {
