@@ -111,3 +111,13 @@ model TempRole {
 
   @@unique([userId, roleId])
 }
+
+model RedFlag {
+  id               String   @id @default(uuid())
+  actorId          String
+  flaggedUserId    String
+  flaggedChannelId String
+  flaggedMessageId String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
