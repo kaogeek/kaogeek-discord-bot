@@ -2,28 +2,34 @@
 
 Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.js.org)
 
-## Setup
+## Workspace Setup
 
-- Make sure to use same node version as specified in `.nvmrc` by using [nvm](https://github.com/nvm-sh/nvm)
+1. Make sure to use same node version as specified in `.nvmrc` by using [nvm](https://github.com/nvm-sh/nvm)
 
-  ```bash
-  nvm use
-  ```
+   ```bash
+   nvm use
+   ```
 
-  If not installed, use `nvm install` to install specified version in `.nvmrc`
-  (at the time of writing `lts/hydrogen`)
+   If not installed, use `nvm install` to install specified version in `.nvmrc`
+   (at the time of writing `lts/hydrogen`)
 
-- Install [pnpm](https://pnpm.io/installation) if you don't have one installed, you can install using npm
+2. Enable [Corepack](https://nodejs.org/api/corepack.html) (if not yet),
+   this will automatically install `pnpm` with the version specified in
+   `package.json#packageManager`.
 
-  ```bash
-  npm install -g pnpm
-  ```
+   ```bash
+   corepack enable
+   ```
 
-- Install dependencies
+   This will ensure all developers use the same version of `pnpm`.
+   Corepack will automatically switch pnpm's version when you switch to
+   different workspace.
 
-  ```bash
-  pnpm install
-  ```
+3. Install dependencies
+
+   ```bash
+   pnpm install
+   ```
 
 ## Discord Bot & Server Setup (For Development)
 
