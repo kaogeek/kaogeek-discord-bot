@@ -17,10 +17,13 @@
   # If true, the bot will delete messages that only contains emojis.
   enabled = false
 
-  # Set a list of channels where the bot will delete messages that only contains emojis
+  # Channel IDs where the bot will delete messages that only contains emojis
   # even if the `enabled` option is set to false.
   enabledChannels = []
 
-  # Set a list of channels where the bot will not delete messages that only contains emojis.
+  # Channel IDs where the bot will not delete messages that only contains emojis.
   # This overrides the `enabled` and `enabledChannels` options.
   disabledChannels = []
+
+  # Role IDs who bypass the emoji spam prevention.
+  bypassRoles = []
