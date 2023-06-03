@@ -17,12 +17,12 @@ export default definePlugin({
         // if has only emoji -> delete message
         if (isOnlyEmoji(message.content) && message.member) {
           try {
+            const { id, channel, member } = message
+            const enabled = isEmojiPreventionEnabled(config, channel, member)
             log.info(
-              `Message with only emoji: ${message.id} by ${message.member}`,
+              `channel=${channel.id} message=${id} author=${member.id} (${member.user.tag}) enabled=${enabled}`,
             )
-            if (
-              isEmojiPreventionEnabled(config, message.channel, message.member)
-            ) {
+            if (enabled) {
               await message.delete()
             }
           } catch (error) {
