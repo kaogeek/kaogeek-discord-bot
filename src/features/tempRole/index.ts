@@ -6,7 +6,7 @@ import { definePlugin } from '@/types/definePlugin'
 import { temporaryRoleCommand } from './temporaryRoleCommand'
 
 export default definePlugin({
-  name: 'temp-role',
+  name: 'tempRole',
   setup: async (pluginContext) => {
     pluginContext.addCommand(temporaryRoleCommand)
 
