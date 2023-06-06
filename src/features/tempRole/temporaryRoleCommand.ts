@@ -151,7 +151,7 @@ export const temporaryRoleCommand = defineCommand({
 
         // Remove the temporary role from the database
         try {
-          await prisma.tempRole.delete({
+          await prisma.tempRole.deleteMany({
             where: {
               guildId: interaction.guild.id,
               userId: user.id,
