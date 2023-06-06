@@ -164,6 +164,11 @@ export const temporaryRoleCommand = defineCommand({
             (error as Error).message,
           )
         }
+
+        // Reply to the interaction
+        await interaction.editReply({
+          content: `User: ${user} lost role: ${role}`,
+        })
       } catch {
         console.error(
           `Failed to remove role "${role.name}" from "${user.user.tag}"`,
