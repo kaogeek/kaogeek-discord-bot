@@ -79,6 +79,12 @@ export const temporaryRoleCommand = defineCommand({
     const duration = interaction.options.getString('duration') as string
 
     if (interaction.options.getSubcommand() === 'add') {
+      temporaryRoleAdd()
+    } else if (interaction.options.getSubcommand() === 'remove') {
+      temporaryRoleRemove()
+    }
+
+    async function temporaryRoleAdd() {
       // Parse the duration
       const durationMs = parse(duration)
 
@@ -108,7 +114,7 @@ export const temporaryRoleCommand = defineCommand({
         try {
           await prisma.tempRole.create({
             data: {
-              guildId: interaction.guild.id,
+              guildId: interaction.guildId as string,
               userId: user.id,
               roleId: role.id,
               expiresAt: expiresAt,
@@ -136,7 +142,9 @@ export const temporaryRoleCommand = defineCommand({
           content: `Failed to add role: ${role} to user: ${user}`,
         })
       }
-    } else if (interaction.options.getSubcommand() === 'remove') {
+    }
+
+    async function temporaryRoleRemove() {
       // Check if the user not has the role
       if (!user.roles.cache.has(role.id)) {
         await interaction.editReply({
@@ -153,7 +161,7 @@ export const temporaryRoleCommand = defineCommand({
         try {
           await prisma.tempRole.deleteMany({
             where: {
-              guildId: interaction.guild.id,
+              guildId: interaction.guildId as string,
               userId: user.id,
               roleId: role.id,
             },
