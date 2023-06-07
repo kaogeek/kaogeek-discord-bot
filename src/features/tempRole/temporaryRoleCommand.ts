@@ -145,6 +145,23 @@ export const temporaryRoleCommand = defineCommand({
     }
 
     async function temporaryRoleRemove() {
+      // Check if the role is not a temporary role
+      if (
+        user.roles.cache.has(role.id) &&
+        !(await prisma.tempRole.findFirst({
+          where: {
+            guildId: interaction.guildId as string,
+            userId: user.id,
+            roleId: role.id,
+          },
+        }))
+      ) {
+        await interaction.editReply({
+          content: `Cannot remove role: ${role} from user: ${user} because it's not a temporary role`,
+        })
+        return
+      }
+
       // Check if the user not has the role
       if (!user.roles.cache.has(role.id)) {
         await interaction.editReply({
