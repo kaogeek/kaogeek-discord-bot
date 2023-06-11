@@ -10,12 +10,16 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "dependencies (non-major)"
+      "enabled": true
     },
     {
       "packageNames": ["node"],
       "enabled": false
+    },
+    {
+      "packagePatterns": ["*"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "dependencies (non-major)"
     }
   ],
   "vulnerabilityAlerts": {
