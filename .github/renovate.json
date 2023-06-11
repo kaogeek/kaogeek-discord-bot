@@ -15,6 +15,11 @@
     {
       "packageNames": ["node"],
       "enabled": false
+    },
+    {
+      "packagePatterns": ["*"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "dependencies (non-major)"
     }
   ],
   "vulnerabilityAlerts": {
