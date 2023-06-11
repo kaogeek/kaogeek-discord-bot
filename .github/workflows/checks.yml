@@ -98,7 +98,7 @@ jobs:
       - uses: actions/checkout@v3
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@6a58db7e0d21ca03e6c44877909e80e45217eed2
+        uses: docker/setup-buildx-action@bdd549bec0b79f87fdf6064e966f34404a39cc33
       - name: Build Docker image
         id: build-and-push
         uses: docker/build-push-action@44ea916f6c540f9302d50c2b1e5a8dc071f15cdf
