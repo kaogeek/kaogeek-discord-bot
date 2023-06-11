@@ -10,7 +10,8 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
-      "enabled": true
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "dependencies (non-major)"
     },
     {
       "packageNames": ["node"],
