@@ -9,7 +9,7 @@
     { regexp = "ควย" },
     { regexp = "@everyone" },
     # Zalgo Text Thanks narze [\u0300-\u036F]
-    { regexp = "[\u0300-\u036F]" },
+    # { regexp = "[\u0300-\u036F]" },
   ]
   reportChannelId = "1108478073998938163"
 
