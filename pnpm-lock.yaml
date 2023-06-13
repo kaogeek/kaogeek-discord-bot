@@ -11,6 +11,9 @@ dependencies:
   '@prisma/client':
     specifier: 4.15.0
     version: 4.15.0(prisma@4.15.0)
+  '@types/unzalgo':
+    specifier: 3.0.0
+    version: 3.0.0
   discord.js:
     specifier: 14.11.0
     version: 14.11.0
@@ -774,6 +777,10 @@ packages:
   /@types/semver@7.5.0:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
     dev: true
+
+  /@types/unzalgo@3.0.0:
+    resolution: {integrity: sha512-JH2A+Uhebgfe34Q1hznztgakVBCk2ndkDnHijIjY4Kkd+o1wgy98Kkxpa4GLhQFL60/XjXu0CEuK8nLwnpfivw==}
+    dev: false
 
   /@types/ws@8.5.4:
     resolution: {integrity: sha512-zdQDHKUgcX/zBc4GrwsE/7dVdAD8JR4EuiAXiiUhhfyIJXXb2+PrGshFyeXWQPMmmZ2XxgaqclgpIC7eTXc1mg==}
