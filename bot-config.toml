@@ -6,7 +6,10 @@
     { regexp = "examplebadname" },
     { regexp = "kaogeek" },
     { regexp = "ก้าวgeek" },
-    { regexp = "ควย" }
+    { regexp = "ควย" },
+    { regexp = "@everyone" },
+    # Zalgo Text Thanks narze 
+    { regexp = "[\u0300-\u036F]" },
   ]
   reportChannelId = "1108478073998938163"
 
