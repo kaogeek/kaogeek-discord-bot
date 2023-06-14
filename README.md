@@ -75,7 +75,15 @@ Discord bot for KaoGeek, built with TypeScript and [discord.js](https://discord.
   pnpm dev:watch
   ```
 
-## Deploy
+## Production deployment
+
+The production instance of the Discord bot is hosted by [Yue.sh](https://yue.sh/). To deploy to production, trigger the [Deployment](https://github.com/kaogeek/kaogeek-discord-bot/actions/workflows/deployment.yml) workflow on GitHub Actions.
+
+![image](https://github.com/kaogeek/kaogeek-discord-bot/assets/193136/a8128bb4-6848-48df-8410-eafc925184a8)
+
+Log from the production bot is sent to [Papertrail](https://www.papertrail.com/). If you have access to Papertrail, you can view the logs at <https://my.papertrailapp.com/systems/kaogeek/events>
+
+## Running
 
 - Run with Docker
   ```bash
