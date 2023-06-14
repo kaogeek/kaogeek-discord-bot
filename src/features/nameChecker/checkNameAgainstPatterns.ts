@@ -13,11 +13,11 @@ export function checkNameAgainstPatterns(
   isZalgoEnabled: boolean,
   log: Logger = console,
 ): boolean | undefined {
+  if (isZalgoEnabled && isZalgo(name.trim())) {
+    return true
+  }
   for (const pattern of patterns) {
     try {
-      if (isZalgoEnabled) {
-        return isZalgo(name.trim())
-      }
       let regexp = compiled.get(pattern.regexp)
       if (!regexp) {
         regexp = new RegExp(pattern.regexp, 'i')
