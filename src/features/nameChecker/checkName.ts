@@ -13,7 +13,7 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   const config = runtimeConfiguration.data.nameChecker
   if (member.guild.id !== Environment.GUILD_ID) return
 
-  const { reportChannelId, patterns } = config
+  const { reportChannelId, patterns, zalgoEnabled } = config
   if (!patterns) {
     return
   }
@@ -31,6 +31,7 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   const checkResult = checkNameAgainstPatterns(
     member.displayName,
     patterns,
+    zalgoEnabled,
     log,
   )
   if (checkResult) {
@@ -40,7 +41,9 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
       log.info(
         `Name pattern match ${checkResult}: "${member.displayName}" (${member.id})`,
       )
-      await reportChannel?.send(`Name pattern match: ${member}`)
+      await reportChannel?.send(
+        `Name pattern match: ${member} - ${member.displayName}`,
+      )
     }
   }
 }

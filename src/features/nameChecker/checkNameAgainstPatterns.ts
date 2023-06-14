@@ -1,3 +1,5 @@
+import { isZalgo } from 'unzalgo'
+
 import { Logger } from '@/types/Logger'
 import { RuntimeConfigurationSchema } from '@/utils/RuntimeConfigurationSchema'
 
@@ -8,8 +10,12 @@ type Pattern = RuntimeConfigurationSchema['nameChecker']['patterns'][number]
 export function checkNameAgainstPatterns(
   name: string,
   patterns: Pattern[],
+  isZalgoEnabled: boolean,
   log: Logger = console,
-): RegExp | undefined {
+): boolean | undefined {
+  if (isZalgoEnabled && isZalgo(name.trim())) {
+    return true
+  }
   for (const pattern of patterns) {
     try {
       let regexp = compiled.get(pattern.regexp)
@@ -18,7 +24,7 @@ export function checkNameAgainstPatterns(
         compiled.set(pattern.regexp, regexp)
       }
       if (regexp.test(name) || regexp.test(name.replaceAll(/\s+/g, ''))) {
-        return regexp
+        return true
       }
     } catch (error) {
       log.error(
@@ -27,4 +33,5 @@ export function checkNameAgainstPatterns(
       )
     }
   }
+  return false
 }
