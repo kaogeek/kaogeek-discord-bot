@@ -23,7 +23,9 @@ export function checkNameAgainstPatterns(
         regexp = new RegExp(pattern.regexp, 'i')
         compiled.set(pattern.regexp, regexp)
       }
-      return regexp.test(name) || regexp.test(name.replaceAll(/\s+/g, ''))
+      if (regexp.test(name) || regexp.test(name.replaceAll(/\s+/g, ''))) {
+        return true
+      }
     } catch (error) {
       log.error(
         `Unable to process pattern "${pattern}" against name "${name}"`,
@@ -31,4 +33,5 @@ export function checkNameAgainstPatterns(
       )
     }
   }
+  return false
 }
