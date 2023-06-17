@@ -54,3 +54,5 @@ COPY --chown=node:node --from=builder /app/dist ./dist
 COPY bot-config.example.toml ./
 
 CMD ["dist/index.js"]
+ARG APP_VERSION=unknown
+ENV APP_VERSION=${APP_VERSION}
