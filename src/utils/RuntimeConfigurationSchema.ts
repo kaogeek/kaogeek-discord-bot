@@ -10,6 +10,16 @@ export const RuntimeConfigurationSchema = z
       })
       .default({}),
 
+    nameCleansing: z
+      .object({
+        enabled: z.boolean().default(false),
+        enabledCheckZalgo: z.boolean().default(false),
+        enabledCheckDehoisted: z.boolean().default(false),
+        enabledCheckExclamationMark: z.boolean().default(false),
+        enabledCheckBadName: z.boolean().default(false),
+      })
+      .default({}),
+
     nominations: z
       .object({
         enabledRoles: z

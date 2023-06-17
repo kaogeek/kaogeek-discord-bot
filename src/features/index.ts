@@ -4,6 +4,7 @@ import memberUpdateLogger from './memberUpdateLogger'
 import messagePruner from './messagePruner'
 import messageReporter from './messageReporter'
 import nameChecker from './nameChecker'
+import nameCleansing from './nameCleansing'
 import nominations from './nominations'
 import ping from './ping'
 import preventEmojiSpam from './preventEmojiSpam'
@@ -20,6 +21,7 @@ export default [
   messagePruner,
   messageReporter,
   nameChecker,
+  nameCleansing,
   nominations,
   ping,
   preventEmojiSpam,
