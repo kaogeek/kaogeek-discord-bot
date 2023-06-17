@@ -36,36 +36,44 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
     return
   }
 
-  if (checkZalgo(member.displayName) && enabledCheckZalgo) {
+  if (member.nickname === null) {
+    return
+  }
+
+  if (checkZalgo(member.nickname) && enabledCheckZalgo) {
     member
-      .setNickname(clean(member.displayName), 'Zalgo Name Detacted')
-      .catch(() => {
-        log.info(`Can't change ${member.displayName}'s name`)
+      .setNickname(clean(member.nickname), 'Zalgo Name Detacted')
+      .catch((error) => {
+        log.error(
+          `Can't change ${member.nickname}'s name (${member.id})`,
+          error,
+        )
       })
   }
 
-  if (checkDehoisted(member.displayName) && enabledCheckDehoisted) {
-    member
-      .setNickname(member.user.username, 'Dehoisted Name Detacted')
-      .catch(() => {
-        log.info(`Can't change ${member.displayName}'s name`)
-      })
+  if (checkDehoisted(member.nickname) && enabledCheckDehoisted) {
+    member.setNickname(null, 'Dehoisted Name Detacted').catch((error) => {
+      log.error(`Can't change ${member.nickname}'s name (${member.id})`, error)
+    })
   }
 
-  if (checkExclamationMark(member.displayName) && enabledCheckExclamationMark) {
+  if (checkExclamationMark(member.nickname) && enabledCheckExclamationMark) {
     member
-      .setNickname(member.user.username, 'Exclamation Mark Name Detacted')
-      .catch(() => {
-        log.info(`Can't change ${member.displayName}'s name`)
+      .setNickname(null, 'Exclamation Mark Name Detacted')
+      .catch((error) => {
+        log.error(
+          `Can't change ${member.nickname}'s name (${member.id})`,
+          error,
+        )
       })
   }
 
   if (
-    checkNameAgainstPatterns(member.displayName, patterns, log) &&
+    checkNameAgainstPatterns(member.nickname, patterns, log) &&
     enabledCheckBadName
   ) {
-    member.setNickname(member.user.username, 'Bad Name Detacted').catch(() => {
-      log.info(`Can't change ${member.displayName}'s name`)
+    member.setNickname(null, 'Bad Name Detacted').catch((error) => {
+      log.error(`Can't change ${member.nickname}'s name (${member.id})`, error)
     })
   }
 }
