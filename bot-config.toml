@@ -15,6 +15,13 @@
   zalgoEnabled = true
   reportChannelId = "1108478073998938163"
 
+[nameCleansing]
+  enabled = true
+  enabledCheckZalgo = true
+  enabledCheckDehoisted = false
+  enabledCheckExclamationMark = true
+  enabledCheckBadName = true
+
 [nominations]
   enabledRoles = [
     # Contributor
