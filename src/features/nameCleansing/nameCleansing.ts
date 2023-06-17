@@ -65,14 +65,14 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   console.log(reasonMessage)
   // only Zalgo to clean name else other reason reset name
   if (reasonMessage.length === 1 && reasonMessage[0] === 'Zalgo') {
-    setNickname(
+    await setNickname(
       member,
       log,
       clean(member.nickname),
       reasonMessage.join(' Name Detected'),
     )
   } else if (reasonMessage.length > 0) {
-    setNickname(
+    await setNickname(
       member,
       log,
       null,
