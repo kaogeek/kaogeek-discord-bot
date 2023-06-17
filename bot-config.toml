@@ -11,6 +11,8 @@
     # Zalgo Text Thanks narze [\u0300-\u036F]
     # { regexp = "[\u0300-\u036F]" },
   ]
+  # ตัวเลือกเปิดปิดใช้งานเช็กตัวอักษร Zalog
+  zalgoEnabled = true
   reportChannelId = "1108478073998938163"
 
 [nominations]
