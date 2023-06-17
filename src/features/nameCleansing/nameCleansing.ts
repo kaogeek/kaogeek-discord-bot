@@ -4,6 +4,7 @@ import { clean } from 'unzalgo'
 
 import { Environment } from '@/config'
 import { BotContext } from '@/types/BotContext'
+import { Logger } from '@/types/Logger'
 
 import {
   checkDehoisted,
@@ -40,40 +41,54 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
     return
   }
 
+  const reasonMessage: string[] = []
+
   if (checkZalgo(member.nickname) && enabledCheckZalgo) {
-    member
-      .setNickname(clean(member.nickname), 'Zalgo Name Detacted')
-      .catch((error) => {
-        log.error(
-          `Can't change ${member.nickname}'s name (${member.id})`,
-          error,
-        )
-      })
+    reasonMessage.push('Zalgo')
   }
 
   if (checkDehoisted(member.nickname) && enabledCheckDehoisted) {
-    member.setNickname(null, 'Dehoisted Name Detacted').catch((error) => {
-      log.error(`Can't change ${member.nickname}'s name (${member.id})`, error)
-    })
+    reasonMessage.push('Dehoisted')
   }
 
   if (checkExclamationMark(member.nickname) && enabledCheckExclamationMark) {
-    member
-      .setNickname(null, 'Exclamation Mark Name Detacted')
-      .catch((error) => {
-        log.error(
-          `Can't change ${member.nickname}'s name (${member.id})`,
-          error,
-        )
-      })
+    reasonMessage.push('Exclamation Mark')
   }
 
   if (
-    checkNameAgainstPatterns(member.nickname, patterns, log) &&
+    checkNameAgainstPatterns(clean(member.nickname.trim()), patterns, log) &&
     enabledCheckBadName
   ) {
-    member.setNickname(null, 'Bad Name Detacted').catch((error) => {
-      log.error(`Can't change ${member.nickname}'s name (${member.id})`, error)
-    })
+    reasonMessage.push('Bad Name')
   }
+
+  console.log(reasonMessage)
+  // only Zalgo to clean name else other reason reset name
+  if (reasonMessage.length === 1 && reasonMessage[0] === 'Zalgo') {
+    await setNickname(
+      member,
+      log,
+      clean(member.nickname),
+      reasonMessage.join(' Name Detected'),
+    )
+  } else if (reasonMessage.length > 0) {
+    await setNickname(
+      member,
+      log,
+      null,
+      reasonMessage.join(' and ') + ' Name Detected',
+    )
+  }
+}
+
+async function setNickname(
+  member: GuildMember,
+  log: Logger,
+  name: string | null,
+  reason: string,
+) {
+  const messageChangeNameError = `Can't change ${member.nickname}'s name (${member.id})`
+  await member.setNickname(name, reason).catch((error) => {
+    log.error(messageChangeNameError, error)
+  })
 }
