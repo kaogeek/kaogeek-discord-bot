@@ -13,7 +13,6 @@ import {
 } from './checkName'
 
 export const compiled = new Map<string, RegExp>()
-const seen = new Map<string, number>()
 
 export async function checkName(member: GuildMember, botContext: BotContext) {
   const { log, runtimeConfiguration } = botContext
@@ -40,7 +39,7 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   if (checkZalgo(member.displayName) && enabledCheckZalgo) {
     member
       .setNickname(clean(member.displayName), 'Zalgo Name Detacted')
-      .catch((error) => {
+      .catch(() => {
         log.info(`Can't change ${member.displayName}'s name`)
       })
   }
@@ -48,7 +47,7 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   if (checkDehoisted(member.displayName) && enabledCheckDehoisted) {
     member
       .setNickname(member.user.username, 'Dehoisted Name Detacted')
-      .catch((error) => {
+      .catch(() => {
         log.info(`Can't change ${member.displayName}'s name`)
       })
   }
@@ -56,7 +55,7 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
   if (checkExclamationMark(member.displayName) && enabledCheckExclamationMark) {
     member
       .setNickname(member.user.username, 'Exclamation Mark Name Detacted')
-      .catch((error) => {
+      .catch(() => {
         log.info(`Can't change ${member.displayName}'s name`)
       })
   }
@@ -65,10 +64,8 @@ export async function checkName(member: GuildMember, botContext: BotContext) {
     checkNameAgainstPatterns(member.displayName, patterns, log) &&
     enabledCheckBadName
   ) {
-    member
-      .setNickname(member.user.username, 'Bad Name Detacted')
-      .catch((error) => {
-        log.info(`Can't change ${member.displayName}'s name`)
-      })
+    member.setNickname(member.user.username, 'Bad Name Detacted').catch(() => {
+      log.info(`Can't change ${member.displayName}'s name`)
+    })
   }
 }
