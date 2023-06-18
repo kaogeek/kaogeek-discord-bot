@@ -61,7 +61,7 @@ jobs:
         run: pnpm test:coverage
       - name: 'Report Coverage'
         if: github.event_name == 'pull_request'
-        uses: davelosert/vitest-coverage-report-action@v1
+        uses: davelosert/vitest-coverage-report-action@v2
 
   smoke-e2e-check:
     name: Run Smoke Test
