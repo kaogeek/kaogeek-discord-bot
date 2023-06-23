@@ -22,12 +22,12 @@
   },
   "dependencies": {
     "@(-.-)/env": "0.3.2",
-    "@prisma/client": "4.16.0",
+    "@prisma/client": "4.16.1",
     "discord.js": "14.11.0",
     "dotenv": "16.3.1",
     "humanize-ms": "1.2.1",
     "node-cron": "3.0.2",
-    "prisma": "4.16.0",
+    "prisma": "4.16.1",
     "toml": "3.0.0",
     "unzalgo": "3.0.0",
     "zod": "3.21.4"
