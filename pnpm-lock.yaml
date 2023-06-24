@@ -53,8 +53,8 @@ devDependencies:
     specifier: 18.16.18
     version: 18.16.18
   '@types/node-cron':
-    specifier: 3.0.7
-    version: 3.0.7
+    specifier: 3.0.8
+    version: 3.0.8
   '@types/unzalgo':
     specifier: 3.0.0
     version: 3.0.0
@@ -964,8 +964,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node-cron@3.0.7:
-    resolution: {integrity: sha512-9PuLtBboc/+JJ7FshmJWv769gDonTpItN0Ol5TMwclpSQNjVyB2SRxSKBcTtbSysSL5R7Oea06kTTFNciCoYwA==}
+  /@types/node-cron@3.0.8:
+    resolution: {integrity: sha512-+z5VrCvLwiJUohbRSgHdyZnHzAaLuD/E2bBANw+NQ1l05Crj8dIxb/kKK+OEqRitV2Wr/LYLuEBenGDsHZVV5Q==}
     dev: true
 
   /@types/node@18.16.18:

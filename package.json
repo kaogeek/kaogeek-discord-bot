@@ -38,7 +38,7 @@
     "@types/eslint": "8.40.2",
     "@types/humanize-ms": "1.2.2",
     "@types/node": "18.16.18",
-    "@types/node-cron": "3.0.7",
+    "@types/node-cron": "3.0.8",
     "@types/unzalgo": "3.0.0",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
