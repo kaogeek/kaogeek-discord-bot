@@ -61,5 +61,5 @@
     "node": "^18.12",
     "pnpm": ">=8.6"
   },
-  "packageManager": "pnpm@8.6.4"
+  "packageManager": "pnpm@8.6.5"
 }
