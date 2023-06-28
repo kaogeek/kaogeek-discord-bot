@@ -9,6 +9,7 @@ import nominations from './nominations'
 import ping from './ping'
 import preventEmojiSpam from './preventEmojiSpam'
 import profileInspector from './profileInspector'
+import redFlagLogger from './redFlagLogger'
 import runtimeConfig from './runtimeConfig'
 import slowmode from './slowmode'
 import stickyMessage from './stickyMessage'
@@ -26,6 +27,7 @@ export default [
   ping,
   preventEmojiSpam,
   profileInspector,
+  redFlagLogger,
   runtimeConfig,
   slowmode,
   stickyMessage,
