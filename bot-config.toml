@@ -14,7 +14,7 @@
   ]
   # ตัวเลือกเปิดปิดใช้งานเช็กตัวอักษร Zalog
   zalgoEnabled = true
-  reportChannelId = "1108478073998938163"
+  reportChannelId = "1108659692319809596"
 
 [nameCleansing]
   enabled = true
