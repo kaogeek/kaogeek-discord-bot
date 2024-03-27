@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.1.1",
-    "@tsconfig/node18": "2.0.1",
+    "@tsconfig/node18": "18.2.4",
     "@types/eslint": "8.40.2",
     "@types/humanize-ms": "1.2.2",
     "@types/node": "18.16.18",
